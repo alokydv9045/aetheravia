@@ -1,0 +1,131 @@
+import { NextRequest } from 'next/server';
+
+/**
+ * Razorpay Configuration Test API
+ * Tests Razorpay API connection and credentials
+ * Use: GET /api/test/razorpay
+ */
+export async function GET(request: NextRequest) {
+  try {
+    console.log('[RAZORPAY TEST] Starting configuration test...');
+    
+    // Check environment variables
+    const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env;
+    
+    const configStatus = {
+      keyId: RAZORPAY_KEY_ID ? {
+        present: true,
+        format: RAZORPAY_KEY_ID.startsWith('rzp_test_') ? 'test' : RAZORPAY_KEY_ID.startsWith('rzp_live_') ? 'live' : 'unknown',
+        prefix: RAZORPAY_KEY_ID.substring(0, 12) + '...'
+      } : { present: false },
+      keySecret: RAZORPAY_KEY_SECRET ? {
+        present: true,
+        length: RAZORPAY_KEY_SECRET.length
+      } : { present: false }
+    };
+
+    console.log('[RAZORPAY TEST] Configuration check:', configStatus);
+
+    if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+      return Response.json({
+        success: false,
+        error: 'Missing Razorpay credentials',
+        config: configStatus,
+        recommendations: [
+          'Add RAZORPAY_KEY_ID to environment variables',
+          'Add RAZORPAY_KEY_SECRET to environment variables',
+          'Ensure credentials are from active Razorpay account'
+        ]
+      }, { status: 400 });
+    }
+
+    // Test API connection
+    const auth = Buffer.from(RAZORPAY_KEY_ID + ':' + RAZORPAY_KEY_SECRET).toString('base64');
+    
+    console.log('[RAZORPAY TEST] Testing API connection...');
+    
+    // Create a minimal test order
+    const testOrderData = {
+      amount: 100, // Re 1.00 in paise
+      currency: 'INR',
+      receipt: `test_${Date.now()}`,
+      notes: {
+        test: 'configuration_check'
+      }
+    };
+
+    const response = await fetch('https://api.razorpay.com/v1/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${auth}`,
+      },
+      body: JSON.stringify(testOrderData),
+    });
+
+    console.log('[RAZORPAY TEST] API Response status:', response.status);
+
+    if (response.ok) {
+      const orderData = await response.json();
+      console.log('[RAZORPAY TEST] Test order created successfully:', orderData.id);
+      
+      return Response.json({
+        success: true,
+        message: 'Razorpay configuration is working correctly',
+        config: configStatus,
+        testResult: {
+          orderCreated: true,
+          orderId: orderData.id,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          status: orderData.status
+        }
+      });
+    } else {
+      const errorText = await response.text();
+      console.error('[RAZORPAY TEST] API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText
+      });
+
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { message: errorText };
+      }
+
+      return Response.json({
+        success: false,
+        error: 'Razorpay API connection failed',
+        config: configStatus,
+        apiError: {
+          status: response.status,
+          statusText: response.statusText,
+          details: errorData
+        },
+        recommendations: [
+          'Verify API keys are correct and active',
+          'Check Razorpay account status',
+          'Ensure test mode is enabled if using test keys',
+          'Verify account has permission to create orders'
+        ]
+      }, { status: response.status });
+    }
+
+  } catch (error: any) {
+    console.error('[RAZORPAY TEST] Unexpected error:', error);
+    
+    return Response.json({
+      success: false,
+      error: 'Configuration test failed',
+      details: error.message,
+      recommendations: [
+        'Check network connectivity',
+        'Verify environment variables are loaded',
+        'Check for any firewall or proxy issues'
+      ]
+    }, { status: 500 });
+  }
+}

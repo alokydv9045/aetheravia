@@ -1,0 +1,192 @@
+# cspell:ignore Moda eslintcache pids vercel encryptable ehthumbs stackdump tscache sarif
+# ======================================
+# BellaModa E-commerce Application
+# Production-Ready .gitignore
+# ======================================
+
+# === DEPENDENCIES & PACKAGE MANAGERS ===
+node_modules/
+.pnp/
+.pnp.js
+.npm/
+npm-cache/
+.eslintcache
+# Lockfiles should generally be committed for reproducible installs
+# (remove these ignores if you want to track a single lockfile)
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.yarn/versions/
+.pnp.*
+
+# === ENVIRONMENT & SECRETS ===
+# Critical: Never commit environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+.env.*.local
+.env.backup
+.env.example.local
+.envrc
+.direnv/
+
+# API Keys and secrets
+secrets/
+config/secrets.json
+*.key
+*.pem
+*.p12
+*.cert
+*.crt
+
+# === NEXT.JS / BUILD OUTPUT ===
+.next/
+out/
+build/
+dist/
+.turbo/
+.swc/
+
+# === TESTING ===
+coverage/
+test-results/
+playwright-report/
+test-coverage/
+*.lcov
+.nyc_output/
+junit.xml
+
+# === DATABASES ===
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+db/
+database/
+data/
+*.dump
+*.sql
+
+# === LOGS & RUNTIME DATA ===
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+pids/
+*.pid
+*.seed
+*.pid.lock
+.node_repl_history
+
+# === CACHE & TEMP FILES ===
+.cache/
+.temp/
+.tmp/
+*.tmp
+*.temp
+.sass-cache/
+
+# === DEPLOYMENT ===
+.vercel/
+.vercel/output/
+.netlify/
+.firebase/
+.aws/
+.gcp/
+deploy/
+
+# === DEVELOPMENT TOOLS & EDITORS ===
+.vscode/
+.idea/
+.history/
+*.swp
+*.swo
+*~
+
+# === OPERATING SYSTEM ===
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+Desktop.ini
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# === TYPESCRIPT ===
+*.tsbuildinfo
+next-env.d.ts
+.tscache/
+
+# === SECURITY & BACKUPS ===
+# Backup files
+*.backup
+*.bak
+*.old
+backup/
+backups/
+
+# Security scan results
+security-reports/
+*.sarif
+
+# === MEDIA & UPLOADS ===
+# Large media files (use Git LFS if needed)
+uploads/
+media/
+public/uploads/
+*.mov
+*.mp4
+*.avi
+*.mkv
+*.wmv
+*.flv
+
+# === DOCUMENTATION ===
+# Generated docs
+docs/build/
+storybook-static/
+
+# === E-COMMERCE SPECIFIC ===
+# Payment logs and receipts
+payment-logs/
+receipts/
+invoices/
+transactions/
+
+# Customer data exports
+exports/
+reports/
+customer-data-*.csv
+order-reports-*.xlsx
+
+# === MONITORING & ANALYTICS ===
+# Performance reports
+lighthouse-reports/
+performance/
+.measurement/
+
+# === MISC PATCH/DIFF ARTIFACTS ===
+*.orig
+*.rej

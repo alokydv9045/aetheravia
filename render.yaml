@@ -1,0 +1,232 @@
+services:
+  - type: web
+    name: bellamoda-store
+    env: node
+    plan: free
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm start
+    envVars:
+      # Core Environment
+      - key: NODE_ENV
+        value: production
+      # Ensure devDependencies install for linting in CI
+      - key: NPM_CONFIG_PRODUCTION
+        value: "false"
+      - key: CI
+        value: "true"
+      
+      # Authentication & Security
+      - key: NEXTAUTH_SECRET
+        sync: false
+      - key: NEXTAUTH_URL
+        sync: false
+      - key: AUTH_TRUST_HOST
+        value: "true"
+      - key: AUTH_DEBUG
+        value: "false"
+      # Fallback auth URL for NextAuth v5
+      - key: AUTH_URL
+        value: "https://aetheravia.onrender.com"
+      
+      # Database Configuration
+      - key: MONGODB_URI
+        sync: false
+      - key: DB_MAX_POOL_SIZE
+        value: "10"
+      - key: DB_SERVER_SELECTION_TIMEOUT
+        value: "15000"
+      - key: DB_SOCKET_TIMEOUT
+        value: "45000"
+      
+      # Payment Processing
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: NEXT_PUBLIC_RAZORPAY_KEY_ID
+        sync: false
+      - key: PAYMENT_TIMEOUT
+        value: "300000"
+      - key: PAYMENT_WEBHOOK_SECRET
+        sync: false
+      
+      # Shipping & 3PL Integration
+      # Primary Provider - Shippo (Required)
+      - key: SHIPPO_API_KEY
+        sync: false
+      - key: SHIPPO_BASE_URL
+        value: "https://api.goshippo.com"
+      - key: SHIPPO_WEBHOOK_URL
+        sync: false
+      - key: SHIPPO_WEBHOOK_SECRET
+        sync: false
+      
+      # Optional Provider - Delivery.com
+      - key: DELIVERY_COM_API_KEY
+        sync: false
+      - key: DELIVERY_COM_BASE_URL
+        value: "https://api.delivery.com"
+      - key: DELIVERY_COM_WEBHOOK_URL
+        sync: false
+      - key: DELIVERY_COM_WEBHOOK_SECRET
+        sync: false
+      
+      # Optional Provider - eCart
+      - key: ECART_API_KEY
+        sync: false
+      - key: ECART_SECRET_KEY
+        sync: false
+      - key: ECART_BASE_URL
+        value: "https://api.ecart.com"
+      - key: ECART_WEBHOOK_URL
+        sync: false
+      - key: ECART_WEBHOOK_SECRET
+        sync: false
+      - key: ECART_WEBHOOK_TOKEN
+        sync: false
+      
+      # 3PL Configuration
+      - key: DEFAULT_3PL_PROVIDER
+        value: "SHIPPO"
+      - key: ENABLE_RATE_COMPARISON
+        value: "true"
+      - key: RATE_MARKUP_PERCENTAGE
+        value: "10"
+      
+      # Store Information
+      - key: STORE_NAME
+        value: "Aetheravia Store"
+      - key: STORE_ADDRESS
+        value: "Near Pal Petrol pump, Bisalpur"
+      - key: STORE_CITY
+        value: "Pilibhit"
+      - key: STORE_STATE
+        value: "Uttar Pradesh"
+      - key: STORE_ZIP
+        value: "262201"
+      - key: STORE_PHONE
+        value: "+919876543210"
+      - key: STORE_COUNTRY
+        value: "India"
+      
+      # Pickup/Fulfillment Center Details
+      - key: PICKUP_ADDRESS
+        value: "Near Pal Petrol pump, Bisalpur"
+      - key: PICKUP_CITY
+        value: "Pilibhit"
+      - key: PICKUP_STATE
+        value: "Uttar Pradesh"
+      - key: PICKUP_PINCODE
+        value: "262201"
+      - key: PICKUP_PHONE
+        value: "+919876543210"
+      - key: COMPANY_NAME
+        value: "Aetheravia"
+      
+      # Media & Content Management
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: MAX_IMAGE_SIZE
+        value: "5242880"
+      - key: ALLOWED_IMAGE_TYPES
+        value: "jpg,jpeg,png,webp,gif"
+      - key: IMAGE_QUALITY
+        value: "80"
+      
+      # Branding & Public Configuration
+      - key: NEXT_PUBLIC_BRAND_NAME
+        sync: false
+      - key: NEXT_PUBLIC_BRAND_TAGLINE
+        sync: false
+      - key: NEXT_PUBLIC_SHOP_ADDRESS
+        sync: false
+      - key: NEXT_PUBLIC_SUPPORT_EMAIL
+        sync: false
+      - key: NEXT_PUBLIC_SUPPORT_PHONE
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SITE_DESCRIPTION
+        sync: false
+      - key: NEXT_PUBLIC_KEYWORDS
+        sync: false
+      
+      # Email & Notifications
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: EMAIL_ENABLED
+        value: "true"
+      - key: EMAIL_QUEUE_ENABLED
+        value: "false"
+      
+      # Webhook & Sync Configuration
+      - key: SYNC_WEBHOOK_SECRET
+        sync: false
+      - key: WEBHOOK_RETRY_ATTEMPTS
+        value: "3"
+      - key: WEBHOOK_RETRY_DELAY
+        value: "5000"
+      - key: ENABLE_BACKGROUND_SYNC
+        value: "true"
+      - key: SYNC_INTERVAL
+        value: "300000"
+      
+      # Analytics & Monitoring
+      - key: NEXT_PUBLIC_GA_ID
+        sync: false
+      - key: NEXT_PUBLIC_GTM_ID
+        sync: false
+      - key: ENABLE_ERROR_TRACKING
+        value: "true"
+      - key: LOG_LEVEL
+        value: "info"
+      - key: RATE_LIMIT_ENABLED
+        value: "true"
+      
+      # Development & Debug
+      - key: DEBUG_MODE
+        value: "false"
+      - key: VERBOSE_LOGGING
+        value: "false"
+      - key: DISABLE_AUTH_MIDDLEWARE
+        value: "false"
+      - key: API_RATE_LIMIT
+        value: "100"
+      - key: API_RATE_WINDOW
+        value: "900000"
+      
+      # Cache Settings
+      - key: CACHE_TTL
+        value: "3600"
+      - key: REDIS_URL
+        sync: false
+      - key: ENABLE_REDIS_CACHE
+        value: "false"
+      
+      # Security Configuration
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: CORS_CREDENTIALS
+        value: "true"
+      - key: ENABLE_CSP
+        value: "true"
+      - key: ENABLE_RATE_LIMITING
+        value: "true"
+      - key: SESSION_TIMEOUT
+        value: "86400"
+      - key: API_KEY_REQUIRED
+        value: "false"
+      - key: INTERNAL_API_SECRET
+        sync: false
