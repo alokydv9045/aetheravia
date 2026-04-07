@@ -160,7 +160,8 @@ export class SecurityLogger {
     const real = request.headers.get('x-real-ip');
     const cfConnecting = request.headers.get('cf-connecting-ip');
     
-    return (cfConnecting || real || forwarded || request.ip || 'unknown').split(',')[0].trim();
+    const rawIp = cfConnecting || real || forwarded || (request as any).ip || 'unknown';
+    return rawIp.split(',')[0].trim();
   }
 
   private async generateFingerprint(request: NextRequest): Promise<string> {
@@ -407,7 +408,8 @@ export function analyzeRequestSecurity(request: NextRequest): {
   reasons: string[];
 } {
   const logger = createSecurityLogger(request);
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || request.ip || 'unknown';
+  const forwarded = request.headers.get('x-forwarded-for');
+  const ip = forwarded ? forwarded.split(',')[0] : (request as any).ip || 'unknown';
   const userAgent = request.headers.get('user-agent') || '';
   const referer = request.headers.get('referer') || '';
   

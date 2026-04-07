@@ -110,72 +110,7 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
     timeline: [timelineEventSchema],
-    trackingNumber: {
-      type: String,
-      default: '',
-    },
-    carrierName: {
-      type: String,
-      default: '',
-    },
-    estimatedDeliveryDate: {
-      type: Date,
-    },
     
-    // Delivery Partner Information
-    deliveryPartner: {
-      provider: {
-        type: String,
-        enum: ['shippo', 'delivery_com', 'ecart', 'dhl', 'auto'],
-        default: null,
-      },
-      trackingId: {
-        type: String,
-        default: '',
-      },
-      shipmentId: {
-        type: String,
-        default: '',
-      },
-      courierName: {
-        type: String,
-        default: '',
-      },
-      estimatedDelivery: {
-        type: Date,
-      },
-      assignedAt: {
-        type: Date,
-      },
-      assignedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-      cost: {
-        type: Number,
-        default: 0,
-      },
-      status: {
-        type: String,
-        enum: ['assigned', 'pickup_scheduled', 'picked_up', 'in_transit', 'out_for_delivery', 'delivered', 'failed', 'returned'],
-        default: 'assigned',
-      },
-      trackingUrl: {
-        type: String,
-        default: '',
-      },
-      deliveryAttempts: {
-        type: Number,
-        default: 0,
-      },
-      lastTrackingUpdate: {
-        type: Date,
-      },
-      metadata: {
-        type: mongoose.Schema.Types.Mixed,
-        default: {},
-      },
-    },
     
     notes: {
       type: String,
@@ -195,7 +130,6 @@ const orderSchema = new mongoose.Schema(
 // Add index for better query performance
 orderSchema.index({ status: 1, createdAt: -1 });
 orderSchema.index({ user: 1, createdAt: -1 });
-orderSchema.index({ trackingNumber: 1 });
 
 // Pre-save middleware to automatically add timeline events
 orderSchema.pre('save', function(next) {
@@ -347,9 +281,6 @@ export type Order = {
   // Enhanced fields
   status: OrderStatus;
   timeline: TimelineEvent[];
-  trackingNumber: string;
-  carrierName: string;
-  estimatedDeliveryDate?: Date;
   notes: string;
   priority: 'low' | 'normal' | 'high' | 'urgent';
   

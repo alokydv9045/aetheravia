@@ -1,9 +1,6 @@
+'use client';
 
 import dynamic from 'next/dynamic';
-
-export const metadata = {
-  title: 'Personalization Management | Admin',
-};
 
 
 const PersonalizationAdminTable = dynamic(() => import('@/components/admin/PersonalizationAdminTable'), { ssr: false });

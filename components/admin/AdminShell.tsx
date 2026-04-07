@@ -23,26 +23,10 @@ function mapSegmentToActive(seg: string | null): string {
     return 'orders-advanced'; // Default to advanced orders
   }
   
-  // Handle shipping routes
-  if (normalized === 'shipping') {
-    if (typeof window !== 'undefined') {
-      const pathname = window.location.pathname;
-      if (pathname.includes('/shipping/unified')) {
-        return 'shipping-unified';
-      }
-    }
-    return 'shipping-unified'; // Default to unified shipping
-  }
-  
-  // Handle 3pl routes - redirect to unified shipping
-  if (normalized === '3pl') {
-    return 'shipping-unified';
-  }
-  
   const allowed = new Set([
     'dashboard', 'analytics', 'orders-advanced', 'orders-unified', 'products', 'coupons', 'users',
     'carousel', 'testimonials', 'loyalty', 'referral', 'personalization',
-    'offers', 'shipping-unified', 'test-notifications'
+    'offers', 'test-notifications'
   ]);
   return allowed.has(normalized) ? normalized : 'dashboard';
 }

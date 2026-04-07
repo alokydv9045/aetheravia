@@ -1,14 +1,16 @@
 
 import Form from './Form';
 
-export function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return {
-    title: `Edit User ${params.id}`,
+    title: `Edit User ${id}`,
   };
 }
 
-export default function UserEditPage({ params }: { params: { id: string } }) {
+export default async function UserEditPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
-    <Form userId={params.id} />
+    <Form userId={id} />
   );
 }

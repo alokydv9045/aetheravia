@@ -3,7 +3,8 @@ import dbConnect from '@/lib/dbConnect';
 import CouponModel from '@/lib/models/CouponModel';
 
 export const GET = auth(async (...request: any) => {
-  const [req, { params }] = request;
+  const [req, { params: paramsPromise }] = request;
+  const params = await paramsPromise;
   
   if (!req.auth?.user?.isAdmin) {
     return Response.json(
@@ -35,7 +36,8 @@ export const GET = auth(async (...request: any) => {
 });
 
 export const PUT = auth(async (...request: any) => {
-  const [req, { params }] = request;
+  const [req, { params: paramsPromise }] = request;
+  const params = await paramsPromise;
   
   if (!req.auth?.user?.isAdmin) {
     return Response.json(
@@ -116,7 +118,8 @@ export const PUT = auth(async (...request: any) => {
 });
 
 export const DELETE = auth(async (...request: any) => {
-  const [req, { params }] = request;
+  const [req, { params: paramsPromise }] = request;
+  const params = await paramsPromise;
   
   if (!req.auth?.user?.isAdmin) {
     return Response.json(

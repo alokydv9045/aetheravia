@@ -155,13 +155,13 @@ couponSchema.virtual('isActive').get(function() {
   return this.status === COUPON_STATUS.ACTIVE && 
          new Date() >= this.startDate && 
          new Date() <= this.expiryDate &&
-         (this.usageLimit === null || this.usageCount < this.usageLimit);
+         (this.usageLimit == null || (this.usageCount ?? 0) < this.usageLimit);
 });
 
 // Virtual to get remaining usage
 couponSchema.virtual('remainingUsage').get(function() {
-  if (this.usageLimit === null) return 'Unlimited';
-  return Math.max(0, this.usageLimit - this.usageCount);
+  if (this.usageLimit == null) return 'Unlimited';
+  return Math.max(0, this.usageLimit - (this.usageCount ?? 0));
 });
 
 // Method to check if coupon is valid for a user

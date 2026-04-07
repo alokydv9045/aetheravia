@@ -3,7 +3,8 @@ import dbConnect from '@/lib/dbConnect';
 import OrderModel, { ORDER_STATUS } from '@/lib/models/OrderModel';
 
 export const GET = auth(async (...request: any) => {
-  const [req, { params }] = request;
+  const [req, { params: paramsPromise }] = request;
+  const params = await paramsPromise;
   if (!req.auth) {
     return Response.json(
       { message: 'unauthorized' },
@@ -27,8 +28,6 @@ export const GET = auth(async (...request: any) => {
     // Calculate additional data
     const progressPercentage = order.getProgressPercentage();
     const nextStatus = order.getNextStatus();
-    const estimatedDelivery = order.estimatedDeliveryDate || 
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // Default 7 days from now
 
     // Enhanced order response with timeline and progress
     const enhancedOrder = {
@@ -42,13 +41,6 @@ export const GET = auth(async (...request: any) => {
       timeline: order.timeline.sort((a: any, b: any) => 
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       ),
-      estimatedDelivery,
-      tracking: {
-        number: order.trackingNumber,
-        carrier: order.carrierName,
-        url: order.trackingNumber ? 
-          `https://track.example.com/${order.trackingNumber}` : null,
-      },
       statusInfo: getStatusInfo(order.status),
       lastUpdated: order.timeline.length > 0 ? 
         order.timeline[order.timeline.length - 1].timestamp : order.updatedAt,
@@ -66,7 +58,8 @@ export const GET = auth(async (...request: any) => {
 
 // PATCH method to update order status (for admin)
 export const PATCH = auth(async (...request: any) => {
-  const [req, { params }] = request;
+  const [req, { params: paramsPromise }] = request;
+  const params = await paramsPromise;
   if (!req.auth) {
     return Response.json(
       { message: 'unauthorized' },
@@ -75,7 +68,7 @@ export const PATCH = auth(async (...request: any) => {
   }
 
   try {
-    const { status, description, trackingNumber, carrierName, notes } = await req.json();
+    const { status, description, notes } = await req.json();
     
     await dbConnect();
     
@@ -89,13 +82,6 @@ export const PATCH = auth(async (...request: any) => {
       order.status = status;
     }
     
-    if (trackingNumber !== undefined) {
-      order.trackingNumber = trackingNumber;
-    }
-    
-    if (carrierName !== undefined) {
-      order.carrierName = carrierName;
-    }
     
     if (notes !== undefined) {
       order.notes = notes;
@@ -105,7 +91,6 @@ export const PATCH = auth(async (...request: any) => {
     if (description && status) {
       await order.addTimelineEvent(status, description, {
         updatedBy: req.auth.user?.id,
-        metadata: { trackingNumber, carrierName }
       });
     }
 
@@ -144,19 +129,19 @@ function getStatusInfo(status: string) {
     },
     [ORDER_STATUS.PROCESSING]: {
       label: 'Processing',
-      description: 'Your order is being prepared for shipment',
+      description: 'Your order is being prepared',
       color: 'primary',
       icon: '📦',
     },
     [ORDER_STATUS.SHIPPED]: {
       label: 'Shipped',
-      description: 'Your order has been shipped and is on its way',
+      description: 'Your order has been shipped',
       color: 'primary',
       icon: '🚚',
     },
     [ORDER_STATUS.OUT_FOR_DELIVERY]: {
       label: 'Out for Delivery',
-      description: 'Your order is out for delivery and will arrive soon',
+      description: 'Your order is out for delivery',
       color: 'warning',
       icon: '🚛',
     },

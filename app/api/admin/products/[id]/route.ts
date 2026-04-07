@@ -3,7 +3,8 @@ import dbConnect from '@/lib/dbConnect';
 import ProductModel from '@/lib/models/ProductModel';
 
 export const GET = auth(async (...args: any) => {
-  const [req, { params }] = args;
+  const [req, { params: paramsPromise }] = args;
+  const params = await paramsPromise;
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json(
       { message: 'unauthorized' },
@@ -26,7 +27,8 @@ export const GET = auth(async (...args: any) => {
 }) as any;
 
 export const PUT = auth(async (...args: any) => {
-  const [req, { params }] = args;
+  const [req, { params: paramsPromise }] = args;
+  const params = await paramsPromise;
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json(
       { message: 'unauthorized' },
@@ -82,7 +84,8 @@ export const PUT = auth(async (...args: any) => {
 }) as any;
 
 export const DELETE = auth(async (...args: any) => {
-  const [req, { params }] = args;
+  const [req, { params: paramsPromise }] = args;
+  const params = await paramsPromise;
 
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json(

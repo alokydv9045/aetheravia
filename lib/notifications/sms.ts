@@ -1,6 +1,7 @@
 import { OrderNotificationData } from './types';
 import { formatPrice } from '@/lib/utils';
 import { brandName } from '@/lib/brand';
+import twilio from 'twilio';
 
 interface SMSResult {
   messageId: string;
@@ -14,7 +15,6 @@ class SMSService {
     // Initialize Twilio client if credentials are available
     if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
       try {
-        const twilio = require('twilio');
         this.twilioClient = twilio(
           process.env.TWILIO_ACCOUNT_SID,
           process.env.TWILIO_AUTH_TOKEN

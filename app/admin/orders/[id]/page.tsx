@@ -5,14 +5,9 @@ export const metadata: Metadata = {
   title: 'Order Details - Admin',
 };
 
-interface AdminOrderPageProps {
-  params: {
-    id: string;
-  };
-}
-
-const AdminOrderPage = ({ params }: AdminOrderPageProps) => {
-  return <AdminOrderDetailPage orderId={params.id} />;
+const AdminOrderPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+  return <AdminOrderDetailPage orderId={id} />;
 };
 
 export default AdminOrderPage;

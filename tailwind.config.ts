@@ -1,4 +1,8 @@
 import type { Config } from 'tailwindcss';
+import tailwindAnimate from 'tailwindcss-animate';
+import daisyui from 'daisyui';
+// @ts-ignore
+import daisyuiThemes from 'daisyui/src/theming/themes';
 
 const config: Config = {
   // Dark mode removed — keep default Tailwind behavior (no explicit dark mode)
@@ -14,7 +18,7 @@ const config: Config = {
     themes: [
       {
         light: {
-          ...require('daisyui/src/theming/themes')['light'],
+          ...daisyuiThemes['light'],
           primary: '#16a34a',
           '.toaster-con': {
             'background-color': 'white',
@@ -89,7 +93,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate'), require('daisyui')],
+  plugins: [tailwindAnimate, daisyui],
 } satisfies Config;
 
 export default config;

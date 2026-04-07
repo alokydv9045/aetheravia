@@ -83,8 +83,7 @@ const AdminLayout = ({
       items: [
         { key: 'orders-advanced', label: 'Advanced Orders', href: '/admin/orders/advanced', icon: '🔍' },
         { key: 'orders-unified', label: 'Unified Orders', href: '/admin/orders/unified', icon: '🎯' },
-        { key: 'products', label: 'Products', href: '/admin/products', icon: '🛍️' },
-        { key: 'shipping-unified', label: 'Shipping Management', href: '/admin/shipping/unified', icon: '🚚' }
+        { key: 'products', label: 'Products', href: '/admin/products', icon: '🛍️' }
       ]
     },
     {

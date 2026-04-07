@@ -4,37 +4,57 @@
 // the client-only component (CarouselClient).
 
 import CarouselClient from './CarouselClient';
-import { headers } from 'next/headers';
-
+import dbConnect from '@/lib/dbConnect';
+import BannerModel from '@/lib/models/BannerModel';
 
 const Carousel = async () => {
   let items: Array<{ key: string; href: string; src: string; alt: string }> = [];
   let error = null;
+
   try {
-    // Build absolute URL for server-side fetch
-    const h = headers();
-    const host = h.get('x-forwarded-host') || h.get('host') || 'localhost:3000';
-    const proto = h.get('x-forwarded-proto') || 'http';
-    const baseUrl = `${proto}://${host}`;
-    const res = await fetch(`${baseUrl}/api/carousel`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to fetch banners');
-    items = await res.json();
+    await dbConnect();
+    // Fetch active banners directly from DB instead of using internal HTTP fetch
+    const banners = await BannerModel.find({ isActive: true }).sort({ order: 1, createdAt: -1 });
+
+    if (banners && banners.length > 0) {
+      items = banners.map((banner) => ({
+        key: banner._id.toString(),
+        href: banner.link || '/shop',
+        src: banner.image,
+        alt: banner.title || 'Banner',
+      }));
+    } else {
+      // Use default banners if none are found in DB
+      items = [
+        {
+          key: 'banner0',
+          href: '/shop',
+          src: '/images/banner/banner0.jpg',
+          alt: 'Aetheravia - Natural Skincare Collection',
+        },
+        {
+          key: 'banner1',
+          href: '/about',
+          src: '/images/banner/banner1.jpg',
+          alt: 'Sustainable Beauty Products',
+        },
+        {
+          key: 'banner2',
+          href: '/ingredients',
+          src: '/images/banner/banner2.jpg',
+          alt: 'Pure Natural Ingredients',
+        },
+      ];
+    }
   } catch (err) {
     error = (err as Error).message;
+    console.error('[Carousel] Error loading banners:', error);
   }
 
   if (error) {
     return (
       <div className="flex flex-col h-64 items-center justify-center bg-gray-100 rounded-lg">
-        <span className="text-red-500 mb-2">Error loading banners: {error}</span>
-      </div>
-    );
-  }
-
-  if (!items || items.length === 0) {
-    return (
-      <div className="flex flex-col h-64 items-center justify-center bg-gray-100 rounded-lg">
-        <span className="text-gray-400 mb-2">No banners found. Add banners from the admin panel.</span>
+        <span className="text-red-500 mb-2">Error loading banners. Using default view.</span>
       </div>
     );
   }

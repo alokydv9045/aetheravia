@@ -96,7 +96,8 @@ export function withApiSecurity(handlers: ApiHandler, options: SecurityOptions =
 
       // 3. CAPTCHA Verification (for sensitive operations)
       if (requireCaptcha) {
-        const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip || 'unknown';
+        const forwarded = req.headers.get('x-forwarded-for');
+        const clientIP = forwarded ? forwarded.split(',')[0] : (req as any).ip || 'unknown';
         
         if (requiresCaptcha(clientIP)) {
           const captchaToken = req.headers.get('x-captcha-token');
@@ -219,7 +220,7 @@ export function withApiSecurity(handlers: ApiHandler, options: SecurityOptions =
         session,
         sanitizedBody,
         securityLogger,
-        clientIP: req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip || 'unknown'
+        clientIP: req.headers.get('x-forwarded-for')?.split(',')[0] || (req as any).ip || 'unknown'
       };
 
       const response = await handler(req, enhancedContext);

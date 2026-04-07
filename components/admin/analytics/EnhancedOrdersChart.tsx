@@ -91,7 +91,7 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
 
   const renderChart = () => {
     const commonProps = {
-      data,
+      data: data as any[],
       margin: { top: 5, right: 30, left: 20, bottom: 5 },
     };
 

@@ -11,7 +11,6 @@ import UnifiedOrderFilters, { OrderFilters } from '@/components/admin/UnifiedOrd
 // If the file does not exist, create it at src/components/admin/UnifiedOrderFilters.tsx or the appropriate location.
 // Or adjust as needed based on your actual folder structure
 import UnifiedOrderList from '@/components/admin/UnifiedOrderList';
-import OrderDeliveryManager from '@/components/admin/OrderDeliveryManager';
 import { formatPrice } from '@/lib/utils';
 
 interface Order {
@@ -46,11 +45,6 @@ interface Order {
   totalPrice: number;
   orderStatus: string;
   status: string;
-  deliveryPartner?: {
-    provider: string;
-    trackingId?: string;
-    estimatedDelivery?: string;
-  };
   deliveredAt?: string;
   createdAt: string;
   updatedAt: string;
@@ -98,8 +92,6 @@ export default function UnifiedOrderManagement() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
-  const [showDeliveryManager, setShowDeliveryManager] = useState(false);
-  const [selectedOrderForDelivery, setSelectedOrderForDelivery] = useState<string | null>(null);
 
   // Get current filters from URL
   const getCurrentFiltersFromURL = useCallback((): OrderFilters => {
@@ -112,7 +104,6 @@ export default function UnifiedOrderManagement() {
         minAmount: undefined,
         maxAmount: undefined,
         paymentMethod: '',
-        deliveryPartner: '',
         sortBy: 'createdAt',
         sortOrder: 'desc',
         page: 1,
@@ -128,7 +119,6 @@ export default function UnifiedOrderManagement() {
       minAmount: searchParams?.get('minAmount') ? Number(searchParams?.get('minAmount')) : undefined,
       maxAmount: searchParams?.get('maxAmount') ? Number(searchParams?.get('maxAmount')) : undefined,
       paymentMethod: searchParams?.get('paymentMethod') ?? '',
-      deliveryPartner: searchParams?.get('deliveryPartner') ?? '',
       sortBy: searchParams?.get('sortBy') ?? 'createdAt',
       sortOrder: (searchParams?.get('sortOrder') as 'asc' | 'desc') ?? 'desc',
       page: Number(searchParams?.get('page') ?? '1') || 1,
@@ -226,37 +216,6 @@ export default function UnifiedOrderManagement() {
     }
   }, [fetchOrders, getCurrentFiltersFromURL]);
 
-  // Handle bulk delivery partner assignment
-  const handleBulkDeliveryAssignment = useCallback(async (orderIds: string[], provider: string) => {
-    try {
-      const response = await fetch('/api/admin/orders/assign-delivery', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          orderIds,
-          provider,
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to assign delivery partner');
-      }
-
-      // Clear selection and refresh
-      setSelectedOrders(new Set());
-      const currentFilters = getCurrentFiltersFromURL();
-      await fetchOrders(currentFilters);
-      
-      alert(`Successfully assigned delivery partner to ${data.assignedCount} orders`);
-    } catch (err) {
-      console.error('Error assigning delivery partner:', err);
-      alert(err instanceof Error ? err.message : 'Failed to assign delivery partner');
-    }
-  }, [fetchOrders, getCurrentFiltersFromURL]);
 
   // Handle bulk export
   const handleBulkExport = useCallback(async (orderIds: string[]) => {
@@ -315,36 +274,6 @@ export default function UnifiedOrderManagement() {
     }
   }, []);
 
-  // Handle delivery partner assignment for single order
-  const handleSingleDeliveryAssignment = useCallback(async (orderId: string, provider: string) => {
-    try {
-      const response = await fetch(`/api/admin/orders/${orderId}/assign-delivery`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ provider }),
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to assign delivery partner');
-      }
-
-      // Update order in local state
-      setOrders(prev => prev.map(order => 
-        order._id === orderId ? { ...order, deliveryPartner: data.deliveryPartner } : order
-      ));
-      
-      setShowDeliveryManager(false);
-      setSelectedOrderForDelivery(null);
-      
-    } catch (err) {
-      console.error('Error assigning delivery partner:', err);
-      alert(err instanceof Error ? err.message : 'Failed to assign delivery partner');
-    }
-  }, []);
 
   // Initialize with URL filters
   useEffect(() => {
@@ -371,7 +300,7 @@ export default function UnifiedOrderManagement() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Unified Order Management</h1>
           <p className="text-gray-600">
-            Complete order management with advanced filtering, bulk operations, and delivery partner assignment
+            Complete order management with advanced filtering and bulk operations.
           </p>
         </div>
 
@@ -460,17 +389,6 @@ export default function UnifiedOrderManagement() {
                 </ul>
               </div>
 
-              <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="btn btn-sm btn-outline">
-                  Assign Delivery
-                </label>
-                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                  <li><a onClick={() => handleBulkDeliveryAssignment(Array.from(selectedOrders), 'shippo')}>Shippo</a></li>
-                  <li><a onClick={() => handleBulkDeliveryAssignment(Array.from(selectedOrders), 'delivery_com')}>Delivery.com</a></li>
-                  <li><a onClick={() => handleBulkDeliveryAssignment(Array.from(selectedOrders), 'ecart')}>eCart</a></li>
-                  <li><a onClick={() => handleBulkDeliveryAssignment(Array.from(selectedOrders), 'auto')}>Auto Select</a></li>
-                </ul>
-              </div>
 
               <button 
                 className="btn btn-sm btn-outline"
@@ -490,10 +408,6 @@ export default function UnifiedOrderManagement() {
           selectedOrders={selectedOrders}
           onSelectionChange={setSelectedOrders}
           onStatusUpdate={handleOrderStatusUpdate}
-          onDeliveryAssignment={(orderId: string) => {
-            setSelectedOrderForDelivery(orderId);
-            setShowDeliveryManager(true);
-          }}
         />
 
         {/* Pagination */}
@@ -529,17 +443,6 @@ export default function UnifiedOrderManagement() {
           </div>
         )}
 
-        {/* Delivery Partner Assignment Modal */}
-        {showDeliveryManager && selectedOrderForDelivery && (
-          <OrderDeliveryManager
-            orderId={selectedOrderForDelivery}
-            onAssign={handleSingleDeliveryAssignment}
-            onClose={() => {
-              setShowDeliveryManager(false);
-              setSelectedOrderForDelivery(null);
-            }}
-          />
-        )}
       </div>
     </div>
   );

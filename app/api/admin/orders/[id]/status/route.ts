@@ -5,9 +5,10 @@ import { requireAdminSession } from '@/lib/requireAdminSession';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     // Verify admin session
     const session = await requireAdminSession();
     if (!session || !(session as any).user?.isAdmin) {
@@ -19,7 +20,6 @@ export async function PUT(
 
     await dbConnect();
 
-    const { id } = params;
     const body = await request.json();
     const { status } = body;
 

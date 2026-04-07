@@ -5,7 +5,6 @@ import dbConnect from '@/lib/dbConnect';
 import Order from '@/lib/models/OrderModel';
 import ProductModel from '@/lib/models/ProductModel';
 import UserModel from '@/lib/models/UserModel';
-import { Shipment } from '@/lib/models/Shipment';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -32,7 +31,6 @@ export const GET = auth(async (req: any) => {
       productMetrics,
       customerInsights,
       orderAnalytics,
-      logisticsMetrics,
       marketingMetrics
     ] = await Promise.all([
       getOverviewData(startDate),
@@ -40,7 +38,6 @@ export const GET = auth(async (req: any) => {
       getProductMetrics(startDate),
       getCustomerInsights(startDate),
       getOrderAnalytics(startDate),
-      getLogisticsMetrics(startDate),
       getMarketingMetrics(startDate)
     ]);
 
@@ -50,7 +47,6 @@ export const GET = auth(async (req: any) => {
       productMetrics,
       customerInsights,
       orderAnalytics,
-      logisticsMetrics,
       marketingMetrics
     };
 
@@ -353,125 +349,16 @@ async function getOrderAnalytics(startDate: Date) {
   };
 }
 
-// 3PL logistics metrics
+// Logistics metrics (Deprecated)
 async function getLogisticsMetrics(startDate: Date) {
-  try {
-    const [shipmentStats, providerPerformance, deliveryTrends] = await Promise.all([
-      // Overall shipment statistics
-      Shipment.aggregate([
-        {
-          $group: {
-            _id: null,
-            totalShipments: { $sum: 1 },
-            deliveredCount: { 
-              $sum: { $cond: [{ $eq: ['$status', 'delivered'] }, 1, 0] }
-            },
-            avgDeliveryTime: { 
-              $avg: {
-                $cond: [
-                  { $eq: ['$status', 'delivered'] },
-                  { $divide: [{ $subtract: ['$deliveredAt', '$createdAt'] }, 1000 * 60 * 60] },
-                  null
-                ]
-              }
-            },
-            totalCost: { $sum: '$cost' }
-          }
-        }
-      ]).then(r => ({
-        totalShipments: r[0]?.totalShipments || 0,
-        deliveredCount: r[0]?.deliveredCount || 0,
-        avgDeliveryTime: Math.round(r[0]?.avgDeliveryTime || 48),
-        shippingCosts: r[0]?.totalCost || 0
-      })),
-
-      // Provider performance comparison
-      Shipment.aggregate([
-        {
-          $group: {
-            _id: '$provider',
-            shipments: { $sum: 1 },
-            delivered: { 
-              $sum: { $cond: [{ $eq: ['$status', 'delivered'] }, 1, 0] }
-            },
-            avgCost: { $avg: '$cost' },
-            avgTime: {
-              $avg: {
-                $cond: [
-                  { $eq: ['$status', 'delivered'] },
-                  { $divide: [{ $subtract: ['$deliveredAt', '$createdAt'] }, 1000 * 60 * 60] },
-                  null
-                ]
-              }
-            }
-          }
-        },
-        {
-          $project: {
-            provider: '$_id',
-            shipments: 1,
-            successRate: { 
-              $multiply: [{ $divide: ['$delivered', '$shipments'] }, 100]
-            },
-            avgCost: { $round: ['$avgCost', 2] },
-            avgTime: { $round: ['$avgTime', 1] }
-          }
-        }
-      ]),
-
-      // Delivery trends over time
-      Shipment.aggregate([
-        { $match: { createdAt: { $gte: startDate } } },
-        {
-          $group: {
-            _id: {
-              $dateToString: { format: '%Y-%m-%d', date: '$createdAt' }
-            },
-            shipments: { $sum: 1 },
-            delivered: { 
-              $sum: { $cond: [{ $eq: ['$status', 'delivered'] }, 1, 0] }
-            },
-            failed: { 
-              $sum: { $cond: [{ $eq: ['$status', 'failed'] }, 1, 0] }
-            }
-          }
-        },
-        {
-          $project: {
-            date: '$_id',
-            shipments: 1,
-            delivered: 1,
-            failed: 1
-          }
-        },
-        { $sort: { date: 1 } }
-      ])
-    ]);
-
-    const deliveryRate = shipmentStats.totalShipments > 0 
-      ? (shipmentStats.deliveredCount / shipmentStats.totalShipments) * 100 
-      : 0;
-
-    return {
-      totalShipments: shipmentStats.totalShipments,
-      deliveryRate,
-      avgDeliveryTime: shipmentStats.avgDeliveryTime,
-      shippingCosts: shipmentStats.shippingCosts,
-      providerPerformance,
-      deliveryTrends
-    };
-  } catch (error) {
-    console.error('Error fetching logistics metrics:', error);
-    // Return default values if Shipment model doesn't exist or has issues
-    return {
-      totalShipments: 0,
-      deliveryRate: 0,
-      avgDeliveryTime: 0,
-      shippingCosts: 0,
-      providerPerformance: [],
-      deliveryTrends: []
-    };
-  }
+  return {
+    totalShipments: 0,
+    deliveryRate: 0,
+    avgDeliveryTime: 0,
+    shippingCosts: 0,
+    providerPerformance: [],
+    deliveryTrends: []
+  };
 }
 
 // Marketing and campaign metrics

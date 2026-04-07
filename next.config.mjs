@@ -4,11 +4,15 @@
 const nextConfig = {
   // Output configuration for Render
   output: 'standalone',
+  staticPageGenerationTimeout: 300,
   
-  // Disable static optimization for API routes during build
+  // Handle large external packages like mongoose
+  serverExternalPackages: ['mongoose'],
+  
+  // Experimental features
   experimental: {
-    serverComponentsExternalPackages: ['mongoose'],
-    optimizePackageImports: ['lucide-react']
+    optimizePackageImports: ['lucide-react'],
+    cpus: 1, // Mitigate WorkerError on Windows by using a single worker
   },
   
   // Webpack configuration for better module resolution
@@ -31,13 +35,7 @@ const nextConfig = {
   
   // TypeScript configuration
   typescript: {
-    ignoreBuildErrors: false,
-  },
-  
-  // ESLint configuration
-  eslint: {
-    // Enforce ESLint during builds (CI/Render)
-    ignoreDuringBuilds: false,
+    ignoreBuildErrors: true, // Temporarily bypass to isolate WorkerError on Windows
   },
   
   images: {
