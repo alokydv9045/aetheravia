@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
-import OrderStatusManager3PL from '@/components/admin/OrderStatusManager3PL';
+import OrderStatusManager from '@/components/admin/OrderStatusManager';
 import OrderNotificationPanel from '@/components/admin/orders/OrderNotificationPanel';
 import { formatPrice } from '@/lib/utils';
 
@@ -61,11 +61,6 @@ interface OrderDetails {
     location?: string;
     metadata?: Record<string, any>;
   }>;
-  tracking?: {
-    number?: string;
-    carrier?: string;
-    url?: string;
-  };
   createdAt: string;
   updatedAt: string;
 }
@@ -386,10 +381,10 @@ export default function AdminOrderDetailPage({ orderId }: AdminOrderDetailPagePr
             <div className="card bg-base-100 shadow">
               <div className="card-body">
                 <h2 className="card-title">Status Management</h2>
-                <OrderStatusManager3PL 
+                <OrderStatusManager 
                   orderId={order._id}
-                  currentStatus={order.status}
-                  onStatusUpdate={handleStatusUpdate}
+                  currentStatus={order.status as any}
+                  onStatusUpdate={handleStatusUpdate as any}
                 />
               </div>
             </div>
@@ -425,38 +420,6 @@ export default function AdminOrderDetailPage({ orderId }: AdminOrderDetailPagePr
               </div>
             </div>
 
-            {/* Tracking Information */}
-            {order.tracking && (
-              <div className="card bg-base-100 shadow">
-                <div className="card-body">
-                  <h2 className="card-title">Tracking Information</h2>
-                  <div className="space-y-2">
-                    {order.tracking.number && (
-                      <div>
-                        <span className="text-sm text-base-content/70">Tracking Number:</span>
-                        <p className="font-mono font-medium">{order.tracking.number}</p>
-                      </div>
-                    )}
-                    {order.tracking.carrier && (
-                      <div>
-                        <span className="text-sm text-base-content/70">Carrier:</span>
-                        <p className="font-medium">{order.tracking.carrier}</p>
-                      </div>
-                    )}
-                    {order.tracking.url && (
-                      <a
-                        href={order.tracking.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-primary btn-sm w-full"
-                      >
-                        Track Package
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
@@ -507,9 +470,6 @@ export default function AdminOrderDetailPage({ orderId }: AdminOrderDetailPagePr
               <div className="space-y-3">
                 <button className="btn btn-outline btn-sm w-full">
                   Print Invoice
-                </button>
-                <button className="btn btn-outline btn-sm w-full">
-                  Print Shipping Label
                 </button>
                 <button className="btn btn-outline btn-sm w-full">
                   Send Email Update

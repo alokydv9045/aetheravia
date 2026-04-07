@@ -6,7 +6,8 @@ import { emitAdminEvent } from '@/lib/eventBus';
 const isValidObjectIdString = (s?: string) => !!s && /^[a-fA-F0-9]{24}$/.test(s);
 
 export const GET = auth(async (...args: any) => {
-  const [req, { params }] = args;
+  const [req, { params: paramsPromise }] = args;
+  const params = await paramsPromise;
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json({ message: 'unauthorized' }, { status: 401 });
   }
@@ -19,7 +20,8 @@ export const GET = auth(async (...args: any) => {
 }) as any;
 
 export const PUT = auth(async (...args: any) => {
-  const [req, { params }] = args;
+  const [req, { params: paramsPromise }] = args;
+  const params = await paramsPromise;
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json({ message: 'unauthorized' }, { status: 401 });
   }
@@ -49,7 +51,8 @@ export const PUT = auth(async (...args: any) => {
 }) as any;
 
 export const DELETE = auth(async (...args: any) => {
-  const [req, { params }] = args;
+  const [req, { params: paramsPromise }] = args;
+  const params = await paramsPromise;
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json({ message: 'unauthorized' }, { status: 401 });
   }

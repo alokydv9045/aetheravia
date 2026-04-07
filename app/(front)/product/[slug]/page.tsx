@@ -10,9 +10,10 @@ import { convertDocToObj, formatPrice } from '@/lib/utils';
 export const generateMetadata = async ({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) => {
-  const product = await productService.getBySlug(params.slug);
+  const { slug } = await params;
+  const product = await productService.getBySlug(slug);
 
   if (!product) {
     return notFound();
@@ -24,8 +25,9 @@ export const generateMetadata = async ({
   };
 };
 
-const ProductPage = async ({ params }: { params: { slug: string } }) => {
-  const product = await productService.getBySlug(params.slug);
+const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
+  const product = await productService.getBySlug(slug);
 
   if (!product) {
     return notFound();

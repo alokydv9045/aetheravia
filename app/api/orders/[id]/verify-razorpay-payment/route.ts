@@ -4,7 +4,8 @@ import OrderModel from '@/lib/models/OrderModel';
 import { razorpay } from '@/lib/razorpay';
 
 export const POST = auth(async (...request: any) => {
-  const [req, { params }] = request;
+  const [req, { params: paramsPromise }] = request;
+  const params = await paramsPromise;
   if (!req.auth) {
     return Response.json(
       { message: 'unauthorized' },

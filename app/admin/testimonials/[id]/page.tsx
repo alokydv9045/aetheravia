@@ -1,12 +1,14 @@
 
 import Form from './Form';
 
-export function generateMetadata({ params }: { params: { id: string } }) {
-  return { title: `Edit Testimonial ${params.id}` };
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return { title: `Edit Testimonial ${id}` };
 }
 
-export default function TestimonialEditPage({ params }: { params: { id: string } }) {
+export default async function TestimonialEditPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
-    <Form id={params.id} />
+    <Form id={id} />
   );
 }

@@ -1,13 +1,8 @@
+'use client';
 
 import dynamic from 'next/dynamic';
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import OffersQuickActions from '@/components/admin/OffersQuickActions';
-
-export const metadata: Metadata = {
-  title: 'Offers Management | Admin',
-  description: 'Create, edit and schedule promotional offers, banners, popups and flash sales.'
-};
 
 const OffersAdminTable = dynamic(() => import('@/components/admin/OffersAdminTable'), { ssr: false });
 

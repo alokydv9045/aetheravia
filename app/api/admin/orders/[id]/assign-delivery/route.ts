@@ -21,9 +21,11 @@ const DELIVERY_PARTNERS = {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+    
     // Verify admin session
     const session = await requireAdminSession();
     if (!session || !(session as any).user?.isAdmin) {
@@ -35,7 +37,6 @@ export async function POST(
 
     await dbConnect();
 
-    const { id } = params;
     const body = await request.json();
     const { provider } = body;
 

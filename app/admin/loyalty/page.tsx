@@ -1,9 +1,6 @@
+'use client';
 
 import dynamic from 'next/dynamic';
-
-export const metadata = {
-  title: 'Loyalty Management | Admin',
-};
 
 
 const LoyaltyAdminTable = dynamic(() => import('@/components/admin/LoyaltyAdminTable'), { ssr: false });

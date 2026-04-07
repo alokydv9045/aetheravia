@@ -11,7 +11,6 @@ export interface OrderFilters {
   minAmount?: number;
   maxAmount?: number;
   paymentMethod?: string;
-  deliveryPartner?: string;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
   page?: number;
@@ -43,13 +42,6 @@ const paymentMethodOptions = [
   { value: 'wallet', label: 'Wallet' },
 ];
 
-const deliveryPartnerOptions = [
-  { value: '', label: 'All Delivery Partners' },
-  { value: 'shippo', label: 'Shippo' },
-  { value: 'delivery_com', label: 'Delivery.com' },
-  { value: 'ecart', label: 'eCart' },
-  { value: 'unassigned', label: 'Unassigned' },
-];
 
 const sortOptions = [
   { value: 'createdAt', label: 'Order Date' },
@@ -76,7 +68,6 @@ export default function UnifiedOrderFilters({
     minAmount: undefined,
     maxAmount: undefined,
     paymentMethod: '',
-    deliveryPartner: '',
     sortBy: 'createdAt',
     sortOrder: 'desc',
     page: 1,
@@ -94,7 +85,6 @@ export default function UnifiedOrderFilters({
         minAmount: searchParams?.get('minAmount') ? Number(searchParams?.get('minAmount')) : undefined,
         maxAmount: searchParams?.get('maxAmount') ? Number(searchParams?.get('maxAmount')) : undefined,
         paymentMethod: searchParams?.get('paymentMethod') ?? '',
-        deliveryPartner: searchParams?.get('deliveryPartner') ?? '',
         sortBy: searchParams?.get('sortBy') ?? 'createdAt',
         sortOrder: (searchParams?.get('sortOrder') as 'asc' | 'desc') ?? 'desc',
         page: Number(searchParams?.get('page') ?? '1') || 1,
@@ -125,7 +115,6 @@ export default function UnifiedOrderFilters({
       minAmount: undefined,
       maxAmount: undefined,
       paymentMethod: '',
-      deliveryPartner: '',
       sortBy: 'createdAt',
       sortOrder: 'desc',
       page: 1,
@@ -136,9 +125,9 @@ export default function UnifiedOrderFilters({
   }, [onFiltersChange]);
 
   // Check if any advanced filters are active
-  const hasAdvancedFilters = localFilters.dateFrom || localFilters.dateTo || 
+  const hasAdvancedFilters = !!(localFilters.dateFrom || localFilters.dateTo || 
     localFilters.minAmount || localFilters.maxAmount || 
-    localFilters.paymentMethod || localFilters.deliveryPartner;
+    localFilters.paymentMethod);
 
   useEffect(() => {
     if (hasAdvancedFilters) {
@@ -320,23 +309,6 @@ export default function UnifiedOrderFilters({
               </select>
             </div>
 
-            {/* Delivery Partner */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Delivery Partner</span>
-              </label>
-              <select
-                className="select select-bordered"
-                value={localFilters.deliveryPartner || ''}
-                onChange={(e) => handleFilterChange('deliveryPartner', e.target.value)}
-              >
-                {deliveryPartnerOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
         </div>
       )}

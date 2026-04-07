@@ -6,7 +6,8 @@ import { notificationService } from '@/lib/notifications';
 import { cancellationAnalytics } from '@/lib/analytics/cancellation';
 
 export const POST = auth(async (...request: any) => {
-  const [req, { params }] = request;
+  const [req, { params: paramsPromise }] = request;
+  const params = await paramsPromise;
   if (!req.auth) {
     return Response.json(
       { message: 'Unauthorized' },

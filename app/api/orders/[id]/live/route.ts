@@ -4,7 +4,8 @@ import OrderModel from '@/lib/models/OrderModel';
 import { registerConnection, removeConnection, startHeartbeat } from '@/lib/services/orderLive';
 
 export const GET = auth(async (...request: any) => {
-  const [req, { params }] = request;
+  const [req, { params: paramsPromise }] = request;
+  const params = await paramsPromise;
   
   if (!req.auth) {
     return Response.json(

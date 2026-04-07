@@ -37,11 +37,6 @@ interface Order {
   totalPrice: number;
   orderStatus: string;
   status: string;
-  deliveryPartner?: {
-    provider: string;
-    trackingId?: string;
-    estimatedDelivery?: string;
-  };
   deliveredAt?: string;
   createdAt: string;
   updatedAt: string;
@@ -54,7 +49,6 @@ interface UnifiedOrderListProps {
   selectedOrders: Set<string>;
   onSelectionChange: (selected: Set<string>) => void;
   onStatusUpdate: (orderId: string, newStatus: string) => void;
-  onDeliveryAssignment: (orderId: string) => void;
 }
 
 export default function UnifiedOrderList({
@@ -64,7 +58,6 @@ export default function UnifiedOrderList({
   selectedOrders,
   onSelectionChange,
   onStatusUpdate,
-  onDeliveryAssignment,
 }: UnifiedOrderListProps) {
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
 
@@ -116,33 +109,6 @@ export default function UnifiedOrderList({
     return <span className={`badge badge-sm ${cls}`}>{normalized.replaceAll('_', ' ')}</span>;
   };
 
-  // Delivery partner badge
-  const DeliveryBadge = ({ deliveryPartner }: { deliveryPartner?: Order['deliveryPartner'] }) => {
-    if (!deliveryPartner) {
-      return <span className="badge badge-ghost badge-sm">Unassigned</span>;
-    }
-    
-    const providerMap: Record<string, { label: string; class: string }> = {
-      shippo: { label: 'Shippo', class: 'badge-primary' },
-      delivery_com: { label: 'Delivery.com', class: 'badge-secondary' },
-      ecart: { label: 'eCart', class: 'badge-accent' },
-    };
-    
-    const provider = providerMap[deliveryPartner.provider] || { label: deliveryPartner.provider, class: 'badge-outline' };
-    
-    return (
-      <div className="flex flex-col gap-1">
-        <span className={`badge badge-sm ${provider.class}`}>
-          {provider.label}
-        </span>
-        {deliveryPartner.trackingId && (
-          <span className="text-xs text-base-content/70 font-mono">
-            {deliveryPartner.trackingId}
-          </span>
-        )}
-      </div>
-    );
-  };
 
   if (loading) {
     return (
@@ -219,11 +185,6 @@ export default function UnifiedOrderList({
                 </div>
               </div>
 
-              {/* Delivery Partner */}
-              <div className="mb-3">
-                <p className="text-xs text-base-content/70 mb-1">Delivery Partner:</p>
-                <DeliveryBadge deliveryPartner={order.deliveryPartner} />
-              </div>
 
               {/* Actions */}
               <div className="flex gap-2">
@@ -245,13 +206,6 @@ export default function UnifiedOrderList({
                     <li><a onClick={() => onStatusUpdate(order._id, 'cancelled')}>Cancelled</a></li>
                   </ul>
                 </div>
-
-                <button 
-                  className="btn btn-xs btn-outline"
-                  onClick={() => onDeliveryAssignment(order._id)}
-                >
-                  Assign
-                </button>
               </div>
             </div>
           </div>
@@ -280,7 +234,6 @@ export default function UnifiedOrderList({
             <th>Payment</th>
             <th>Amount</th>
             <th>Status</th>
-            <th>Delivery</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -335,9 +288,6 @@ export default function UnifiedOrderList({
                   <StatusBadge status={order.status || order.orderStatus} />
                 </td>
                 <td>
-                  <DeliveryBadge deliveryPartner={order.deliveryPartner} />
-                </td>
-                <td>
                   <div className="flex gap-1">
                     <Link 
                       href={`/order/${order._id}`} 
@@ -357,14 +307,6 @@ export default function UnifiedOrderList({
                         <li><a onClick={() => onStatusUpdate(order._id, 'cancelled')}>Cancelled</a></li>
                       </ul>
                     </div>
-
-                    <button 
-                      className="btn btn-ghost btn-xs"
-                      onClick={() => onDeliveryAssignment(order._id)}
-                      title="Assign Delivery Partner"
-                    >
-                      🚚
-                    </button>
                   </div>
                 </td>
               </tr>

@@ -168,9 +168,10 @@ class AdvancedRateLimit {
   }
 
   private defaultKeyGenerator(request: NextRequest): string {
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : 
                request.headers.get('x-real-ip') || 
-               request.ip || 
+               (request as any).ip || 
                'unknown';
     
     return `${ip}:${request.nextUrl.pathname}`;
@@ -219,7 +220,8 @@ advancedRateLimit.registerEndpoint('/api/admin', {
   blockDurationMs: 5 * 60 * 1000, // Block for 5 minutes
   skipIf: (req) => {
     // Skip for localhost in development
-    const ip = req.headers.get('x-forwarded-for') || req.ip;
+    const forwarded = req.headers.get('x-forwarded-for');
+    const ip = forwarded || (req as any).ip;
     return process.env.NODE_ENV === 'development' && (ip === '127.0.0.1' || ip === '::1');
   }
 });

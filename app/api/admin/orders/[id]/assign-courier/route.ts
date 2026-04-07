@@ -5,7 +5,8 @@ import OrderModel, { ORDER_STATUS, type OrderStatus } from '@/lib/models/OrderMo
 // Assign or update courier details for an order
 // Expects JSON body: { carrierName?: string, trackingNumber?: string, estimatedDeliveryDate?: string | Date, status?: string, notes?: string }
 export const PUT = auth(async (...args: any) => {
-	const [req, { params }] = args;
+	const [req, { params: paramsPromise }] = args;
+	const params = await paramsPromise;
 	if (!req.auth || !req.auth.user?.isAdmin) {
 		return Response.json(
 			{ message: 'unauthorized' },

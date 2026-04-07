@@ -1,9 +1,6 @@
+'use client';
 
 import dynamic from 'next/dynamic';
-
-export const metadata = {
-  title: 'Referral Management | Admin',
-};
 
 
 const ReferralAdminTable = dynamic(() => import('@/components/admin/ReferralAdminTable'), { ssr: false });
