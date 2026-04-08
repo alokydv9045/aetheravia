@@ -1,6 +1,5 @@
+import TripCarousel from '@/components/products/TripCarousel';
 import ProductItem from '@/components/products/ProductItem';
-import CardSlider from '@/components/slider/CardSlider';
-import { CarouselItem } from '@/components/ui/carousel';
 import productService from '@/lib/services/productService';
 import { convertDocToObj } from '@/lib/utils';
 
@@ -12,17 +11,16 @@ const Slider = async () => {
       {topRated.length === 0 ? (
         <div className='rounded-lg bg-base-300 p-6 text-center'>No top rated products yet.</div>
       ) : (
-        <CardSlider>
-          {/*Wrap for SSR */}
+        <TripCarousel>
           {topRated.map((product) => (
-            <CarouselItem
+            <div
               key={product.slug}
-              className='sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5'
+              className='shrink-0 w-[260px] sm:w-[280px]'
             >
               <ProductItem product={convertDocToObj(product)} />
-            </CarouselItem>
+            </div>
           ))}
-        </CardSlider>
+        </TripCarousel>
       )}
     </div>
   );

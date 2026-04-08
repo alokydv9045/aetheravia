@@ -19,7 +19,7 @@ const config: Config = {
       {
         light: {
           ...daisyuiThemes['light'],
-          primary: '#16a34a',
+          primary: '#45745D',
           '.toaster-con': {
             'background-color': 'white',
             color: 'black',
@@ -38,6 +38,18 @@ const config: Config = {
     },
     extend: {
       colors: {
+        green: {
+          50: '#f1f6f4',
+          100: '#e2ede9',
+          200: '#c5dbd3',
+          300: '#a8c9bd',
+          400: '#71a58d',
+          500: '#45745D',
+          600: '#3a624e',
+          700: '#2f4f3f',
+          800: '#243c30',
+          900: '#192921',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
