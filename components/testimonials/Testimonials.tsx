@@ -106,8 +106,7 @@ export default function Testimonials({
 
   return (
     <section aria-label="Testimonials" className="mt-4 md:mt-10">
-      <div className="mb-3 flex items-end justify-between">
-        <h2 className="text-xl font-semibold md:text-2xl">{title}</h2>
+      <div className="mb-3 flex items-end justify-end">
         {loading && <span className="text-xs opacity-60">Loading…</span>}
         {error && <span className="text-xs text-error">{error}</span>}
       </div>
@@ -119,13 +118,16 @@ export default function Testimonials({
         <CarouselContent>
           {data.map((t) => (
             <CarouselItem key={t.id} className="md:basis-1/2 lg:basis-1/3">
-              <article className="card bg-base-200 shadow-sm transition hover:shadow-md h-full">
+              <article 
+                className="card shadow-md transition hover:shadow-xl h-full"
+                style={{ backgroundColor: '#9F5035', color: 'white' }}
+              >
                 <div className="card-body gap-3">
                   {typeof t.rating === "number" && <Stars value={t.rating} />}
-                  <p className="text-sm md:text-base leading-relaxed opacity-90">“{t.quote}”</p>
-                  <div className="mt-2">
-                    <p className="font-medium">{t.name}</p>
-                    {t.role && <p className="text-xs opacity-70">{t.role}</p>}
+                  <p className="text-sm md:text-base leading-relaxed opacity-95">“{t.quote}”</p>
+                  <div className="mt-2 border-t border-white/20 pt-3">
+                    <p className="font-bold">{t.name}</p>
+                    {t.role && <p className="text-xs opacity-80">{t.role}</p>}
                   </div>
                 </div>
               </article>

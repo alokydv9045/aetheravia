@@ -56,7 +56,7 @@ export default async function CategoriesBar() {
   return (
     <nav aria-label="Categories" className="w-full bg-white border-b border-gray-100">
       <div className="container mx-auto px-4">
-        <ul className="flex gap-6 md:gap-8 overflow-x-auto items-center py-4 scrollbar-hide">
+        <ul className="flex gap-6 md:gap-8 overflow-x-auto items-center md:justify-center py-4 scrollbar-hide">
           {categories.map((cat) => (
             <li key={cat} className="flex-shrink-0">
               <Link
@@ -72,7 +72,7 @@ export default async function CategoriesBar() {
                     className="object-cover"
                   />
                 </div>
-                <span className="text-sm md:text-base font-medium text-gray-700 group-hover:text-green-600 transition-colors duration-300 max-w-[6rem] leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{cat}</span>
+                <span className="text-sm md:text-base font-medium text-[#2D4B3C] group-hover:text-black transition-colors duration-300 max-w-[6rem] leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{cat}</span>
               </Link>
             </li>
           ))}

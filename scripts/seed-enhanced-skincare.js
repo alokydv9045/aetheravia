@@ -23,7 +23,7 @@ async function seed() {
       category: 'Face Wash',
       image: '/images/products/natural-cosmetic-products-arrangement.jpg',
       price: 699,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.8,
       numReviews: 34,
       countInStock: 50,
@@ -45,7 +45,7 @@ async function seed() {
       category: 'Serums',
       image: '/images/products/serum-bottle-with-yellow-background.jpg',
       price: 1299,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.9,
       numReviews: 67,
       countInStock: 30,
@@ -67,7 +67,7 @@ async function seed() {
       category: 'Moisturizers',
       image: '/images/products/spa-arrangement-with-cremes.jpg',
       price: 899,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.7,
       numReviews: 45,
       countInStock: 40,
@@ -89,7 +89,7 @@ async function seed() {
       category: 'Sunscreen',
       image: '/images/products/organic-cosmetic-product-with-dreamy-aesthetic-fresh-background.jpg',
       price: 799,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.6,
       numReviews: 28,
       countInStock: 35,
@@ -111,7 +111,7 @@ async function seed() {
       category: 'Body Scrub',
       image: '/images/products/cosmetics-composition-with-serum-bottles.jpg',
       price: 649,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.5,
       numReviews: 23,
       countInStock: 25,
@@ -133,7 +133,7 @@ async function seed() {
       category: 'Body Wash',
       image: '/images/products/natural-cosmetic-products-arrangement.jpg',
       price: 549,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.6,
       numReviews: 52,
       countInStock: 60,
@@ -155,7 +155,7 @@ async function seed() {
       category: 'Night Care',
       image: '/images/products/spa-arrangement-with-cremes.jpg',
       price: 1099,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.8,
       numReviews: 41,
       countInStock: 20,
@@ -177,7 +177,7 @@ async function seed() {
       category: 'Eye Care',
       image: '/images/products/organic-cosmetic-product-with-dreamy-aesthetic-fresh-background.jpg',
       price: 999,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.7,
       numReviews: 19,
       countInStock: 15,
@@ -199,7 +199,7 @@ async function seed() {
       category: 'Combo Packs',
       image: '/images/products/natural-cosmetic-products-arrangement.jpg',
       price: 2499,
-      brand: 'Aetheravia',
+      brand: 'AETHRAVIA',
       rating: 4.9,
       numReviews: 83,
       countInStock: 25,
@@ -219,7 +219,7 @@ async function seed() {
 
   const coupons = [
     {
-      code: 'AETHERAVIA50',
+      code: 'AETHRAVIA50',
       name: '50% Off Exclusive',
       type: 'percentage',
       value: 50,
@@ -228,7 +228,7 @@ async function seed() {
       status: 'active',
       minimumOrderAmount: 0,
       usagePerUser: 1,
-      description: 'Exclusive 50% discount on all Aetheravia products',
+      description: 'Exclusive 50% discount on all AETHRAVIA products',
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -325,7 +325,7 @@ async function seed() {
       console.log('Upserted offer', o.title);
     }
 
-    console.log('Enhanced skincare seeding complete');
+    console.log('Enhanced skincare seeding complete for AETHRAVIA');
   } catch (err) {
     console.error('Seeding error', err);
   } finally {

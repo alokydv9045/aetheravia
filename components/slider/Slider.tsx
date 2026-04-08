@@ -10,19 +10,20 @@ const Slider = async () => {
   return (
     <div>
       {topRated.length === 0 ? (
-        <div className='rounded-lg bg-base-300 p-6 text-center'>No top rated products yet.</div>
+        <div className='rounded-lg bg-base-300 p-6 text-center text-gray-500'>No top rated products yet.</div>
       ) : (
-        <CardSlider>
-          {/*Wrap for SSR */}
+        <div 
+          className="flex gap-5 overflow-x-auto pb-6 scroll-smooth scrollbar-hide" 
+          style={{ 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch' 
+          }}
+        >
           {topRated.map((product) => (
-            <CarouselItem
-              key={product.slug}
-              className='sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5'
-            >
-              <ProductItem product={convertDocToObj(product)} />
-            </CarouselItem>
+            <ProductItem key={product.slug} product={convertDocToObj(product)} />
           ))}
-        </CardSlider>
+        </div>
       )}
     </div>
   );

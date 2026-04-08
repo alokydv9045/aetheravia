@@ -3,8 +3,8 @@ import { Star, Users, Award, Heart, ShieldCheck } from 'lucide-react'
 import Testimonials from '@/components/testimonials/Testimonials'
 
 export const metadata: Metadata = {
-  title: 'Customer Testimonials - Aetheravia',
-  description: 'Read what our customers say about Aetheravia skincare products. Real reviews from verified buyers sharing their experiences with our natural, cruelty-free beauty solutions.',
+  title: 'Customer Testimonials - AETHRAVIA',
+  description: 'Read what our customers say about AETHRAVIA skincare products. Real reviews from verified buyers sharing their experiences with our natural, cruelty-free beauty solutions.',
 }
 
 export default function TestimonialsPage() {
@@ -18,7 +18,7 @@ export default function TestimonialsPage() {
               What Our Customers Say
             </h1>
             <p className="text-xl text-gray-700 mb-8">
-              Discover why thousands of customers trust Aetheravia for their skincare journey.
+              Discover why thousands of customers trust AETHRAVIA for their skincare journey.
               Real stories from real people who love our natural, cruelty-free products.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -49,21 +49,21 @@ export default function TestimonialsPage() {
                   name: "Priya Sharma",
                   role: "Verified Buyer · Mumbai",
                   rating: 5,
-                  quote: "Aetheravia has transformed my skincare routine! The natural ingredients make my skin glow, and I love that it's cruelty-free. The packaging is beautiful too - feels premium and eco-friendly."
+                  quote: "AETHRAVIA has transformed my skincare routine! The natural ingredients make my skin glow, and I love that it's cruelty-free. The packaging is beautiful too - feels premium and eco-friendly."
                 },
                 {
                   id: "review-2",
                   name: "Rahul Kumar",
                   role: "Verified Buyer · Delhi",
                   rating: 5,
-                  quote: "I've tried many skincare brands, but Aetheravia stands out. The products are effective, affordable, and the customer service is exceptional. Highly recommend!"
+                  quote: "I've tried many skincare brands, but AETHRAVIA stands out. The products are effective, affordable, and the customer service is exceptional. Highly recommend!"
                 },
                 {
                   id: "review-3",
                   name: "Anjali Patel",
                   role: "Beauty Enthusiast · Ahmedabad",
                   rating: 5,
-                  quote: "As someone with sensitive skin, finding gentle yet effective products was challenging. Aetheravia's natural formulations have been a game-changer. My skin has never looked better!"
+                  quote: "As someone with sensitive skin, finding gentle yet effective products was challenging. AETHRAVIA's natural formulations have been a game-changer. My skin has never looked better!"
                 },
                 {
                   id: "review-4",
@@ -77,14 +77,14 @@ export default function TestimonialsPage() {
                   name: "Meera Joshi",
                   role: "Skincare Blogger · Pune",
                   rating: 5,
-                  quote: "I love how Aetheravia combines traditional Ayurvedic wisdom with modern science. The results are amazing and I feel good about using products that are kind to my skin and the environment."
+                  quote: "I love how AETHRAVIA combines traditional Ayurvedic wisdom with modern science. The results are amazing and I feel good about using products that are kind to my skin and the environment."
                 },
                 {
                   id: "review-6",
                   name: "Arjun Reddy",
                   role: "Verified Buyer · Hyderabad",
                   rating: 5,
-                  quote: "Outstanding quality and fast shipping. The products work as advertised and the scent is divine. Aetheravia has earned a loyal customer in me!"
+                  quote: "Outstanding quality and fast shipping. The products work as advertised and the scent is divine. AETHRAVIA has earned a loyal customer in me!"
                 }
               ]}
             />
@@ -97,7 +97,7 @@ export default function TestimonialsPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Why Customers Trust Aetheravia
+              Why Customers Trust AETHRAVIA
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Our commitment to quality, transparency, and customer satisfaction has made us a trusted name in natural skincare.
@@ -147,7 +147,7 @@ export default function TestimonialsPage() {
             Join Thousands of Happy Customers
           </h2>
           <p className="text-green-50 text-lg mb-8 max-w-2xl mx-auto">
-            Experience the Aetheravia difference. Natural, effective, and loved by customers worldwide.
+            Experience the AETHRAVIA difference. Natural, effective, and loved by customers worldwide.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
