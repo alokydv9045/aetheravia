@@ -1,7 +1,7 @@
 // Centralized brand helper for UI & server usage
 // Uses NEXT_PUBLIC_* so it works on client and server in Next.js
 
-export const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || 'Aetheravia';
+export const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || 'AETHRAVIA';
 export const brandTagline = process.env.NEXT_PUBLIC_BRAND_TAGLINE || 'Embrace the earth, unveil your personality';
 export const shopAddress = process.env.NEXT_PUBLIC_SHOP_ADDRESS || 'H.no. 46, Mohalla Mohammad Wasil, Near Hadri Masjid, Pilibhit, Uttar Pradesh, India, 262001';
 

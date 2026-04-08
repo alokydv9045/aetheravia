@@ -183,7 +183,7 @@ const ShopPage = () => {
               <div className='w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4'>
                 <span className='text-2xl'>🧼</span>
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-2'>Face Wash</h3>
+              <h3 className='text-xl font-semibold text-[#2D4B3C] mb-2'>Face Wash</h3>
               <p className='text-gray-600 mb-4'>Gentle cleansers for all skin types</p>
               <Button variant="outline" size="sm" className='border-green-200 hover:bg-green-50'>
                 Shop Now
@@ -194,7 +194,7 @@ const ShopPage = () => {
               <div className='w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4'>
                 <span className='text-2xl'>🫧</span>
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-2'>Body Scrub</h3>
+              <h3 className='text-xl font-semibold text-[#2D4B3C] mb-2'>Body Scrub</h3>
               <p className='text-gray-600 mb-4'>Exfoliating scrubs for smooth skin</p>
               <Button variant="outline" size="sm" className='border-blue-200 hover:bg-blue-50'>
                 Shop Now
@@ -205,7 +205,7 @@ const ShopPage = () => {
               <div className='w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4'>
                 <span className='text-2xl'>🧴</span>
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-2'>Body Wash</h3>
+              <h3 className='text-xl font-semibold text-[#2D4B3C] mb-2'>Body Wash</h3>
               <p className='text-gray-600 mb-4'>Nourishing cleansers for daily use</p>
               <Button variant="outline" size="sm" className='border-purple-200 hover:bg-purple-50'>
                 Shop Now
@@ -216,7 +216,7 @@ const ShopPage = () => {
               <div className='w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4'>
                 <span className='text-2xl'>📦</span>
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-2'>Combo Packs</h3>
+              <h3 className='text-xl font-semibold text-[#2D4B3C] mb-2'>Combo Packs</h3>
               <p className='text-gray-600 mb-4'>Complete routines at special prices</p>
               <Button variant="outline" size="sm" className='border-pink-200 hover:bg-pink-50'>
                 Shop Now

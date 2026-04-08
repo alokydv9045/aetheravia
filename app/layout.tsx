@@ -8,6 +8,7 @@ import Header from '@/components/header/Header';
 import Providers from '@/components/Providers';
 import Sidebar from '@/components/Sidebar';
 import FAQSection from '@/components/footer/FAQ';
+import TrustBar from '@/components/footer/TrustBar';
 import ResponsiveDrawerInit from '@/components/ResponsiveDrawerInit';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import BrowserExtensionFix from '@/components/BrowserExtensionFix';
@@ -51,6 +52,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className='flex min-h-screen flex-col'>
                   <Header />
                   {children}
+                  <TrustBar />
                   <FAQSection />
                   <Footer />
                   <ScrollToTopButton />

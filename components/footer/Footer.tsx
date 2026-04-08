@@ -29,31 +29,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900 border-t border-slate-200">
-      {/* Trust Bar */}
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-100">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex flex-wrap justify-center items-center gap-6 text-sm">
-            <div className="flex items-center space-x-2 text-green-700">
-              <Leaf className="h-4 w-4" />
-              <span className="font-medium">100% Natural</span>
-            </div>
-            <div className="flex items-center space-x-2 text-green-700">
-              <Heart className="h-4 w-4" />
-              <span className="font-medium">Cruelty Free</span>
-            </div>
-            <div className="flex items-center space-x-2 text-green-700">
-              <Award className="h-4 w-4" />
-              <span className="font-medium">Dermatologist Tested</span>
-            </div>
-            <div className="flex items-center space-x-2 text-green-700">
-              <CheckCircle className="h-4 w-4" />
-              <span className="font-medium">Vegan Certified</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <footer className="bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
@@ -61,16 +37,16 @@ const Footer = () => {
           {/* Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
                 <span className="text-white font-bold text-sm">
                   {(process.env.NEXT_PUBLIC_BRAND_NAME || 'AE').slice(0,2).toUpperCase()}
                 </span>
               </div>
               <div>
-                <h3 className="text-lg font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  {process.env.NEXT_PUBLIC_BRAND_NAME || 'Aetheravia'}
+                <h3 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
+                  AETHRAVIA
                 </h3>
-                <p className="text-xs text-slate-500">Premium Natural Skincare</p>
+                <p className="text-xs text-slate-600">Premium Natural Skincare</p>
               </div>
             </div>
 
@@ -96,7 +72,7 @@ const Footer = () => {
 
           {/* Shop */}
           <div className="space-y-3">
-            <h4 className="text-base font-semibold text-slate-900 border-b border-green-200 pb-1">Shop</h4>
+            <h4 className="text-base font-semibold text-slate-600 border-b border-green-200 pb-1">Products</h4>
             <ul className="space-y-2">
               {[
                 { name: 'Face Care', href: '/search?category=face' },
@@ -120,7 +96,7 @@ const Footer = () => {
 
           {/* Support */}
           <div className="space-y-3">
-            <h4 className="text-base font-semibold text-slate-900 border-b border-green-200 pb-1">Support</h4>
+            <h4 className="text-base font-semibold text-slate-600 border-b border-green-200 pb-1">Support</h4>
             <ul className="space-y-2">
               {[
                 { name: 'Contact Us', href: `mailto:${brandEmail}` },
@@ -144,7 +120,7 @@ const Footer = () => {
 
           {/* Newsletter & Contact */}
           <div className="space-y-3">
-            <h4 className="text-base font-semibold text-slate-900 border-b border-green-200 pb-1">Stay Connected</h4>
+            <h4 className="text-base font-semibold text-slate-600 border-b border-green-200 pb-1">Stay Connected</h4>
             <p className="text-slate-600 text-sm leading-relaxed">
               Get exclusive access to new products and skincare tips.
             </p>
@@ -154,7 +130,7 @@ const Footer = () => {
                 placeholder="Enter your email"
                 className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-green-500 focus:ring-green-500/20 rounded-md h-9"
               />
-              <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-md h-9 shadow-sm hover:shadow-md transition-all duration-200 text-sm">
+              <Button className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-md h-9 shadow-sm hover:shadow-md transition-all duration-200 text-sm">
                 Subscribe
               </Button>
             </div>
@@ -179,7 +155,7 @@ const Footer = () => {
 
             {/* Trust Badges */}
             <div>
-              <h5 className="text-sm font-semibold text-slate-900 mb-3">Why Choose Aetheravia?</h5>
+              <h5 className="text-sm font-semibold text-slate-600 mb-3">Why Choose AETHRAVIA?</h5>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex items-center space-x-2 text-sm text-slate-600">
                   <Truck className="h-4 w-4 text-green-500 flex-shrink-0" />
@@ -189,7 +165,7 @@ const Footer = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-slate-600">
-                  <RotateCcw className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                  <RotateCcw className="h-4 w-4 text-green-500 flex-shrink-0" />
                   <div>
                     <p className="font-medium text-xs">Easy Returns</p>
                     <p className="text-xs">30-day return policy</p>
@@ -214,7 +190,7 @@ const Footer = () => {
 
             {/* Payment Methods */}
             <div>
-              <h5 className="text-sm font-semibold text-slate-900 mb-3">Accepted Payments</h5>
+              <h5 className="text-sm font-semibold text-slate-600 mb-3">Accepted Payments</h5>
               <div className="flex flex-wrap gap-1.5">
                 {[
                   'Visa', 'Mastercard', 'American Express', 'Razorpay',
@@ -258,8 +234,8 @@ const Footer = () => {
             </Link>
           </div>
           <div className="text-center lg:text-right">
-            <p className="text-xs text-slate-500">
-              © {currentYear} {process.env.NEXT_PUBLIC_BRAND_NAME || 'Aetheravia'}. All rights reserved.
+            <p className="text-xs text-slate-600">
+              © {currentYear} AETHRAVIA. All rights reserved.
             </p>
             <p className="text-xs text-slate-400 mt-0.5">
               Made with <span className="text-red-400">♥</span> for beautiful, healthy skin

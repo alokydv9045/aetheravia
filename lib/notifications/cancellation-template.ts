@@ -47,7 +47,7 @@ export function generateCancellationEmailTemplate(data: OrderNotificationData): 
           margin: 20px;
         }
         .header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #B78C69 0%, #8d654a 100%);
           color: white;
           padding: 30px;
           text-align: center;
@@ -82,8 +82,8 @@ export function generateCancellationEmailTemplate(data: OrderNotificationData): 
           text-align: center;
         }
         .refund-info {
-          background: #e8f5e8;
-          border-left: 4px solid #4caf50;
+          background: #f8f3f0;
+          border-left: 4px solid #B78C69;
           padding: 20px;
           margin: 20px 0;
           border-radius: 0 8px 8px 0;
@@ -104,7 +104,7 @@ export function generateCancellationEmailTemplate(data: OrderNotificationData): 
         .btn {
           display: inline-block;
           padding: 12px 24px;
-          background: #667eea;
+          background: #B78C69;
           color: white;
           text-decoration: none;
           border-radius: 6px;
@@ -176,7 +176,7 @@ export function generateCancellationEmailTemplate(data: OrderNotificationData): 
 
           <div class="total">
             <h3>💰 Cancelled Order Total</h3>
-            <h2 style="color: #667eea; margin: 0;">${formatPrice(totalAmount || 0)}</h2>
+            <h2 style="color: #B78C69; margin: 0;">${formatPrice(totalAmount || 0)}</h2>
           </div>
 
           ${refundAmount && refundAmount > 0 ? `

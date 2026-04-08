@@ -15,28 +15,28 @@ const Header = () => {
             </label>
             <Link
               href='/'
-              className='ml-3 text-xl font-bold tracking-tight sm:ml-4 sm:text-2xl lg:text-3xl text-gray-900 truncate hover:text-green-600 transition-colors'
+              className='ml-3 text-lg sm:text-2xl font-black tracking-tighter uppercase transition-colors text-[#2D4B3C]'
             >
-              {process.env.NEXT_PUBLIC_BRAND_NAME || 'Aetheravia'}
+              AETHRAVIA
             </Link>
           </div>
           
           {/* Center: Navigation Links (desktop) */}
-          <div className='hidden lg:flex items-center space-x-8'>
-            <Link href='/' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
+          <div className='hidden lg:flex items-center space-x-4'>
+            <Link href='/' className='text-base font-medium text-[#2D4B3C] hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-[#2D4B3C]'>
               Home
             </Link>
-            <Link href='/shop' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
-              Shop
+            <Link href='/shop' className='text-base font-medium text-[#2D4B3C] hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-[#2D4B3C]'>
+              Products
             </Link>
-            <Link href='/about' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
-              About
+            <Link href='/about' className='text-base font-medium text-[#2D4B3C] hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-[#2D4B3C]'>
+              About us
             </Link>
-            <Link href='/ingredients' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
+            <Link href='/ingredients' className='text-base font-medium text-[#2D4B3C] hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-[#2D4B3C]'>
               Ingredients
             </Link>
-            <Link href='/contact' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
-              Contact
+            <Link href='/contact' className='text-base font-medium text-[#2D4B3C] hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-[#2D4B3C]'>
+              Contact us
             </Link>
           </div>
           

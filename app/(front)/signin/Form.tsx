@@ -65,16 +65,16 @@ const Form = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-gray-50 flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Decorative top bar */}
-        <div className="h-1 bg-gradient-to-r from-green-400 to-blue-400 rounded-full mb-8" />
+        <div className="h-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full mb-8" />
         
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 px-8 py-8 border-b border-green-100">
+          <div className="bg-gradient-to-r from-green-50 to-gray-50 px-8 py-8 border-b border-green-100">
             <div className="flex items-center justify-center mb-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-400 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
                 <LogIn className="w-6 h-6 text-white" />
               </div>
             </div>
@@ -152,7 +152,7 @@ const Form = () => {
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-2">
                 <div className="flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-blue-600" />
+                  <Lock className="w-4 h-4 text-green-600" />
                   Password
                 </div>
               </label>
@@ -169,7 +169,7 @@ const Form = () => {
                 className={`w-full px-4 py-3 rounded-lg border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 ${
                   errors.password
                     ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                    : 'border-gray-200 focus:border-blue-500 focus:ring-blue-100'
+                    : 'border-gray-200 focus:border-green-500 focus:ring-green-100'
                 }`}
                 placeholder="Enter your password"
               />
@@ -221,7 +221,7 @@ const Form = () => {
         </div>
 
         {/* Bottom decorative bar */}
-        <div className="h-1 bg-gradient-to-r from-blue-400 to-green-400 rounded-full mt-8" />
+        <div className="h-1 bg-gradient-to-r from-green-600 to-green-400 rounded-full mt-8" />
       </div>
     </div>
   );

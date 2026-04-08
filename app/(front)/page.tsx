@@ -34,16 +34,16 @@ const HomePage = () => {
       </section>
 
       {/* Main Content Wrapper */}
-      <div className='flex flex-col gap-12 md:gap-20'>
+      <div className='flex flex-col gap-6 md:gap-10'>
         {/* Brand Intro Section */}
       <section className='py-16 bg-white'>
         <div className='container mx-auto px-4'>
           <div className='max-w-4xl mx-auto text-center mb-12'>
-            <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-6'>
-              Natural Beauty, Sustainable Future
+            <h2 className='text-3xl md:text-4xl font-bold text-[#2D4B3C] mb-6'>
+              Organic Cosmetic, Natural brand
             </h2>
-            <p className='text-lg text-gray-700 mb-8'>
-              Aetheravia is a skincare/body care brand that promotes sustainable, eco-friendly, 
+            <p className='text-lg text-[#2D4B3C] mb-8'>
+              AETHRAVIA is a skincare/body care brand that promotes sustainable, eco-friendly, 
               cruelty-free, and toxic-free products, catering to health-conscious consumers who 
               seek natural, effective solutions for radiant skin.
             </p>
@@ -51,42 +51,42 @@ const HomePage = () => {
           
           <div className='grid grid-cols-2 md:grid-cols-4 gap-8'>
             <div className='text-center'>
-              <div className='w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4'>
-                <Leaf className='w-8 h-8 text-green-600' />
+              <div className='w-16 h-16 bg-[#FAF9F6] rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300 hover:bg-[#2D4B3C] group cursor-default shadow-sm border border-gray-100'>
+                <Leaf className='w-8 h-8 text-[#2D4B3C] transition-colors group-hover:text-white' />
               </div>
-              <h3 className='font-semibold text-gray-900 mb-2'>Eco-Friendly</h3>
-              <p className='text-sm text-gray-600'>Sustainably sourced ingredients</p>
+              <h3 className='font-semibold text-[#2D4B3C] mb-2'>Eco-Friendly</h3>
+              <p className='text-sm text-[#2D4B3C]'>Sustainably sourced ingredients</p>
             </div>
             
             <div className='text-center'>
-              <div className='w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4'>
-                <Heart className='w-8 h-8 text-pink-600' />
+              <div className='w-16 h-16 bg-[#FAF9F6] rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300 hover:bg-[#2D4B3C] group cursor-default shadow-sm border border-gray-100'>
+                <Heart className='w-8 h-8 text-[#2D4B3C] transition-colors group-hover:text-white' />
               </div>
-              <h3 className='font-semibold text-gray-900 mb-2'>Cruelty-Free</h3>
-              <p className='text-sm text-gray-600'>Never tested on animals</p>
+              <h3 className='font-semibold text-[#2D4B3C] mb-2'>Cruelty-Free</h3>
+              <p className='text-sm text-[#2D4B3C]'>Never tested on animals</p>
             </div>
             
             <div className='text-center'>
-              <div className='w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4'>
-                <ShieldCheck className='w-8 h-8 text-blue-600' />
+              <div className='w-16 h-16 bg-[#FAF9F6] rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300 hover:bg-[#2D4B3C] group cursor-default shadow-sm border border-gray-100'>
+                <ShieldCheck className='w-8 h-8 text-[#2D4B3C] transition-colors group-hover:text-white' />
               </div>
-              <h3 className='font-semibold text-gray-900 mb-2'>Toxic-Free</h3>
-              <p className='text-sm text-gray-600'>Pure, safe formulations</p>
+              <h3 className='font-semibold text-[#2D4B3C] mb-2'>Toxic-Free</h3>
+              <p className='text-sm text-[#2D4B3C]'>Pure, safe formulations</p>
             </div>
             
             <div className='text-center'>
-              <div className='w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4'>
-                <Sparkles className='w-8 h-8 text-purple-600' />
+              <div className='w-16 h-16 bg-[#FAF9F6] rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300 hover:bg-[#2D4B3C] group cursor-default shadow-sm border border-gray-100'>
+                <Sparkles className='w-8 h-8 text-[#2D4B3C] transition-colors group-hover:text-white' />
               </div>
-              <h3 className='font-semibold text-gray-900 mb-2'>Natural</h3>
-              <p className='text-sm text-gray-600'>Botanical ingredients</p>
+              <h3 className='font-semibold text-[#2D4B3C] mb-2'>Natural</h3>
+              <p className='text-sm text-[#2D4B3C]'>Botanical ingredients</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Top Rated Products Section */}
-      <section className='py-16 bg-gray-50'>
+      <section className='pt-16 pb-0 bg-white'>
         <div className='container mx-auto px-4'>
           <div className='text-center mb-8'>
             <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
@@ -103,10 +103,8 @@ const HomePage = () => {
         </div>
       </section>
 
-      <Icons />
-
       {/* Latest Products Section */}
-      <section className='py-16 bg-white'>
+      <section className='pt-0 pb-16 bg-white'>
         <div className='container mx-auto px-4'>
           <Suspense fallback={<ProductItemsSkeleton qty={8} name='Latest Products' />}>
             <ProductItems />
@@ -114,12 +112,14 @@ const HomePage = () => {
         </div>
       </section>
 
+      <Icons />
+
       {/* Testimonials Section */}
-      <section className='py-16 bg-gray-50'>
+      <section className='py-16 bg-white'>
         <div className='container mx-auto px-4'>
           <div className='text-center mb-12'>
             <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
-              What Our Customers Say
+              See How We Earned these Stars
             </h2>
             <p className='text-lg text-gray-600 mb-8'>
               Real reviews from real customers who love our products

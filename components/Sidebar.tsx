@@ -34,7 +34,7 @@ const Sidebar = () => {
       <li className='lg:hidden'>
         <Link href='/shop' onClick={toggleDrawer} className='flex items-center gap-3 text-gray-700 hover:text-green-600'>
           <ShoppingBag size={20} />
-          Shop
+          Products
         </Link>
       </li>
       <li className='lg:hidden'>
@@ -58,7 +58,7 @@ const Sidebar = () => {
       <li className='lg:hidden'>
         <Link href='/contact' onClick={toggleDrawer} className='flex items-center gap-3 text-gray-700 hover:text-green-600'>
           <Phone size={20} />
-          Contact
+          Contact us
         </Link>
       </li>
       <li className='lg:hidden'>
