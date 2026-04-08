@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans, Be_Vietnam_Pro } from 'next/font/google';
 import './globals.css';
 
 import DrawerButton from '@/components/DrawerButton';
@@ -17,8 +17,20 @@ import { constructMetadata, getOrganizationSchema } from '@/lib/seo';
 const inter = Inter({ 
   subsets: ['latin'], 
   display: 'swap',
-  preload: true,
-  fallback: ['system-ui', 'arial']
+  variable: '--font-inter',
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jakarta',
+});
+
+const vietnam = Be_Vietnam_Pro({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-vietnam',
 });
 
 export const metadata: Metadata = constructMetadata();
@@ -40,7 +52,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={`${inter.className} ${jakarta.variable} ${vietnam.variable}`} suppressHydrationWarning>
         <BrowserExtensionFix />
         <Providers>
           <ErrorBoundary>

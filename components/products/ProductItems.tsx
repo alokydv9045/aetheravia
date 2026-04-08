@@ -1,15 +1,13 @@
 import productService from '@/lib/services/productService';
 import { convertDocToObj } from '@/lib/utils';
-import CardSlider from '@/components/slider/CardSlider';
-import { CarouselItem } from '@/components/ui/carousel';
-
+import TripCarousel from './TripCarousel';
 import ProductItem from './ProductItem';
 
 const ProductItems = async () => {
   const latestProducts = await productService.getLatest();
 
   return (
-    <div>
+    <div className='container mx-auto px-4'>
       <div className='text-center mb-8'>
         <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>Latest Products</h2>
         <p className='text-lg text-gray-600'>Discover our newest arrivals</p>
@@ -17,16 +15,16 @@ const ProductItems = async () => {
       {latestProducts.length === 0 ? (
         <div className='rounded-lg bg-base-300 p-6 text-center'>No products yet.</div>
       ) : (
-        <CardSlider>
+        <TripCarousel>
           {latestProducts.map((product) => (
-            <CarouselItem
+            <div
               key={product.slug}
-              className='sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5'
+              className='shrink-0 w-[260px] sm:w-[280px]'
             >
               <ProductItem product={convertDocToObj(product)} />
-            </CarouselItem>
+            </div>
           ))}
-        </CardSlider>
+        </TripCarousel>
       )}
     </div>
   );
