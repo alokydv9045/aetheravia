@@ -26,39 +26,39 @@ const Sidebar = () => {
         <h2 className='text-xl font-bold text-gray-900 mb-4'>Navigation</h2>
       </li>
       <li className='lg:hidden'>
-        <Link href='/' onClick={toggleDrawer} className='flex items-center gap-3 text-gray-700 hover:text-green-600'>
+        <Link href='/' onClick={toggleDrawer} className='flex items-center gap-3 text-black hover:text-primary font-medium'>
           <Home size={20} />
           Home
         </Link>
       </li>
       <li className='lg:hidden'>
-        <Link href='/shop' onClick={toggleDrawer} className='flex items-center gap-3 text-gray-700 hover:text-green-600'>
+        <Link href='/shop' onClick={toggleDrawer} className='flex items-center gap-3 text-black hover:text-primary font-medium'>
           <ShoppingBag size={20} />
-          Products
+          Shop
         </Link>
       </li>
       <li className='lg:hidden'>
-        <Link href='/search' onClick={toggleDrawer} className='flex items-center gap-3 text-gray-700 hover:text-green-600'>
+        <Link href='/search' onClick={toggleDrawer} className='flex items-center gap-3 text-black hover:text-primary font-medium'>
           <Search size={20} />
           Search
         </Link>
       </li>
       <li className='lg:hidden'>
-        <Link href='/about' onClick={toggleDrawer} className='flex items-center gap-3 text-gray-700 hover:text-green-600'>
+        <Link href='/about' onClick={toggleDrawer} className='flex items-center gap-3 text-black hover:text-primary font-medium'>
           <Info size={20} />
-          About Us
+          About
         </Link>
       </li>
       <li className='lg:hidden'>
-        <Link href='/ingredients' onClick={toggleDrawer} className='flex items-center gap-3 text-gray-700 hover:text-green-600'>
+        <Link href='/ingredients' onClick={toggleDrawer} className='flex items-center gap-3 text-black hover:text-primary font-medium'>
           <TestTube size={20} />
           Ingredients
         </Link>
       </li>
       <li className='lg:hidden'>
-        <Link href='/contact' onClick={toggleDrawer} className='flex items-center gap-3 text-gray-700 hover:text-green-600'>
+        <Link href='/contact' onClick={toggleDrawer} className='flex items-center gap-3 text-black hover:text-primary font-medium'>
           <Phone size={20} />
-          Contact us
+          Contact
         </Link>
       </li>
       <li className='lg:hidden'>

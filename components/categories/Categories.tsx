@@ -53,7 +53,10 @@ function categoryImageSrc(name: string) {
 
 export default async function Categories() {
   const all = await productService.getCategories();
-  const categories = Array.isArray(all) ? all.slice(0, 6) : [];
+  const allowedCategories = ['Body Scrub', 'Body Wash', 'Face Wash'];
+  const categories = Array.isArray(all) 
+    ? all.filter(cat => allowedCategories.includes(cat)) 
+    : [];
   return (
     <div className='grid auto-rows-[300px] grid-cols-2 gap-4 md:auto-rows-[330px] md:grid-cols-4'>
       {categories.map((cat, idx) => (

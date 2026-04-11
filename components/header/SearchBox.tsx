@@ -48,14 +48,27 @@ export const SearchBox = () => {
         </select>
         <input
           className='input join-item input-bordered w-36 xs:w-44 sm:w-56 md:w-64 lg:w-72 flex-1'
-          placeholder='Search'
+          placeholder=''
           aria-label='Search'
           defaultValue={q}
           name='q'
           onChange={(e) => setFormQuery(e.target.value)}
         />
         <button className='btn join-item input-bordered px-4 min-w-[84px]' type='submit'>
-          Search
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='w-6 h-6'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z'
+            />
+          </svg>
         </button>
       </div>
     </form>

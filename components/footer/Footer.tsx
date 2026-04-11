@@ -43,7 +43,7 @@ const Footer = () => {
                 </span>
               </div>
               <div>
-                <h3 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
+                <h3 className="text-lg font-bold text-primary">
                   AETHRAVIA
                 </h3>
                 <p className="text-xs text-slate-600">Premium Natural Skincare</p>
@@ -72,7 +72,7 @@ const Footer = () => {
 
           {/* Shop */}
           <div className="space-y-3">
-            <h4 className="text-base font-semibold text-slate-600 border-b border-green-200 pb-1">Products</h4>
+            <h4 className="text-base font-semibold text-black border-b border-primary/20 pb-1">Shop</h4>
             <ul className="space-y-2">
               {[
                 { name: 'Face Care', href: '/search?category=face' },
@@ -85,7 +85,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-slate-600 hover:text-green-600 transition-colors text-sm hover:underline decoration-green-300 underline-offset-2"
+                    className="text-black/70 hover:text-primary transition-colors text-sm hover:underline decoration-primary/30 underline-offset-2"
                   >
                     {link.name}
                   </Link>
@@ -96,11 +96,11 @@ const Footer = () => {
 
           {/* Support */}
           <div className="space-y-3">
-            <h4 className="text-base font-semibold text-slate-600 border-b border-green-200 pb-1">Support</h4>
+            <h4 className="text-base font-semibold text-black border-b border-primary/20 pb-1">Support</h4>
             <ul className="space-y-2">
               {[
                 { name: 'Contact Us', href: `mailto:${brandEmail}` },
-                { name: 'FAQs', href: '#faqs' },
+                { name: 'FAQs', href: '/help' },
                 { name: 'Shipping Info', href: '/shipping' },
                 { name: 'Returns', href: '/returns' },
                 { name: 'Order Tracking', href: '/track' },
@@ -109,7 +109,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-slate-600 hover:text-green-600 transition-colors text-sm hover:underline decoration-green-300 underline-offset-2"
+                    className="text-black/70 hover:text-primary transition-colors text-sm hover:underline decoration-primary/30 underline-offset-2"
                   >
                     {link.name}
                   </Link>

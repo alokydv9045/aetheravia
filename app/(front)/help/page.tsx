@@ -3,6 +3,8 @@ import { Metadata } from 'next'
 import { Mail, Phone, Package, RotateCcw, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+import FAQSection from '@/components/footer/FAQ'
+
 export const metadata: Metadata = {
   title: 'Help & Support - Aetheravia',
   description: 'Get help with your Aetheravia orders, account, and shopping experience',
@@ -54,49 +56,8 @@ export default function HelpPage() {
         </div>
 
         {/* FAQ Section */}
-        <div className="bg-white rounded-lg shadow-sm p-8 mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
-          
-          <div className="space-y-8">
-            <div className="border-b border-gray-200 pb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">How can I track my order?</h3>
-              <p className="text-gray-600">
-                You can track your order by visiting the <Link href="/order-history" className="text-green-600 hover:text-green-700 font-medium">Order History</Link> page 
-                or using the tracking number provided in your confirmation email.
-              </p>
-            </div>
-
-            <div className="border-b border-gray-200 pb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">What is your return policy?</h3>
-              <p className="text-gray-600">
-                We offer a 30-day return policy for unworn items in original condition. 
-                Visit our <Link href="/returns" className="text-green-600 hover:text-green-700 font-medium">Returns page</Link> to start the process.
-              </p>
-            </div>
-
-            <div className="border-b border-gray-200 pb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">How do I change my shipping address?</h3>
-              <p className="text-gray-600">
-                You can update your shipping address in your <Link href="/profile" className="text-green-600 hover:text-green-700 font-medium">Profile settings</Link>. 
-                For orders already placed, contact our support team immediately.
-              </p>
-            </div>
-
-            <div className="border-b border-gray-200 pb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">What payment methods do you accept?</h3>
-              <p className="text-gray-600">
-                We accept all major credit cards, debit cards, UPI, net banking, and digital wallets through our secure Razorpay integration.
-              </p>
-            </div>
-
-            <div className="pb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">How can I cancel my order?</h3>
-              <p className="text-gray-600">
-                Orders can be cancelled within 1 hour of placement if they haven&apos;t been processed. 
-                Visit your <Link href="/order-history" className="text-green-600 hover:text-green-700 font-medium">order details</Link> or contact support.
-              </p>
-            </div>
-          </div>
+        <div className="mb-16">
+          <FAQSection />
         </div>
 
         {/* Contact Support */}
