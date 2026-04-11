@@ -30,23 +30,17 @@ const ShopPage = () => {
       <section className='py-8 bg-white border-b border-gray-200'>
         <div className='container mx-auto px-4'>
           <div className='flex flex-wrap justify-center gap-4'>
-            <Button variant="default" className='bg-green-600 hover:bg-green-700 text-white'>
+            <Button variant="default" className='bg-primary hover:bg-black text-white'>
               All Products
             </Button>
-            <Button variant="outline" className='border-green-200 hover:bg-green-50'>
+            <Button variant="outline" className='border-primary/20 hover:bg-primary/5 text-primary'>
               Face Wash
             </Button>
-            <Button variant="outline" className='border-blue-200 hover:bg-blue-50'>
+            <Button variant="outline" className='border-primary/20 hover:bg-primary/5 text-primary'>
               Body Scrub
             </Button>
-            <Button variant="outline" className='border-purple-200 hover:bg-purple-50'>
+            <Button variant="outline" className='border-primary/20 hover:bg-primary/5 text-primary'>
               Body Wash
-            </Button>
-            <Button variant="outline" className='border-pink-200 hover:bg-pink-50'>
-              Combo Packs
-            </Button>
-            <Button variant="outline" className='border-orange-200 hover:bg-orange-50'>
-              Special Offers
             </Button>
           </div>
         </div>
@@ -178,47 +172,36 @@ const ShopPage = () => {
             </p>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center hover:shadow-md transition-shadow'>
-              <div className='w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4'>
+              <div className='w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4'>
                 <span className='text-2xl'>🧼</span>
               </div>
-              <h3 className='text-xl font-semibold text-[#2D4B3C] mb-2'>Face Wash</h3>
+              <h3 className='text-xl font-semibold text-primary mb-2'>Face Wash</h3>
               <p className='text-gray-600 mb-4'>Gentle cleansers for all skin types</p>
-              <Button variant="outline" size="sm" className='border-green-200 hover:bg-green-50'>
+              <Button variant="outline" size="sm" className='border-primary/20 hover:bg-primary/5 text-primary'>
                 Shop Now
               </Button>
             </div>
 
             <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center hover:shadow-md transition-shadow'>
-              <div className='w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4'>
+              <div className='w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4'>
                 <span className='text-2xl'>🫧</span>
               </div>
-              <h3 className='text-xl font-semibold text-[#2D4B3C] mb-2'>Body Scrub</h3>
+              <h3 className='text-xl font-semibold text-primary mb-2'>Body Scrub</h3>
               <p className='text-gray-600 mb-4'>Exfoliating scrubs for smooth skin</p>
-              <Button variant="outline" size="sm" className='border-blue-200 hover:bg-blue-50'>
+              <Button variant="outline" size="sm" className='border-primary/20 hover:bg-primary/5 text-primary'>
                 Shop Now
               </Button>
             </div>
 
             <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center hover:shadow-md transition-shadow'>
-              <div className='w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4'>
+              <div className='w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4'>
                 <span className='text-2xl'>🧴</span>
               </div>
-              <h3 className='text-xl font-semibold text-[#2D4B3C] mb-2'>Body Wash</h3>
+              <h3 className='text-xl font-semibold text-primary mb-2'>Body Wash</h3>
               <p className='text-gray-600 mb-4'>Nourishing cleansers for daily use</p>
-              <Button variant="outline" size="sm" className='border-purple-200 hover:bg-purple-50'>
-                Shop Now
-              </Button>
-            </div>
-
-            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center hover:shadow-md transition-shadow'>
-              <div className='w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4'>
-                <span className='text-2xl'>📦</span>
-              </div>
-              <h3 className='text-xl font-semibold text-[#2D4B3C] mb-2'>Combo Packs</h3>
-              <p className='text-gray-600 mb-4'>Complete routines at special prices</p>
-              <Button variant="outline" size="sm" className='border-pink-200 hover:bg-pink-50'>
+              <Button variant="outline" size="sm" className='border-primary/20 hover:bg-primary/5 text-primary'>
                 Shop Now
               </Button>
             </div>

@@ -28,28 +28,29 @@ const Menu = ({ showSearch = true }: { showSearch?: boolean }) => {
 
   return (
     <ul className='flex gap-2'>
-      <li className='flex items-center gap-2 md:gap-4'>
+      <li className='flex items-center'>
         <Link
           href='/cart'
-          className='relative mr-1 text-gray-700 hover:text-green-600 transition-colors'
+          className='flex items-center gap-2 text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary group relative'
           aria-label='Shopping Cart'
         >
-          <ShoppingCart />
-          <span className='absolute -right-4 -top-4'>
-            {items.length !== 0 && (
-              <div className='badge badge-primary px-1.5'>
+          <ShoppingCart size={20} className="transition-colors group-hover:text-white" />
+          <span className="hidden sm:inline">Cart</span>
+          {items.length !== 0 && (
+            <span className='absolute top-0 right-2 -mt-2 -mr-1'>
+              <div className='badge badge-primary badge-sm h-4 w-4 p-0 flex items-center justify-center text-[10px]'>
                 {items.reduce((a, c) => a + c.qty, 0)}
               </div>
-            )}
-          </span>
+            </span>
+          )}
         </Link>
       </li>
       {session && session.user ? (
         <li>
           <div className='dropdown dropdown-end dropdown-bottom'>
-            <label tabIndex={0} className='btn btn-ghost rounded-btn text-gray-700 hover:text-green-600'>
+            <label tabIndex={0} className='flex items-center gap-2 text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary cursor-pointer'>
               {session.user.name}
-              <ChevronDown />
+              <ChevronDown size={16} />
             </label>
             <ul
               tabIndex={0}
@@ -78,7 +79,7 @@ const Menu = ({ showSearch = true }: { showSearch?: boolean }) => {
       ) : (
         <li>
           <button
-            className='btn btn-ghost rounded-btn text-gray-700 hover:text-green-600'
+            className='text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'
             type='button'
             onClick={() => signIn()}
           >

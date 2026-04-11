@@ -76,7 +76,7 @@ export default function FAQSection() {
                     {item.q}
                   </span>
                 </div>
-                <div className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center group-open:bg-[#2D4B3C] group-open:border-[#2D4B3C] transition-all">
+                <div className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center group-open:bg-primary group-open:border-primary transition-all">
                   <Plus className="h-5 w-5 text-gray-600 group-open:text-white group-open:rotate-45 transition-all duration-300" />
                 </div>
               </summary>
@@ -88,7 +88,7 @@ export default function FAQSection() {
                       <Link
                         key={lnk.href + lnk.label}
                         href={lnk.href}
-                        className="text-[#2D4B3C] hover:underline font-normal text-sm"
+                        className="text-primary hover:underline font-normal text-sm"
                       >
                         {lnk.label}
                       </Link>
@@ -102,9 +102,9 @@ export default function FAQSection() {
 
         <div className="mt-12 flex items-center justify-end">
           <Link href="/contact">
-            <button className="flex items-center gap-4 bg-[#2D4B3C] text-white px-8 py-4 rounded-full hover:bg-[#1a2e25] transition-all group">
+            <button className="flex items-center gap-4 bg-primary text-white px-8 py-4 rounded-full hover:bg-black transition-all group">
               <span className="text-sm font-medium">Go to Contact us</span>
-              <div className="bg-[#1a2e25] group-hover:bg-[#2D4B3C] p-2 rounded-full transition-colors">
+              <div className="bg-black/20 group-hover:bg-black/40 p-2 rounded-full transition-colors">
                 <ArrowRight className="h-4 w-4" />
               </div>
             </button>

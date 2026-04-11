@@ -36,5 +36,5 @@ export default function AuthErrorRecovery() {
     }
   }, [session, status]);
 
-  return null; // This component doesn't render anything
+  return null; // This component doesn't render anything 
 }

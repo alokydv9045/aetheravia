@@ -18,7 +18,7 @@ const TrustBar = () => {
           {trustItems.map((item, idx) => (
             <div 
               key={idx} 
-              className="flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 cursor-default hover:bg-[#2D4B3C] hover:text-white text-[#2D4B3C] group"
+              className="flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 cursor-default hover:bg-primary hover:text-white text-primary group"
             >
               <item.icon className="h-6 w-6 transition-colors group-hover:text-white" />
               <span className="font-medium">{item.text}</span>

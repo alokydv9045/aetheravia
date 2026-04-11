@@ -53,7 +53,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                   <Header />
                   {children}
                   <TrustBar />
-                  <FAQSection />
                   <Footer />
                   <ScrollToTopButton />
                 </div>
