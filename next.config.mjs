@@ -45,6 +45,10 @@ const nextConfig = {
         hostname: 'res.cloudinary.com',
       },
       {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
       },
@@ -65,7 +69,7 @@ const nextConfig = {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' checkout.razorpay.com",
       "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
       "font-src 'self' fonts.gstatic.com",
-      "img-src 'self' data: blob: res.cloudinary.com",
+      "img-src 'self' data: blob: res.cloudinary.com lh3.googleusercontent.com",
       "connect-src 'self' api.razorpay.com lumberjack.razorpay.com https://api.cloudinary.com",
       "frame-src checkout.razorpay.com api.razorpay.com",
       "object-src 'none'",
@@ -79,7 +83,7 @@ const nextConfig = {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://vercel.live checkout.razorpay.com",
       "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
       "font-src 'self' fonts.gstatic.com",
-      "img-src 'self' data: blob: res.cloudinary.com",
+      "img-src 'self' data: blob: res.cloudinary.com lh3.googleusercontent.com",
       "connect-src 'self' ws: wss: http://localhost:* https://vercel.live api.razorpay.com lumberjack.razorpay.com https://api.cloudinary.com",
       "frame-src 'self' checkout.razorpay.com api.razorpay.com",
       "worker-src 'self' blob:",

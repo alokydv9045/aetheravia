@@ -6,6 +6,7 @@ import AddToCart from '@/components/products/AddToCart';
 import { Rating } from '@/components/products/Rating';
 import productService from '@/lib/services/productService';
 import { convertDocToObj, formatPrice } from '@/lib/utils';
+import FAQSection from '@/components/footer/FAQ';
 
 export const generateMetadata = async ({
   params,
@@ -97,6 +98,9 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
             </div>
           </div>
         </div>
+      </div>
+      <div className="mt-20">
+        <FAQSection />
       </div>
     </div>
   );

@@ -27,6 +27,12 @@ const Carousel = async () => {
       // Use default banners if none are found in DB
       items = [
         {
+          key: 'banner3',
+          href: '/shop',
+          src: '/images/banner/banner3.jpg',
+          alt: 'Aetheravia - Premium Skincare Experience',
+        },
+        {
           key: 'banner0',
           href: '/shop',
           src: '/images/banner/banner0.jpg',

@@ -1,50 +1,74 @@
-import { AlignJustify, Search } from 'lucide-react';
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import Menu from './Menu';
+import SearchInline from './SearchInline';
 
 const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 text-gray-900">
+    <header className={`sticky top-0 z-50 transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-white/90 backdrop-blur-md shadow-sm' 
+        : 'bg-white'
+    } border-b border-gray-100 text-gray-900`}>
       <nav aria-label="Main navigation" className="w-full">
-        <div className='w-full flex items-center justify-between min-h-[5rem] px-4 sm:px-6 lg:px-8'>
-          {/* Left: Drawer + Logo */}
+        <div className='container mx-auto px-4 flex items-center justify-between min-h-[3rem] md:min-h-[3.5rem]'>
+          {/* Left: Logo */}
           <div className='flex items-center min-w-0'>
-            <label htmlFor='my-drawer' className='btn btn-square btn-ghost text-gray-700 hover:text-gray-900 hover:bg-gray-100 shrink-0' aria-label='Open menu'>
-              <AlignJustify size={24} />
-            </label>
             <Link
               href='/'
-              className='ml-3 text-xl font-bold tracking-tight sm:ml-4 sm:text-2xl lg:text-3xl text-gray-900 truncate hover:text-green-600 transition-colors'
+              className='flex items-center gap-2 group'
             >
-              {process.env.NEXT_PUBLIC_BRAND_NAME || 'Aetheravia'}
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10">
+                <Image
+                  src="/images/logo_mark.png"
+                  alt="Aetheravia Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <span className='text-lg sm:text-2xl font-black tracking-tighter uppercase text-primary hover:opacity-80 transition-opacity'>
+                AETHRAVIA
+              </span>
             </Link>
           </div>
           
           {/* Center: Navigation Links (desktop) */}
-          <div className='hidden lg:flex items-center space-x-8'>
-            <Link href='/' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
+          <div className='hidden lg:flex items-center space-x-2'>
+            <Link href='/' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
               Home
             </Link>
-            <Link href='/shop' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
+            <Link href='/shop' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
               Shop
             </Link>
-            <Link href='/about' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
+            <Link href='/about' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
               About
             </Link>
-            <Link href='/ingredients' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
+            <Link href='/ingredients' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
               Ingredients
             </Link>
-            <Link href='/contact' className='text-lg font-medium text-gray-700 hover:text-green-600 transition-colors py-2 px-3 rounded-md hover:bg-green-50'>
+            <Link href='/contact' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
               Contact
             </Link>
           </div>
           
-          {/* Right: Search Icon + Menu items */}
-          <div className='flex items-center justify-end gap-3 sm:gap-4'>
-            <Link href='/search' className='text-gray-700 hover:text-green-600 transition-colors p-3 rounded-md hover:bg-green-50' aria-label='Search'>
-              <Search size={22} />
-            </Link>
+          {/* Right: Search + Menu items */}
+          <div className='flex items-center justify-end gap-1 sm:gap-2'>
+            <SearchInline />
             <Menu showSearch={false} />
           </div>
         </div>

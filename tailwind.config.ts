@@ -16,10 +16,9 @@ const config: Config = {
   daisyui: {
     // Keep only the light theme to avoid dark-mode variants
     themes: [
-      {
         light: {
           ...daisyuiThemes['light'],
-          primary: '#45745D',
+          primary: '#904917',
           '.toaster-con': {
             'background-color': 'white',
             color: 'black',
@@ -38,31 +37,43 @@ const config: Config = {
     },
     extend: {
       colors: {
-        green: {
-          50: '#f1f6f4',
-          100: '#e2ede9',
-          200: '#c5dbd3',
-          300: '#a8c9bd',
-          400: '#71a58d',
-          500: '#45745D',
-          600: '#3a624e',
-          700: '#2f4f3f',
-          800: '#243c30',
-          900: '#192921',
+        // New Artisanal Heritage Palette
+        primary: {
+          DEFAULT: '#904917',
+          foreground: '#ffffff',
+          container: '#ae602d',
+        },
+        secondary: {
+          DEFAULT: '#725a39',
+          foreground: '#ffffff',
+          container: '#fbdbb0',
+        },
+        surface: {
+          DEFAULT: '#fcf9f4',
+          foreground: '#1c1c19',
+          dim: '#dcdad5',
+          bright: '#fcf9f4',
+          container: {
+            DEFAULT: '#f0ede8',
+            low: '#f6f3ee',
+            lowest: '#ffffff',
+            high: '#ebe8e3',
+            highest: '#e5e2dd',
+          }
+        },
+        brand: {
+          DEFAULT: '#904917',
+          black: '#1c1c19',
+        },
+        outline: {
+          DEFAULT: '#82746c',
+          variant: '#d4c3b9',
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
+        background: '#fcf9f4',
+        foreground: '#1c1c19',
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
@@ -85,9 +96,16 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: '0.25rem',
+        md: '0.125rem',
+        sm: '0.125rem',
+        xl: '0.5rem',
+        full: '0.75rem',
+      },
+      fontFamily: {
+        headline: ['Noto Serif', 'serif'],
+        body: ['Manrope', 'sans-serif'],
+        label: ['Manrope', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {
