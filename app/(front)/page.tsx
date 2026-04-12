@@ -22,46 +22,32 @@ const HomePage = () => {
       {/* Key Ingredients: The Elemental Three */}
       <IngredientGallery />
 
-      {/* Artisanal Rituals Section */}
-      <SkincareRitual />
+      {/* Top Rated & New Arrivals Sliders */}
+      <section className="py-24 px-4 md:px-12 max-w-screen-2xl mx-auto space-y-32">
+        <Suspense fallback={<ProductItemsSkeleton qty={4} layout="slider" />}>
+          <ProductItems 
+            layout="slider" 
+            title="Signature" 
+            highlight="Favorites" 
+            sort="topRated"
+          />
+        </Suspense>
 
-      {/* Top Rated Products Section */}
-      <section className='pt-24 pb-8 bg-surface'>
-        <div className='container mx-auto px-4'>
-          <div className='text-center mb-16'>
-            <h2 className='font-headline text-4xl md:text-5xl text-primary mb-4'>
-              Top Rated Products
-            </h2>
-            <p className='font-body text-lg text-surface-foreground/60 italic'>
-              Highly rated products loved by our customers
-            </p>
-          </div>
-          
-          <Suspense fallback={<ProductItemsSkeleton qty={4} name='Top Rated Products' />}>
-            <Slider />
-          </Suspense>
-        </div>
-      </section>
-
-      {/* Latest Products Section */}
-      <section className='pt-8 pb-24 bg-surface'>
-        <div className='container mx-auto px-4'>
-          <div className='text-center mb-16'>
-            <h2 className='font-headline text-4xl md:text-5xl text-primary mb-4'>
-              New Arrivals
-            </h2>
-            <p className='font-body text-lg text-surface-foreground/60 italic'>
-              Discover our latest artisanal formulations
-            </p>
-          </div>
-          <Suspense fallback={<ProductItemsSkeleton qty={8} name='Latest Products' />}>
-            <ProductItems />
-          </Suspense>
-        </div>
+        <Suspense fallback={<ProductItemsSkeleton qty={4} layout="slider" />}>
+          <ProductItems 
+            layout="slider" 
+            title="Recent" 
+            highlight="Harvest" 
+            sort="latest"
+          />
+        </Suspense>
       </section>
 
       {/* Trust & Heritage Values */}
       <TrustBarModern />
+
+      {/* Artisanal Rituals Section */}
+      <SkincareRitual />
 
       {/* Newsletter / Editorial Section */}
       <Newsletter />

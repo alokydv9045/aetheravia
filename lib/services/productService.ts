@@ -63,7 +63,7 @@ const getBySlug = cache(async (slug: string): Promise<Product | null> => {
   return product as unknown as Product | null;
 });
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 12;
 const getByQuery = cache(
   async ({
     q,
@@ -92,10 +92,20 @@ const getByQuery = cache(
     const queryFilter =
       q && q !== 'all'
         ? {
-            name: {
-              $regex: q,
-              $options: 'i',
-            },
+            $or: [
+              {
+                name: {
+                  $regex: q,
+                  $options: 'i',
+                },
+              },
+              {
+                ingredients: {
+                  $regex: q,
+                  $options: 'i',
+                },
+              },
+            ],
           }
         : {};
     const categoryFilter = category && category !== 'all' ? { category } : {};
