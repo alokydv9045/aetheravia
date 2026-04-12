@@ -95,7 +95,7 @@ class EmailService {
   <style>
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f7f7f7; }
     .container { max-width: 600px; margin: 0 auto; background-color: white; }
-    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 30px; text-align: center; }
+    .header { background: linear-gradient(135deg, #B78C69 0%, #89694f 100%); color: white; padding: 40px 30px; text-align: center; }
     .header h1 { margin: 0; font-size: 28px; font-weight: 300; }
     .status-banner { background-color: ${statusColor}; color: white; padding: 20px; text-align: center; font-size: 18px; font-weight: 500; }
     .content { padding: 30px; }
@@ -108,10 +108,10 @@ class EmailService {
     .items-table th, .items-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
     .items-table th { background-color: #f8f9fa; font-weight: 600; color: #666; }
     .total-row { font-weight: 600; background-color: #f8f9fa; }
-    .tracking-info { background-color: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196f3; }
-    .button { display: inline-block; background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; margin: 20px 0; }
+    .tracking-info { background-color: #f8f3f0; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #B78C69; }
+    .button { display: inline-block; background-color: #B78C69; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; margin: 20px 0; }
     .footer { background-color: #f8f9fa; padding: 30px; text-align: center; color: #666; border-top: 1px solid #eee; }
-    .footer a { color: #667eea; text-decoration: none; }
+    .footer a { color: #B78C69; text-decoration: none; }
     @media (max-width: 600px) {
       .content { padding: 20px; }
       .info-row { flex-direction: column; }
@@ -158,7 +158,7 @@ class EmailService {
       
       ${data.trackingNumber ? `
       <div class="tracking-info">
-        <h3 style="margin: 0 0 10px 0; color: #1976d2;">📦 Tracking Information</h3>
+        <h3 style="margin: 0 0 10px 0; color: #89694f;">📦 Tracking Information</h3>
         <p style="margin: 0;">Tracking Number: <strong>${data.trackingNumber}</strong></p>
         <p style="margin: 5px 0 0 0; font-size: 14px;">You can track your order using this number on our website.</p>
       </div>
@@ -294,7 +294,7 @@ If you have any questions, please contact our support team.
       processing: '#8b5cf6',
       shipped: '#06b6d4',
       out_for_delivery: '#f97316',
-      delivered: '#10b981',
+      delivered: '#B78C69',
       cancelled: '#ef4444',
       returned: '#6b7280',
     };

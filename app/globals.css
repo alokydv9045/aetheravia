@@ -1,38 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 38 36% 97%; /* #fcf9f4 */
+    --foreground: 30 5% 10%; /* #1c1c19ish */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 38 36% 97%;
+    --card-foreground: 30 5% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 38 36% 97%;
+    --popover-foreground: 30 5% 10%;
 
-    --primary: 151 25% 36%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 25 72% 33%; /* #904917 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 36 33% 34%; /* #725a39 */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 38 10% 90%;
+    --muted-foreground: 30 5% 40%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 25 20% 90%;
+    --accent-foreground: 25 72% 33%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 25 10% 85%;
+    --input: 25 10% 85%;
+    --ring: 25 72% 33%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
   }
 
   /* Dark theme removed — site will use single light theme variables only */
@@ -40,7 +42,12 @@
 
 @layer base {
   * { border-color: hsl(var(--border)); }
-  body { background: hsl(var(--background)); color: hsl(var(--foreground)); scroll-behavior:smooth; }
+  body { 
+    background: hsl(var(--background)); 
+    color: hsl(var(--foreground)); 
+    font-family: 'Manrope', sans-serif;
+    scroll-behavior:smooth; 
+  }
 }
 
 /* Fluid typography & responsive admin helpers */
@@ -98,5 +105,11 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
+  }
+
+  .noise-overlay {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
   }
 }

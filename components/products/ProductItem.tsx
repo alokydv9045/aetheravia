@@ -2,101 +2,95 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { Heart, Calendar, ShoppingCart } from 'lucide-react';
-
 import { Product } from '@/lib/models/ProductModel';
 import { formatPrice } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import useCartService from '@/lib/hooks/useCartStore';
+import toast from 'react-hot-toast';
 
 const ProductItem = ({ product }: { product: Product }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { items, increase } = useCartService();
 
-  // Mock duration and discount since they are not in the model but in the UI snippet
-  const duration = "7 nights / 8 days";
-  const originalPrice = product.price + 2000;
-  const discount = "₹ 2,000 Off";
-  const dates = "Apr 3, Apr 11, Apr 18";
+  const addItemHandler = () => {
+    increase({
+      ...product,
+      qty: 0,
+      color: '',
+      size: '',
+    });
+    toast.success('Added to your cart', {
+      style: {
+        background: '#904917',
+        color: '#fff',
+        borderRadius: '8px',
+        fontSize: '12px',
+        fontWeight: 'bold',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase'
+      },
+      iconTheme: {
+        primary: '#fff',
+        secondary: '#904917',
+      },
+    });
+  };
 
   return (
-    <article 
-      id={`trip-card-${product.slug}`}
-      className="group bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 flex flex-col shrink-0 w-full"
-      style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04)' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="relative overflow-hidden shrink-0 w-full aspect-[4/3]">
-        <Link href={`/product/${product.slug}`}>
-          <Image 
-            alt={product.name} 
-            src={/^(\/|https?:)/.test(product.image) ? product.image : '/images/banner/banner0.jpg'}
+    <article className="group flex flex-col w-full snap-start">
+      <div className="relative bg-[#f6f3ee] rounded-xl overflow-hidden shadow-[0_8px_32px_0_rgba(28,28,25,0.05)] mb-6 aspect-[4/5] z-0">
+        <Link href={`/product/${product.slug}`} className="block relative h-full w-full">
+          <Image
+            src={/^(\/|https?:)/.test(product.image) ? product.image : '/images/placeholder.jpg'}
+            alt={product.name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 260px, 280px"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         </Link>
         
-        {/* Wishlist Button (Added feature) */}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            setIsWishlisted(!isWishlisted);
-          }}
-          className='absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm hover:shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100'
-        >
-          <Heart
-            className={`h-4 w-4 transition-colors ${
-              isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'
-            }`}
-          />
-        </button>
+        {/* Heritage Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="bg-[#fbdbb0] text-[#765f3d] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">
+            {product.category}
+          </span>
+        </div>
 
+        {/* Quick Add Overlay */}
+        <div className="absolute bottom-0 left-0 w-full p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/20 to-transparent z-20">
+          <button 
+            onClick={addItemHandler}
+            className="w-full bg-primary text-white py-3 font-body text-xs font-bold uppercase tracking-widest rounded-lg shadow-lg hover:bg-primary-container transition-colors active:scale-[0.98]"
+          >
+            Quick Add
+          </button>
+        </div>
       </div>
 
-      <div className="flex flex-col justify-center flex-grow p-4 pt-3.5">
-        <div className="flex items-center gap-1 text-[12px] mb-1.5" style={{ color: '#5e5e5e', fontFamily: "var(--font-vietnam), 'Be Vietnam Pro', sans-serif" }}>
-          <Calendar className="w-3.5 h-3.5 opacity-70" />
-          <span>{duration}</span>
-        </div>
-
-        <Link href={`/product/${product.slug}`}>
-          <h3 className="font-bold leading-snug mb-2.5 line-clamp-2 text-[14px] min-h-[40px] hover:text-green-600 transition-colors" style={{ color: '#191c1d', fontFamily: "var(--font-jakarta), 'Plus Jakarta Sans', sans-serif" }}>
-            {product.name}
+      <div className="space-y-2 px-1">
+        <div className="flex justify-between items-start gap-4">
+          <h3 className="font-headline text-xl text-[#1c1c19] leading-tight group-hover:text-primary transition-colors">
+            <Link href={`/product/${product.slug}`}>{product.name}</Link>
           </h3>
-        </Link>
-
-        <div className="flex items-baseline gap-2 mb-3">
-          <span className="text-[16px] font-extrabold" style={{ color: '#191c1d', fontFamily: "var(--font-jakarta), 'Plus Jakarta Sans', sans-serif" }}>
-            {formatPrice(product.price)}
-          </span>
-          <span className="text-[12px] line-through" style={{ color: '#9e9e9e' }}>
-            {formatPrice(originalPrice)}
-          </span>
-          <span className="text-[11px] font-bold" style={{ color: '#e65100' }}>
-            {discount}
-          </span>
-        </div>
-
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-1.5 text-[11px]" style={{ color: '#5e5e5e', fontFamily: "var(--font-vietnam), 'Be Vietnam Pro', sans-serif" }}>
-            <Calendar className="w-3.5 h-3.5 mt-0.5 shrink-0 opacity-70" />
-            <span className="leading-relaxed">{dates}</span>
+          <div className="text-right shrink-0">
+            <span className="block font-body text-lg font-bold text-primary">
+              {formatPrice(product.price)}
+            </span>
+            <span className="block font-body text-[10px] text-secondary/50 line-through">
+              {formatPrice(product.price + 500)}
+            </span>
           </div>
-          
-          {/* Add to Cart Button (Added feature) */}
-          <Button
-            size="sm"
-            disabled={product.countInStock === 0}
-            className="h-8 px-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all opacity-0 group-hover:opacity-100"
-          >
-            <ShoppingCart className="h-4 w-4" />
-          </Button>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <span className="bg-[#f0ede8] px-2 py-1 rounded text-[10px] text-secondary font-bold uppercase tracking-tighter">
+            {product.brand} & Silt
+          </span>
+          <span className="w-1 h-1 rounded-full bg-outline/30"></span>
+          <span className="text-[10px] text-secondary/70 uppercase tracking-wider font-medium">Detoxifying</span>
         </div>
       </div>
     </article>
   );
 };
+
 
 export default ProductItem;

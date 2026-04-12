@@ -51,19 +51,22 @@ function categoryImageSrc(name: string) {
 
 export default async function CategoriesBar() {
   const all = await productService.getCategories();
-  const categories = Array.isArray(all) ? all : [];
+  const allowedCategories = ['Body Scrub', 'Body Wash', 'Face Wash'];
+  const categories = Array.isArray(all) 
+    ? all.filter(cat => allowedCategories.includes(cat)) 
+    : [];
 
   return (
     <nav aria-label="Categories" className="w-full bg-white border-b border-gray-100">
       <div className="container mx-auto px-4">
-        <ul className="flex gap-6 md:gap-8 overflow-x-auto items-center justify-start md:justify-center py-4 scrollbar-hide">
+        <ul className="flex gap-6 md:gap-8 overflow-x-auto items-center py-3 scrollbar-hide">
           {categories.map((cat) => (
             <li key={cat} className="flex-shrink-0">
               <Link
-                href={`/search?category=${encodeURIComponent(cat)}`}
+                href={`/shop?category=${encodeURIComponent(cat)}`}
                 className="flex flex-col items-center space-y-3 text-center group"
               >
-                <div className="relative w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden border-2 border-transparent hover:border-green-400 transition-all duration-300 group-hover:scale-105 bg-gray-50">
+                <div className="relative w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden border-2 border-transparent hover:border-primary-400 transition-all duration-300 group-hover:scale-105 bg-gray-50">
                   <Image
                     src={categoryImageSrc(cat)}
                     alt={cat}
@@ -72,7 +75,7 @@ export default async function CategoriesBar() {
                     className="object-cover"
                   />
                 </div>
-                <span className="text-sm md:text-base font-medium text-gray-700 group-hover:text-green-600 transition-colors duration-300 max-w-[6rem] leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{cat}</span>
+                <span className="text-sm md:text-base font-medium text-primary group-hover:text-black transition-colors duration-300 max-w-[6rem] leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{cat}</span>
               </Link>
             </li>
           ))}
