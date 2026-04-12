@@ -6,11 +6,11 @@ import { motion } from 'framer-motion';
 
 export default function HeroModern() {
   return (
-    <section className="relative h-screen min-h-[700px] flex items-center overflow-hidden bg-surface">
+    <section className="relative h-[calc(100vh-4rem)] min-h-[600px] flex items-center overflow-hidden bg-surface">
       <div className="absolute inset-0 z-0">
         <Image 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2LEby-DgpY40EkgslE_4tps9OT-8d3Z8MyCBFTkaNp3HvXYaYYtrSod8UpqQr24P8HOgbrbal_D4k7ihH4ETeJVkoDOa5UFptj5pDS6a8er5sn1Easr6IRr3UbP19zDT0hiwRdqIFq4E2LYpHr0EIJxDNH4ECk_4DPuMyh3ecQkQey6DYg2thvaHNCkvquAvLNsRJjKT2asWZ2l108CEzNtTZi72njPpLpVxKfmKXZDbFpLsBmJM9SayAeD9tyCjc_o6RrsMbkIkY"
-          alt="Ancient Heritage Textures"
+          src="/images/hero_hd.png"
+          alt="Artisanal Heritage Skincare Textures"
           fill
           priority
           className="object-cover brightness-95"

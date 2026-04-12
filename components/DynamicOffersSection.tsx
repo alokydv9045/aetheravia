@@ -54,3 +54,7 @@ export default function DynamicOffersSection() {
     </div>
   );
 }
+
+
+//Component: SearchInline.tsx
+

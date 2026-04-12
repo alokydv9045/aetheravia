@@ -2,68 +2,95 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { ShoppingCart, Heart, X, Star, Plus, Minus } from 'lucide-react';
-
 import { Product } from '@/lib/models/ProductModel';
 import { formatPrice } from '@/lib/utils';
-
-import { Rating } from './Rating';
-import { Button } from '@/components/ui/button';
+import useCartService from '@/lib/hooks/useCartStore';
+import toast from 'react-hot-toast';
 
 const ProductItem = ({ product }: { product: Product }) => {
+  const { items, increase } = useCartService();
+
+  const addItemHandler = () => {
+    increase({
+      ...product,
+      qty: 0,
+      color: '',
+      size: '',
+    });
+    toast.success('Added to your cart', {
+      style: {
+        background: '#904917',
+        color: '#fff',
+        borderRadius: '8px',
+        fontSize: '12px',
+        fontWeight: 'bold',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase'
+      },
+      iconTheme: {
+        primary: '#fff',
+        secondary: '#904917',
+      },
+    });
+  };
+
   return (
-    <article 
-      className="group bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 flex flex-col shrink-0 w-[260px] sm:w-[280px]" 
-      style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04)' }}
-    >
-      <div className="relative overflow-hidden shrink-0 w-full aspect-[4/3]">
+    <article className="group flex flex-col w-full snap-start">
+      <div className="relative bg-[#f6f3ee] rounded-xl overflow-hidden shadow-[0_8px_32px_0_rgba(28,28,25,0.05)] mb-6 aspect-[4/5] z-0">
         <Link href={`/product/${product.slug}`} className="block relative h-full w-full">
           <Image
-            src={/^(\/|https?:)/.test(product.image) ? product.image : '/images/banner/banner0.jpg'}
+            src={/^(\/|https?:)/.test(product.image) ? product.image : '/images/placeholder.jpg'}
             alt={product.name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 260px, 280px"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         </Link>
+        
+        {/* Heritage Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="bg-[#fbdbb0] text-[#765f3d] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">
+            {product.category}
+          </span>
+        </div>
+
+        {/* Quick Add Overlay */}
+        <div className="absolute bottom-0 left-0 w-full p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/20 to-transparent z-20">
+          <button 
+            onClick={addItemHandler}
+            className="w-full bg-primary text-white py-3 font-body text-xs font-bold uppercase tracking-widest rounded-lg shadow-lg hover:bg-primary-container transition-colors active:scale-[0.98]"
+          >
+            Quick Add
+          </button>
+        </div>
       </div>
 
-      <div className="flex flex-col justify-center flex-grow p-4 pt-3.5">
-        <div className="flex items-center gap-1 text-[12px] mb-1.5 text-gray-500">
-          <svg className="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          <span>Natural Collection</span>
-        </div>
-
-        <Link href={`/product/${product.slug}`}>
-          <h3 className="font-bold leading-snug mb-2.5 line-clamp-2 text-[14px] min-h-[40px] text-[#191c1d]">
-            {product.name}
+      <div className="space-y-2 px-1">
+        <div className="flex justify-between items-start gap-4">
+          <h3 className="font-headline text-xl text-[#1c1c19] leading-tight group-hover:text-primary transition-colors">
+            <Link href={`/product/${product.slug}`}>{product.name}</Link>
           </h3>
-        </Link>
-
-        <div className="flex items-baseline gap-2 mb-3">
-          <span className="text-[16px] font-extrabold text-[#191c1d]">
-            {formatPrice(product.price)}
-          </span>
-          <span className="text-[12px] line-through text-gray-400">
-            {formatPrice(product.price + 500)}
-          </span>
-          <span className="text-[11px] font-bold text-orange-600">
-            ₹ 500 Off
-          </span>
+          <div className="text-right shrink-0">
+            <span className="block font-body text-lg font-bold text-primary">
+              {formatPrice(product.price)}
+            </span>
+            <span className="block font-body text-[10px] text-secondary/50 line-through">
+              {formatPrice(product.price + 500)}
+            </span>
+          </div>
         </div>
-
-        <div className="flex items-start gap-1.5 text-[11px] text-gray-500">
-          <svg className="w-3.5 h-3.5 mt-0.5 shrink-0 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          <span className="leading-relaxed">Available for next delivery</span>
+        
+        <div className="flex items-center gap-2">
+          <span className="bg-[#f0ede8] px-2 py-1 rounded text-[10px] text-secondary font-bold uppercase tracking-tighter">
+            {product.brand} & Silt
+          </span>
+          <span className="w-1 h-1 rounded-full bg-outline/30"></span>
+          <span className="text-[10px] text-secondary/70 uppercase tracking-wider font-medium">Detoxifying</span>
         </div>
       </div>
     </article>
   );
 };
+
 
 export default ProductItem;

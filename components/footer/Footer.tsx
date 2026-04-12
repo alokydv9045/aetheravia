@@ -1,245 +1,128 @@
-import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
-  Mail,
-  MapPin,
-  Phone,
-  CreditCard,
-  Shield,
-  Truck,
-  RotateCcw,
-  Heart,
-  Leaf,
-  Award,
-  CheckCircle,
-  Star
-} from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { Instagram, Share2, Globe, ArrowRight } from 'lucide-react';
 import { brandEmail } from '@/lib/brand';
-
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
-      {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+    <footer className="bg-[#e5e2dd] relative overflow-hidden text-[#1c1c19]">
+      {/* Noise Texture Overlay (3%) */}
+      <div className="absolute inset-0 noise-overlay opacity-[0.03] pointer-events-none"></div>
 
-          {/* Brand Info */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                <span className="text-white font-bold text-sm">
-                  {(process.env.NEXT_PUBLIC_BRAND_NAME || 'AE').slice(0,2).toUpperCase()}
-                </span>
+      <div className="max-w-7xl mx-auto px-6 md:px-8 py-16 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+          
+          {/* Column 1: Brand Story & Socials */}
+          <div className="space-y-8">
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="relative w-12 h-12">
+                <Image
+                  src="/images/logo_mark.png"
+                  alt="Aetheravia Logo"
+                  fill
+                  className="object-contain"
+                />
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-primary">
-                  AETHRAVIA
-                </h3>
-                <p className="text-xs text-slate-600">Premium Natural Skincare</p>
-              </div>
+              <span className="text-2xl font-serif italic text-primary">Aethravia</span>
+            </Link>
+
+            <div className="space-y-4">
+              <h2 className="text-xl font-serif tracking-tight text-primary">Our Heritage</h2>
+              <p className="text-sm font-medium leading-relaxed text-secondary opacity-90">
+                Aethravia is built on the ancient wisdom of Multani Mitti, Chandan, and Reetha. 
+                Inspired by the earth, crafted for the soul.
+              </p>
             </div>
 
-            <p className="text-slate-600 text-sm leading-relaxed max-w-sm">
-              {process.env.NEXT_PUBLIC_BRAND_TAGLINE || 'Discover the power of nature with our carefully curated collection of premium skincare products.'}
-            </p>
-
-            <div className="flex space-x-2">
-              <Button variant="outline" size="icon" className="h-8 w-8 hover:bg-green-50 hover:border-green-300 hover:text-green-600 transition-all duration-200 rounded-md">
-                <Facebook className="h-3 w-3" />
-              </Button>
-              <Button variant="outline" size="icon" className="h-8 w-8 hover:bg-green-50 hover:border-green-300 hover:text-green-600 transition-all duration-200 rounded-md">
-                <Instagram className="h-3 w-3" />
-              </Button>
-              <Button variant="outline" size="icon" className="h-8 w-8 hover:bg-green-50 hover:border-green-300 hover:text-green-600 transition-all duration-200 rounded-md">
-                <Twitter className="h-3 w-3" />
-              </Button>
-              <Button variant="outline" size="icon" className="h-8 w-8 hover:bg-green-50 hover:border-green-300 hover:text-green-600 transition-all duration-200 rounded-md">
-                <Youtube className="h-3 w-3" />
-              </Button>
+            {/* Social Area */}
+            <div className="flex items-center space-x-6 pt-4">
+              <a 
+                href="https://www.instagram.com/aeth.ravia/?hl=en" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-secondary hover:text-primary transition-colors flex items-center space-x-2 group"
+              >
+                <Instagram size={18} className="transition-transform group-hover:scale-110" />
+                <span className="text-[10px] font-bold tracking-widest uppercase">Instagram</span>
+              </a>
+              <a 
+                href="https://wa.me/yournumber" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-secondary hover:text-primary transition-colors flex items-center space-x-2 group"
+              >
+                <svg 
+                  viewBox="0 0 24 24" 
+                  className="w-[19px] h-[19px] fill-current transition-transform group-hover:scale-110"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                <span className="text-[10px] font-bold tracking-widest uppercase">WhatsApp</span>
+              </a>
             </div>
           </div>
 
-          {/* Shop */}
-          <div className="space-y-3">
-            <h4 className="text-base font-semibold text-black border-b border-primary/20 pb-1">Shop</h4>
-            <ul className="space-y-2">
-              {[
-                { name: 'Face Care', href: '/search?category=face' },
-                { name: 'Body Care', href: '/search?category=body' },
-                { name: 'Hair Care', href: '/search?category=hair' },
-                { name: 'Natural Oils', href: '/search?category=oils' },
-                { name: 'Skincare Sets', href: '/search?category=sets' },
-                { name: 'New Arrivals', href: '/search?sort=newest' }
-              ].map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-black/70 hover:text-primary transition-colors text-sm hover:underline decoration-primary/30 underline-offset-2"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Column 2: Collections */}
+          <div className="flex flex-col space-y-6">
+            <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-primary">Collections</h3>
+            <nav className="flex flex-col space-y-4">
+              <Link href="/shop?category=Body Wash" className="text-sm font-medium text-secondary hover:text-primary transition-colors inline-flex items-center group">
+                Body Wash 
+                <ArrowRight size={12} className="ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+              </Link>
+              <Link href="/shop?category=Body Scrub" className="text-sm font-medium text-secondary hover:text-primary transition-colors inline-flex items-center group">
+                Body Scrub
+                <ArrowRight size={12} className="ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+              </Link>
+              <Link href="/shop?category=Face Wash" className="text-sm font-medium text-secondary hover:text-primary transition-colors inline-flex items-center group">
+                Face Wash
+                <ArrowRight size={12} className="ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+              </Link>
+            </nav>
           </div>
 
-          {/* Support */}
-          <div className="space-y-3">
-            <h4 className="text-base font-semibold text-black border-b border-primary/20 pb-1">Support</h4>
-            <ul className="space-y-2">
-              {[
-                { name: 'Contact Us', href: `mailto:${brandEmail}` },
-                { name: 'FAQs', href: '/help' },
-                { name: 'Shipping Info', href: '/shipping' },
-                { name: 'Returns', href: '/returns' },
-                { name: 'Order Tracking', href: '/track' },
-                { name: 'Size Guide', href: '/help' }
-              ].map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-black/70 hover:text-primary transition-colors text-sm hover:underline decoration-primary/30 underline-offset-2"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Column 3: The House */}
+          <div className="flex flex-col space-y-6">
+            <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-primary">The House</h3>
+            <nav className="flex flex-col space-y-4">
+              <Link href="/about" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Our Story</Link>
+              <Link href="/sourcing" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Sourcing</Link>
+              <Link href="/rituals" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Rituals</Link>
+              <Link href="/journal" className="text-sm font-medium text-secondary hover:text-primary transition-colors">The Journal</Link>
+            </nav>
           </div>
 
-          {/* Newsletter & Contact */}
-          <div className="space-y-3">
-            <h4 className="text-base font-semibold text-slate-600 border-b border-green-200 pb-1">Stay Connected</h4>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Get exclusive access to new products and skincare tips.
-            </p>
-            <div className="space-y-2">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-green-500 focus:ring-green-500/20 rounded-md h-9"
-              />
-              <Button className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-md h-9 shadow-sm hover:shadow-md transition-all duration-200 text-sm">
-                Subscribe
-              </Button>
-            </div>
-
-            {/* Contact Info */}
-            <div className="pt-2 space-y-1">
-              <div className="flex items-center space-x-2 text-sm text-slate-600">
-                <Phone className="h-3 w-3 text-green-600" />
-                <span className="text-xs">{process.env.NEXT_PUBLIC_SUPPORT_PHONE || '+91-XXXX-XXXXXX'}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-slate-600">
-                <Mail className="h-3 w-3 text-green-600" />
-                <span className="text-xs truncate">{brandEmail}</span>
-              </div>
-            </div>
+          {/* Column 4: Assistance */}
+          <div className="flex flex-col space-y-6">
+            <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-primary">Assistance</h3>
+            <nav className="flex flex-col space-y-4">
+              <Link href="/shipping" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Shipping & Returns</Link>
+              <Link href="/privacy" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Terms of Service</Link>
+              <Link href="/faq" className="text-sm font-medium text-secondary hover:text-primary transition-colors uppercase tracking-widest text-[11px]">FAQ</Link>
+              <Link href={`mailto:${brandEmail}`} className="pt-2 text-xs font-bold text-primary underline underline-offset-4">{brandEmail}</Link>
+            </nav>
           </div>
         </div>
 
-        {/* Trust & Payment Section */}
-        <div className="mt-8 pt-6 border-t border-slate-200">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-            {/* Trust Badges */}
-            <div>
-              <h5 className="text-sm font-semibold text-slate-600 mb-3">Why Choose AETHRAVIA?</h5>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center space-x-2 text-sm text-slate-600">
-                  <Truck className="h-4 w-4 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-xs">Free Shipping</p>
-                    <p className="text-xs">On orders over ₹999</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2 text-sm text-slate-600">
-                  <RotateCcw className="h-4 w-4 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-xs">Easy Returns</p>
-                    <p className="text-xs">30-day return policy</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2 text-sm text-slate-600">
-                  <Shield className="h-4 w-4 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-xs">Secure Shopping</p>
-                    <p className="text-xs">256-bit SSL encryption</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2 text-sm text-slate-600">
-                  <Star className="h-4 w-4 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-xs">Quality Assured</p>
-                    <p className="text-xs">Premium ingredients only</p>
-                  </div>
-                </div>
+        {/* Minimalist Legal Bottom Bar */}
+        <div className="mt-20 pt-10 border-t border-primary/10">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
+            <p className="text-[10px] font-medium text-secondary/60 tracking-wider">
+              © {currentYear} AETHRAVIA ARTISANAL HERITAGE. ALL RIGHTS RESERVED.
+            </p>
+            
+            <div className="flex items-center space-x-10">
+              <span className="hidden md:inline text-[10px] font-bold text-primary/40 tracking-widest uppercase">Grounded in Nature</span>
+              <div className="flex items-center space-x-2 text-secondary/80">
+                <Globe size={14} className="text-primary" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">India (English)</span>
               </div>
             </div>
-
-            {/* Payment Methods */}
-            <div>
-              <h5 className="text-sm font-semibold text-slate-600 mb-3">Accepted Payments</h5>
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  'Visa', 'Mastercard', 'American Express', 'Razorpay',
-                  'Google Pay', 'PhonePe', 'Paytm', 'UPI'
-                ].map((payment) => (
-                  <Badge
-                    key={payment}
-                    variant="outline"
-                    className="border-slate-300 text-slate-700 hover:border-green-300 hover:bg-green-50 px-2 py-0.5 rounded text-xs font-medium"
-                  >
-                    {payment}
-                  </Badge>
-                ))}
-              </div>
-              <div className="mt-3 flex items-center space-x-2">
-                <Shield className="h-3 w-3 text-green-500" />
-                <span className="text-xs text-slate-600">Your payment information is secure</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Separator className="bg-slate-200" />
-
-      {/* Bottom Footer */}
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex flex-col lg:flex-row justify-between items-center space-y-2 lg:space-y-0">
-          <div className="flex flex-wrap justify-center lg:hidden space-x-4 text-xs text-slate-600">
-            <Link href="#" className="hover:text-green-600 transition-colors hover:underline decoration-green-300 underline-offset-2">
-              Privacy Policy
-            </Link>
-            <Link href="#" className="hover:text-green-600 transition-colors hover:underline decoration-green-300 underline-offset-2">
-              Terms of Service
-            </Link>
-            <Link href="#" className="hover:text-green-600 transition-colors hover:underline decoration-green-300 underline-offset-2">
-              Cookie Policy
-            </Link>
-            <Link href="#" className="hover:text-green-600 transition-colors hover:underline decoration-green-300 underline-offset-2">
-              Accessibility
-            </Link>
-          </div>
-          <div className="text-center lg:text-right">
-            <p className="text-xs text-slate-600">
-              © {currentYear} AETHRAVIA. All rights reserved.
-            </p>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Made with <span className="text-red-400">♥</span> for beautiful, healthy skin
-            </p>
           </div>
         </div>
       </div>

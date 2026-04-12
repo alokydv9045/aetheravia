@@ -28,9 +28,9 @@ const trustItems = [
 
 export default function TrustBarModern() {
   return (
-    <section className="py-8 bg-surface border-t border-outline-variant/10">
+    <section className="py-6 bg-surface border-t border-outline-variant/10">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
           {trustItems.map((item, idx) => (
             <motion.div 
               key={item.title}
