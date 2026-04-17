@@ -2,15 +2,37 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Product } from '@/lib/models/ProductModel';
 import { formatPrice } from '@/lib/utils';
 import useCartService from '@/lib/hooks/useCartStore';
 import toast from 'react-hot-toast';
 
 const ProductItem = ({ product }: { product: Product }) => {
+  const router = useRouter();
+  const { data: session } = useSession();
   const { items, increase } = useCartService();
 
   const addItemHandler = () => {
+    if (!session) {
+      const msg = 'Please sign in to add to cart';
+      toast.error(msg, {
+        id: msg,
+        style: {
+          background: '#1c1c19',
+          color: '#fff',
+          borderRadius: '8px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase'
+        }
+      });
+      router.push('/signin');
+      return;
+    }
+    
     increase({
       ...product,
       qty: 0,
@@ -34,6 +56,34 @@ const ProductItem = ({ product }: { product: Product }) => {
     });
   };
 
+  const buyNowHandler = () => {
+    if (!session) {
+      const msg = 'Please sign in to continue';
+      toast.error(msg, {
+        id: msg,
+        style: {
+          background: '#1c1c19',
+          color: '#fff',
+          borderRadius: '8px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase'
+        }
+      });
+      router.push('/signin');
+      return;
+    }
+    
+    increase({
+      ...product,
+      qty: 0,
+      color: '',
+      size: '',
+    });
+    router.push('/shipping');
+  };
+
   return (
     <article className="group flex flex-col w-full snap-start">
       <div className="relative bg-[#f6f3ee] rounded-xl overflow-hidden shadow-[0_8px_32px_0_rgba(28,28,25,0.05)] mb-6 aspect-[4/5] z-0">
@@ -55,13 +105,21 @@ const ProductItem = ({ product }: { product: Product }) => {
         </div>
 
         {/* Quick Add Overlay */}
-        <div className="absolute bottom-0 left-0 w-full p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/20 to-transparent z-20">
-          <button 
-            onClick={addItemHandler}
-            className="w-full bg-primary text-white py-3 font-body text-xs font-bold uppercase tracking-widest rounded-lg shadow-lg hover:bg-primary-container transition-colors active:scale-[0.98]"
-          >
-            Quick Add
-          </button>
+        <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 translate-y-0 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/60 to-transparent z-20">
+          <div className="flex gap-2">
+            <button 
+              onClick={addItemHandler}
+              className="flex-1 bg-white/10 backdrop-blur-md text-white border border-white/20 py-2.5 font-body text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-white/20 transition-colors active:scale-[0.98]"
+            >
+              Quick Add
+            </button>
+            <button 
+              onClick={buyNowHandler}
+              className="flex-1 bg-primary text-white py-2.5 font-body text-[10px] font-bold uppercase tracking-widest rounded-lg shadow-lg hover:bg-opacity-90 transition-colors active:scale-[0.98]"
+            >
+              Buy Now
+            </button>
+          </div>
         </div>
       </div>
 

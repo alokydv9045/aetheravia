@@ -92,7 +92,6 @@ const Footer = () => {
               <Link href="/about" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Our Story</Link>
               <Link href="/sourcing" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Sourcing</Link>
               <Link href="/rituals" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Rituals</Link>
-              <Link href="/journal" className="text-sm font-medium text-secondary hover:text-primary transition-colors">The Journal</Link>
             </nav>
           </div>
 

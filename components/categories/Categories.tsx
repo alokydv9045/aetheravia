@@ -21,7 +21,7 @@ function categoryImageSrc(name: string) {
     'Serums': 'high-angle-selection-powders-bowls.jpg',
     'Exfoliators': 'high-angle-selection-powders-bowls.jpg',
 
-    // Image 3: homemade-remedy-with-cucumber.jpg - Used for body products and natural care
+    // Image 3: homemade-remedy-with-cucumber.jpg - Used for body products and natural colour
     'Body Scrub': 'homemade-remedy-with-cucumber.jpg',
     'Body Wash': 'homemade-remedy-with-cucumber.jpg',
     'Night Care': 'homemade-remedy-with-cucumber.jpg',

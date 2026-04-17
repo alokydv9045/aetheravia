@@ -49,6 +49,13 @@ const Sidebar = () => {
           About
         </Link>
       </li>
+
+      <li className='lg:hidden'>
+        <Link href='/ritual' onClick={toggleDrawer} className='flex items-center gap-3 text-black hover:text-primary font-medium'>
+          <TestTube size={20} />
+          Rituals
+        </Link>
+      </li>
       <li className='lg:hidden'>
         <Link href='/ingredients' onClick={toggleDrawer} className='flex items-center gap-3 text-black hover:text-primary font-medium'>
           <TestTube size={20} />
