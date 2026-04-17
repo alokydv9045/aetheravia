@@ -42,11 +42,13 @@
 
 @layer base {
   * { border-color: hsl(var(--border)); }
-  body { 
+  html, body {
     background: hsl(var(--background)); 
     color: hsl(var(--foreground)); 
     font-family: 'Manrope', sans-serif;
-    scroll-behavior:smooth; 
+    scroll-behavior: smooth; 
+    overflow-x: hidden;
+    width: 100%;
   }
 }
 

@@ -50,10 +50,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               <DrawerButton />
               <ResponsiveDrawerInit />
               <div className='drawer-content'>
-                <div className='flex min-h-screen flex-col'>
+                <div className='flex min-h-screen flex-col overflow-x-hidden'>
                   <Header />
                   {children}
-                  <TrustBar />
                   <Footer />
                   <ScrollToTopButton />
                 </div>

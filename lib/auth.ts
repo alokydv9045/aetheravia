@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import dbConnect from './dbConnect';
@@ -14,6 +15,11 @@ export const config = {
   // Add explicit URL configuration for Render
   ...(process.env.NEXTAUTH_URL && { url: process.env.NEXTAUTH_URL }),
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || 'placeholder',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'placeholder',
+      allowDangerousEmailAccountLinking: true, // Allow linking Google email to existing credentials account
+    }),
     CredentialsProvider({
       credentials: {
         email: {
@@ -21,6 +27,9 @@ export const config = {
         },
         password: {
           type: 'password',
+        },
+        otp: {
+          type: 'text',
         },
       },
       async authorize(credentials) {
@@ -30,12 +39,35 @@ export const config = {
 
           const user = await UserModel.findOne({ email: credentials.email });
 
-          if (user) {
+          if (user && user.password) {
+            // Verify password
             const isMatch = await bcrypt.compare(
               credentials.password as string,
               user.password,
             );
-            if (isMatch) {
+            
+            if (!isMatch) return null;
+
+            // If OTP is required but not provided, we can't authorize here
+            // The frontend should have called /api/auth/otp/send first
+            if (!credentials.otp) return null;
+
+            // Verify OTP
+            if (!user.loginOtp || !user.loginOtpExpiry) return null;
+
+            const isOtpMatch = await bcrypt.compare(
+              credentials.otp as string,
+              user.loginOtp,
+            );
+
+            const isExpired = new Date() > user.loginOtpExpiry;
+
+            if (isOtpMatch && !isExpired) {
+              // Clear OTP after successful login
+              user.loginOtp = undefined;
+              user.loginOtpExpiry = undefined;
+              await user.save();
+
               return {
                 id: user._id.toString(),
                 _id: user._id.toString(),
@@ -99,10 +131,44 @@ export const config = {
       return session;
     },
     async signIn({ user, account, profile }: any) {
-      // Additional security checks during sign in
+      if (account?.provider === 'google') {
+        try {
+          await dbConnect();
+          const existingUser = await UserModel.findOne({ email: user.email });
+          
+          if (!existingUser) {
+            // Create new social user
+            const newUser = await UserModel.create({
+              name: user.name || profile?.name || 'Archive Member',
+              email: user.email,
+              avatar: user.image || profile?.picture,
+              isAdmin: false,
+            });
+            // Update the user object with the DB ID for the JWT callback
+            user.id = newUser._id.toString();
+            user._id = newUser._id.toString();
+            user.isAdmin = false;
+          } else {
+            // Update user object with existing DB info
+            user.id = existingUser._id.toString();
+            user._id = existingUser._id.toString();
+            user.isAdmin = existingUser.isAdmin;
+            
+            // Sync avatar if it's missing or from a different source
+            if (!existingUser.avatar && (user.image || profile?.picture)) {
+              existingUser.avatar = user.image || profile?.picture;
+              await existingUser.save();
+            }
+          }
+          return true;
+        } catch (error) {
+          console.error('Error during Google sign-in:', error);
+          return false;
+        }
+      }
+      
       if (user?.email) {
-        // Log successful login (without sensitive data)
-        console.log(`Successful login attempt for user: ${user.email.substring(0, 3)}***`);
+        console.log(`Successful credentials login for: ${user.email.substring(0, 3)}***`);
         return true;
       }
       return false;

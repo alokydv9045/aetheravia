@@ -22,7 +22,8 @@ const MyOrders = () => {
     if (status === 'loading') return; // Still loading
     
     if (status === 'unauthenticated' || !session) {
-      toast.error('Please sign in to view your order history');
+      const msg = 'Please sign in to view your order history';
+      toast.error(msg, { id: msg });
       router.push('/signin?callbackUrl=/order-history');
       return;
     }
