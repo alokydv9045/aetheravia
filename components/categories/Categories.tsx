@@ -62,7 +62,7 @@ export default async function Categories() {
       {categories.map((cat, idx) => (
         <Link
           key={cat}
-          href={`/search?category=${encodeURIComponent(cat)}`}
+          href={`/shop?category=${encodeURIComponent(cat)}`}
           className={`group relative col-span-2 overflow-hidden ${idx === 0 ? 'row-span-1 md:row-span-2' : ''}`}
         >
           <Image

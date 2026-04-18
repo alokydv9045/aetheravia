@@ -251,41 +251,49 @@ export default function LoyaltyAdminTable() {
   {!isLoading && filteredList.length > 0 && view === 'cards' && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredList.map(u => (
-            <div key={u._id} className={`card bg-base-100 border border-base-300 shadow-sm relative ${selected.includes(u._id) ? 'ring-2 ring-primary' : ''}`}>
-              <div className="absolute top-2 left-2">
-                <input type="checkbox" className="checkbox checkbox-xs" checked={selected.includes(u._id)} onChange={()=>toggleSelect(u._id)} />
+            <div key={u._id} className={`p-6 bg-white/40 backdrop-blur-md border border-primary/10 rounded-[2rem] shadow-sm relative group transition-all hover:bg-white/60 ${selected.includes(u._id) ? 'ring-2 ring-primary bg-white/80' : ''}`}>
+               <div className="absolute top-4 right-4">
+                <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" checked={selected.includes(u._id)} onChange={()=>toggleSelect(u._id)} />
               </div>
-              <div className="card-body p-4 space-y-3">
-                <div className="space-y-1 min-w-0">
-                  <div className="font-semibold truncate" title={u.name}>{u.name}</div>
-                  <div className="text-xs font-mono opacity-70 truncate">{u.email}</div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+                    {u.name?.charAt(0).toUpperCase() || 'L'}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-0.5">Heritage Member</div>
+                    <div className="font-bold text-sm text-primary truncate" title={u.name}>{u.name}</div>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between text-xs">
+
+                <div className="grid grid-cols-2 gap-4 py-4 border-y border-primary/5">
                   <div className="flex flex-col">
-                    <span className="opacity-60">Points</span>
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-1">Vault Points</div>
                     {editing === u._id ? (
-                      <input className="input input-xs input-bordered w-20" type="number" value={form.points} onChange={e=>setForm(f=>({...f, points: e.target.value}))} />
+                      <input className="input input-xs input-bordered w-full font-bold text-primary" type="number" value={form.points} onChange={e=>setForm(f=>({...f, points: e.target.value}))} />
                     ) : (
-                      <span className="font-semibold">{u.loyaltyPoints ?? 0}</span>
+                      <span className="font-black text-primary text-base">{u.loyaltyPoints ?? 0}</span>
                     )}
                   </div>
-                  <div className="flex flex-col items-end">
-                    <span className="opacity-60">Tier</span>
+                  <div className="flex flex-col text-right">
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-1">Current Tier</div>
                     {editing === u._id ? (
-                      <input className="input input-xs input-bordered w-20" value={form.tier} onChange={e=>setForm(f=>({...f, tier: e.target.value}))} />
+                      <input className="input input-xs input-bordered w-full text-right font-bold text-gray-600" value={form.tier} onChange={e=>setForm(f=>({...f, tier: e.target.value}))} />
                     ) : (
-                      <span className="font-semibold">{u.loyaltyTier || '-'}</span>
+                      <span className="font-bold text-gray-600 uppercase text-[10px] tracking-widest">{u.loyaltyTier || 'Novice'}</span>
                     )}
                   </div>
                 </div>
+
                 <div className="flex gap-2 pt-2">
                   {editing === u._id ? (
                     <>
-                      <button onClick={()=>saveEdit(u._id)} className="btn btn-primary btn-xs">Save</button>
-                      <button onClick={()=>setEditing(null)} className="btn btn-ghost btn-xs">Cancel</button>
+                      <button onClick={()=>saveEdit(u._id)} className="flex-1 py-2 text-[10px] font-bold uppercase tracking-widest bg-primary text-white rounded-xl shadow-lg shadow-primary/20 transition-all">Archive Save</button>
+                      <button onClick={()=>setEditing(null)} className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-stone-100 text-gray-400 rounded-xl">Dismiss</button>
                     </>
                   ) : (
-                    <button onClick={()=>beginEdit(u)} className="btn btn-outline btn-xs w-full">Edit</button>
+                    <button onClick={()=>beginEdit(u)} className="w-full py-2.5 text-[10px] font-bold uppercase tracking-widest bg-primary/5 text-primary border border-primary/10 rounded-xl hover:bg-primary/10 transition-colors">Adjust Credentials</button>
                   )}
                 </div>
               </div>
