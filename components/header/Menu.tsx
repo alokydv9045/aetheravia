@@ -58,18 +58,18 @@ const Menu = ({ showSearch = true }: { showSearch?: boolean }) => {
             >
               {session.user.isAdmin && (
                 <li onClick={handleClick}>
-                  <Link href='/admin/dashboard' className='text-gray-700 hover:text-green-600'>Admin Dashboard</Link>
+                  <Link href='/admin/dashboard' className='text-gray-700 hover:text-primary hover:bg-primary/5'>Admin Dashboard</Link>
                 </li>
               )}
 
               <li onClick={handleClick}>
-                <Link href='/order-history' className='text-gray-700 hover:text-green-600'>Order history</Link>
+                <Link href='/order-history' className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>Order history</Link>
               </li>
               <li onClick={handleClick}>
-                <Link href='/profile' className='text-gray-700 hover:text-green-600'>Profile</Link>
+                <Link href='/profile' className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>Profile</Link>
               </li>
               <li onClick={handleClick}>
-                <button type='button' onClick={signOutHandler} className='text-gray-700 hover:text-green-600'>
+                <button type='button' onClick={signOutHandler} className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>
                   Sign out
                 </button>
               </li>

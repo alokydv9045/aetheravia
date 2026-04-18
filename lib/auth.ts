@@ -48,26 +48,7 @@ export const config = {
             
             if (!isMatch) return null;
 
-            // If OTP is required but not provided, we can't authorize here
-            // The frontend should have called /api/auth/otp/send first
-            if (!credentials.otp) return null;
-
-            // Verify OTP
-            if (!user.loginOtp || !user.loginOtpExpiry) return null;
-
-            const isOtpMatch = await bcrypt.compare(
-              credentials.otp as string,
-              user.loginOtp,
-            );
-
-            const isExpired = new Date() > user.loginOtpExpiry;
-
-            if (isOtpMatch && !isExpired) {
-              // Clear OTP after successful login
-              user.loginOtp = undefined;
-              user.loginOtpExpiry = undefined;
-              await user.save();
-
+            if (isMatch) {
               return {
                 id: user._id.toString(),
                 _id: user._id.toString(),

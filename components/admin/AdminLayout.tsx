@@ -1,9 +1,11 @@
 "use client";
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { brandName } from '@/lib/brand';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import AdminRealtimeListener from './AdminRealtimeListener';
+import Menu from '@/components/header/Menu';
 
 const AdminLayout = ({
   activeItem = 'dashboard',
@@ -71,7 +73,7 @@ const AdminLayout = ({
 
   const menuItems = useMemo(() => [
     {
-      category: 'Overview',
+      category: 'Main Portal',
       items: [
         { key: 'dashboard', label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
         { key: 'analytics', label: 'Analytics', href: '/admin/analytics', icon: '📈' },
@@ -79,7 +81,7 @@ const AdminLayout = ({
       ]
     },
     {
-      category: 'Commerce',
+      category: 'Commerce Hub',
       items: [
         { key: 'orders-advanced', label: 'Advanced Orders', href: '/admin/orders/advanced', icon: '🔍' },
         { key: 'orders-unified', label: 'Unified Orders', href: '/admin/orders/unified', icon: '🎯' },
@@ -87,7 +89,7 @@ const AdminLayout = ({
       ]
     },
     {
-      category: 'Marketing',
+      category: 'Marketing Center',
       items: [
         { key: 'offers', label: 'Offers', href: '/admin/offers', icon: '🎯' },
         { key: 'coupons', label: 'Coupons', href: '/admin/coupons', icon: '🎫' },
@@ -95,7 +97,7 @@ const AdminLayout = ({
       ]
     },
     {
-      category: 'Customer',
+      category: 'Customer Vault',
       items: [
         { key: 'users', label: 'Users', href: '/admin/users', icon: '👥' },
         { key: 'loyalty', label: 'Loyalty', href: '/admin/loyalty', icon: '⭐' },
@@ -104,7 +106,7 @@ const AdminLayout = ({
       ]
     },
     {
-      category: 'Content',
+      category: 'Editorial',
       items: [
         { key: 'testimonials', label: 'Testimonials', href: '/admin/testimonials', icon: '💬' }
       ]
@@ -205,85 +207,50 @@ const AdminLayout = ({
   }, [sidebarOpen, isMobile, toggleSidebar]);
 
   return (
-  <div className='admin-neutral relative flex min-h-screen bg-base-100 text-base-content'>
-      {/* Mobile menu button - improved positioning and visibility */}
-      <button
-        ref={mobileToggleButtonRef}
-        onClick={() => toggleSidebar()}
-        className="fixed top-4 left-4 z-50 p-3 rounded-lg bg-primary text-primary-content shadow-lg hover:bg-primary/90 transition-all duration-200 md:hidden"
-        aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-        aria-expanded={sidebarOpen}
-        style={{ 
-          WebkitTapHighlightColor: 'transparent',
-          touchAction: 'manipulation'
-        }}
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-
-      {/* Desktop toggle button - improved styling */}
-      <button
-        ref={desktopToggleButtonRef}
-        onClick={() => toggleSidebar()}
-        className="hidden md:block fixed top-4 left-4 z-50 p-2 rounded-lg bg-base-200 shadow-lg hover:bg-base-300 transition-colors"
-        aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-        aria-expanded={sidebarOpen}
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-
-      {/* Sidebar - improved mobile handling */}
+    <div className='relative flex min-h-screen bg-stone-50 text-gray-900 font-body'>
+      {/* Sidebar - Unified Glass Branding */}
       <div
         id="admin-mobile-sidebar"
         ref={sidebarRef}
         aria-hidden={!sidebarOpen}
         className={`
-        fixed inset-y-0 left-0 z-40 w-80 max-w-[85%] bg-gradient-to-b from-base-200 to-base-300 shadow-xl transform transition-transform duration-300 ease-in-out flex flex-col outline-none
-        md:relative md:block md:shadow-lg md:max-w-none md:w-72
+        fixed inset-y-0 left-0 z-40 w-80 max-w-[85%] bg-white/95 backdrop-blur-xl border-r border-gray-100 shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col outline-none
+        md:relative md:block md:shadow-none md:max-w-none md:w-72
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
-        style={{
-          // Ensure proper touch handling on mobile
-          WebkitOverflowScrolling: 'touch',
-          overscrollBehavior: 'contain'
-        }}
+        style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
         role={isMobile ? 'dialog' : 'navigation'}
         aria-label="Admin navigation"
         aria-modal={isMobile ? true : undefined}
       >
-        {/* Close button removed with toggle icon */}
-        {/* Sidebar Header */}
-        <div className="p-4 border-b border-base-content/10 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-200 border border-gray-300 shadow-sm">
-              <span className="font-bold text-sm text-base-content">V</span>
+        {/* Sidebar Header: Official Brand Logo & Type */}
+        <div className="p-6 border-b border-gray-50 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative w-10 h-10 transition-transform group-hover:scale-110">
+              <Image src="/images/logo_mark.png" alt="Aetheravia" fill className="object-contain" priority />
             </div>
             <div>
-              <h1 className="font-bold text-base text-base-content">{brandName}</h1>
-              <p className="text-xs text-base-content/70">Admin Panel</p>
+              <h1 className="font-headline font-black text-sm tracking-tighter text-primary uppercase leading-tight">AETHRAVIA</h1>
+              <p className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-[0.3em]">Guardian Hub</p>
             </div>
-          </div>
+          </Link>
         </div>
 
-        {/* Navigation Menu */}
-        <div className="p-4 space-y-4 flex-1 flex flex-col overflow-y-auto">
+        {/* Navigation Menu: Brand Interactions */}
+        <div className="p-4 space-y-6 flex-1 flex flex-col overflow-y-auto">
           {menuItems.map((category, categoryIndex) => {
             const isCollapsed = collapsed[category.category];
             return (
               <div key={categoryIndex} className="flex-shrink-0">
                 <button
                   type="button"
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-md hover:bg-base-100 md:cursor-default group"
+                  className="w-full flex items-center justify-between px-3 py-1 rounded-md md:cursor-default group mb-1"
                   aria-expanded={isCollapsed ? 'false' : 'true'}
                   onClick={() => isMobile && toggleCategory(category.category)}
                 >
-                  <span className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">{category.category}</span>
+                  <span className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-[0.2em]">{category.category}</span>
                   {isMobile && (
-                    <span className={`transition-transform text-base-content/60 group-hover:text-base-content ${isCollapsed ? '' : 'rotate-90'}`}>▶</span>
+                    <span className={`transition-all text-gray-300 group-hover:text-primary ${isCollapsed ? '' : 'rotate-90'}`}>▶</span>
                   )}
                 </button>
                 <ul className={`space-y-1 mt-1 transition-[max-height,opacity] duration-300 ease-out ${isCollapsed ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-96 opacity-100'}`}>
@@ -293,17 +260,18 @@ const AdminLayout = ({
                         href={item.href}
                         ref={categoryIndex === 0 && itemIdx === 0 ? firstLinkRef : undefined}
                         className={`
-                          flex items-center px-3 py-2 rounded-lg transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-primary/40
+                          flex items-center px-4 py-2.5 rounded-xl transition-all duration-300 group
                           ${activeItem === item.key 
-                            ? 'bg-gray-200 text-base-content shadow-inner font-medium' 
-                            : 'text-base-content hover:bg-base-100 hover:shadow-sm active:bg-gray-200'
+                            ? 'bg-primary text-white shadow-lg shadow-primary/20 font-bold' 
+                            : 'text-gray-600 hover:text-primary hover:bg-primary/5'
                           }
                         `}
                         onClick={() => isMobile && toggleSidebar(false)}
                       >
-                        <span className="font-medium text-sm truncate">{item.label}</span>
+                         <span className={`mr-3 text-lg transition-transform group-hover:scale-125 ${activeItem === item.key ? 'scale-110' : 'opacity-70'}`}>{item.icon}</span>
+                        <span className="text-sm tracking-tight">{item.label}</span>
                         {activeItem === item.key && (
-                          <span className="ml-auto w-2 h-2 bg-primary-content rounded-full animate-ping"></span>
+                          <span className="ml-auto w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
                         )}
                       </Link>
                     </li>
@@ -315,37 +283,71 @@ const AdminLayout = ({
         </div>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-base-content/10 flex-shrink-0">
-          <div className="text-center">
-            <p className="text-xs text-base-content/50">{brandName} Admin v2.0</p>
-            <div className="flex justify-center gap-1 mt-1">
-              <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></div>
-              <span className="text-xs text-success">System Online</span>
+        <div className="p-6 border-t border-gray-50 flex-shrink-0">
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 rounded-full">
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-[10px] font-label font-bold text-green-700 uppercase tracking-tight">System Secure</span>
             </div>
+            <p className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-widest text-center">
+              v2.8 Artisan Edition
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Overlay for mobile when sidebar is open - improved touch handling */}
+      {/* Overlay for mobile when sidebar is open */}
       {sidebarOpen && isMobile && (
         <div
-          className="fixed inset-0 z-30 bg-black bg-opacity-50 transition-opacity duration-300"
+          className="fixed inset-0 z-30 bg-primary/10 backdrop-blur-sm transition-opacity duration-300"
           onClick={() => toggleSidebar(false)}
           aria-hidden="true"
-          style={{ 
-            WebkitTapHighlightColor: 'transparent',
-            touchAction: 'none'
-          }}
         />
       )}
 
-      {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${sidebarOpen && !isMobile ? 'md:ml-0' : ''}`}>
-        <div className={`min-h-screen bg-gradient-to-br from-base-100 to-base-200 ${!isMobile ? 'pt-16' : 'pt-16'}`}>
-          {children}
-        </div>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen min-w-0 transition-all duration-300">
+        {/* Top Header Row (The Vault Header) */}
+        <header className="sticky top-0 z-30 h-16 bg-white/70 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-4 sm:px-8 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            {/* The 3-line Toggle (Hamburger) integrated into Navbar */}
+            <button
+              onClick={() => toggleSidebar()}
+              className="p-2.5 rounded-xl transition-all hover:bg-primary/5 active:scale-90 text-primary group"
+              aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+            >
+              <div className="relative w-6 h-5 overflow-hidden">
+                <span className={`absolute h-0.5 w-6 bg-current rounded-full transition-all duration-300 ${sidebarOpen ? 'top-2.5 -rotate-45' : 'top-0'}`} />
+                <span className={`absolute h-0.5 w-4 bg-current rounded-full transition-all duration-300 top-2 ${sidebarOpen ? 'opacity-0 translate-x-10' : 'opacity-100'}`} />
+                <span className={`absolute h-0.5 w-6 bg-current rounded-full transition-all duration-300 ${sidebarOpen ? 'top-2.5 rotate-45' : 'top-4'}`} />
+              </div>
+            </button>
+            <div className="h-6 w-[1px] bg-gray-100 mx-1"></div>
+            <div className="hidden sm:block">
+               <span className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-[0.25em]">Aetheravia Console</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-6">
+            <Link href="/" className="hidden lg:flex items-center gap-2 text-[10px] font-label font-bold text-primary/60 uppercase tracking-widest hover:text-primary transition-colors hover:underline whitespace-nowrap">
+              <span>Exit to Boutique</span>
+              <span className="text-xs">↗</span>
+            </Link>
+            <div className="hidden lg:block h-6 w-[1px] bg-gray-100"></div>
+            {/* The Actual Profile Dropdown (Themed Primary) */}
+            <Menu showSearch={false} />
+          </div>
+        </header>
+
+        <main className="flex-1 relative overflow-y-auto overflow-x-hidden p-4 sm:p-8 lg:p-10 scroll-smooth">
+          {/* Subtle branding background element */}
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/3 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          
+          <div className="relative max-w-[1600px] mx-auto w-full pb-20">
+            {children}
+          </div>
+        </main>
       </div>
-      {/* Realtime listener (non-intrusive) */}
       <AdminRealtimeListener />
     </div>
   );

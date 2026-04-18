@@ -56,8 +56,11 @@ const Dashboard = () => {
         data: summary.salesData.map(
           (x: { totalSales: number }) => x.totalSales,
         ),
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        borderColor: '#904917',
+        backgroundColor: 'rgba(144, 73, 23, 0.1)',
+        pointBackgroundColor: '#904917',
+        tension: 0.4,
+        fill: true,
       },
     ],
   };
@@ -70,8 +73,11 @@ const Dashboard = () => {
         data: summary.salesData.map(
           (x: { totalOrders: number }) => x.totalOrders,
         ),
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        borderColor: '#C5A059',
+        backgroundColor: 'rgba(197, 160, 89, 0.1)',
+        pointBackgroundColor: '#C5A059',
+        tension: 0.4,
+        fill: true,
       },
     ],
   };
@@ -107,8 +113,9 @@ const Dashboard = () => {
     datasets: [
       {
         label: 'Users',
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(75, 136, 177, 0.5)',
+        borderColor: '#2D4B3C',
+        backgroundColor: 'rgba(45, 75, 60, 0.1)',
+        pointBackgroundColor: '#2D4B3C',
         data: summary.usersData.map(
           (x: { totalUsers: number }) => x.totalUsers,
         ),
@@ -148,20 +155,21 @@ const Dashboard = () => {
 
 function StatCard({ label, value, href }: { label: string; value: string; href: string }) {
   return (
-    <Link href={href} className="stat bg-base-100 shadow-sm hover:shadow transition-shadow rounded-box p-3 sm:p-4 no-underline">
-      <div className="stat-title text-[10px] sm:text-xs text-muted-foreground">{label}</div>
-      <div className="stat-value text-sm sm:text-lg font-semibold text-primary truncate">{value}</div>
-      <div className="stat-desc text-[10px] sm:text-xs underline">View {label.toLowerCase()}</div>
+    <Link href={href} className="flex flex-col p-5 bg-white/40 backdrop-blur-md border border-primary/10 rounded-2xl shadow-sm hover:shadow-md transition-all hover:bg-white/60 no-underline group">
+      <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-1 group-hover:text-primary/40 transition-colors">{label}</div>
+      <div className="text-xl font-bold text-primary truncate group-hover:scale-105 transition-transform origin-left">{value}</div>
+      <div className="mt-3 text-[9px] font-label font-bold text-primary/30 uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity">Access Data →</div>
     </Link>
   );
 }
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="card bg-base-100 shadow-sm">
-      <div className="card-body p-4 sm:p-6">
-        <h2 className="text-sm sm:text-base font-semibold mb-3 flex items-center gap-2">
-          <span className="text-base" aria-hidden="true">📊</span> {title}
+    <div className="flex flex-col p-6 bg-white/40 backdrop-blur-md border border-primary/10 rounded-[2.5rem] shadow-sm overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
+      <div className="relative">
+        <h2 className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
+          <span className="text-lg opacity-60" aria-hidden="true">📈</span> {title}
         </h2>
         <div className="relative h-[220px] sm:h-[300px]">{children}</div>
       </div>

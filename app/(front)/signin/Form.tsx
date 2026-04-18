@@ -66,29 +66,25 @@ const Form = () => {
   };
 
   const formSubmit: SubmitHandler<Inputs> = async (form) => {
-    if (step === 'credentials') {
-      await sendOtp();
-      return;
-    }
-
-    const { email, password, otp } = form;
+    const { email, password } = form;
     
     const result = await signIn('credentials', {
       email,
       password,
-      otp,
+      // Pass a dummy OTP since the backend now ignores it but the provider might still expect the field
+      otp: '000000', 
       redirect: false,
       callbackUrl,
     });
 
     if (result?.error) {
       toast.error(result.error === 'CredentialsSignin' 
-        ? 'Invalid verification code' 
+        ? 'Invalid email or password' 
         : result.error,
         { id: 'signin-error' }
       );
     } else if (result?.ok) {
-      toast.success('Login successful! Redirecting...', { id: 'signin-success' });
+      toast.success('Login successful! Welcome back.', { id: 'signin-success' });
       router.refresh();
       router.push(callbackUrl);
     }

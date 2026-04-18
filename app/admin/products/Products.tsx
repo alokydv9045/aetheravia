@@ -381,48 +381,55 @@ export default function Products() {
             </div>
           </div>
         </div>
-        {/* Mobile Cards */}
-        <div className="md:hidden space-y-3 p-2">
+        {/* Mobile Cards (Vault System) */}
+        <div className="md:hidden space-y-4 p-2">
           {paginated.map((product: Product) => (
-            <div key={product._id} className="card-soft p-3 flex gap-3">
-              <div className="w-16 h-16 rounded bg-base-200 overflow-hidden flex-shrink-0">
-                <Image src={product.image} alt={product.name} width={64} height={64} className="object-cover w-full h-full" />
-              </div>
-              <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="font-semibold text-sm leading-tight line-clamp-2">{product.name}</div>
-                  <div className="text-[10px] text-base-content/50 uppercase tracking-wide mt-0.5">{product.brand}</div>
+            <div key={product._id} className="p-6 bg-white/40 backdrop-blur-md border border-primary/10 rounded-[2rem] shadow-sm relative group transition-all hover:bg-white/60">
+              <div className="flex gap-4">
+                <div className="w-20 h-20 rounded-2xl bg-stone-100 overflow-hidden flex-shrink-0 border border-primary/5">
+                  <Image src={product.image} alt={product.name} width={80} height={80} className="object-cover w-full h-full" />
                 </div>
-                <div className="flex flex-wrap items-center gap-2 mt-2 text-xs">
-                  {showColumns.price && <span className="text-primary font-semibold">{formatPrice(product.price)}</span>}
-                  {showColumns.category && <span className="badge badge-outline badge-xs">{product.category}</span>}
-                  {showColumns.stock && <span className={`badge badge-xs ${product.countInStock > 10 ? 'badge-success' : product.countInStock > 0 ? 'badge-warning' : 'badge-error'}`}>{product.countInStock > 0 ? product.countInStock : 'Out'}</span>}
-                  {showColumns.status && <span className={`badge badge-xs ${product.countInStock > 0 ? 'badge-success' : 'badge-error'}`}>{product.countInStock > 0 ? 'Avail' : 'None'}</span>}
-                </div>
-                <div className="flex items-center justify-between mt-2">
-                  {showColumns.rating && (
-                    <div className="flex items-center gap-1">
-                      <div className="rating rating-xs">
-                        {[...Array(5)].map((_, i) => (
-                          <div key={i} className={`mask mask-star-2 w-3 h-3 ${i < Math.floor(product.rating) ? 'bg-warning' : 'bg-base-300'}`} />
-                        ))}
-                      </div>
-                      <span className="text-[10px]">{product.rating?.toFixed(1)}</span>
-                    </div>
-                  )}
-                  <div className="flex gap-1">
-                    <Link href={`/admin/products/${product._id}`} className="btn btn-ghost btn-xs">✏️</Link>
-                    <button onClick={() => deleteProduct({ productId: product._id! })} className="btn btn-ghost btn-xs text-error">🗑️</button>
+                <div className="flex-1 min-w-0 flex flex-col">
+                  <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-0.5">{product.brand}</div>
+                  <div className="font-bold text-sm text-primary leading-tight line-clamp-2">{product.name}</div>
+                  <div className="mt-auto flex items-center gap-2">
+                    <span className="text-sm font-black text-primary">{formatPrice(product.price)}</span>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter ${product.countInStock > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                      {product.countInStock > 0 ? `${product.countInStock} In Vault` : 'Deteriorated'}
+                    </span>
                   </div>
                 </div>
               </div>
+              
+              <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-primary/5">
+                <div>
+                  <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-1">Archive Dept.</div>
+                  <div className="text-[10px] font-bold text-gray-600 truncate">{product.category}</div>
+                </div>
+                <div>
+                  <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-1">Authenticity</div>
+                  <div className="flex items-center gap-1">
+                    <div className="rating rating-xs">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className={`mask mask-star-2 w-2 h-2 ${i < Math.floor(product.rating) ? 'bg-primary' : 'bg-base-200'}`} />
+                      ))}
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-400">{product.rating?.toFixed(1)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-2 mt-5">
+                <Link href={`/admin/products/${product._id}`} className="flex-1 py-2 text-center text-[10px] font-bold uppercase tracking-widest bg-primary text-white rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">Edit Asset</Link>
+                <button onClick={() => deleteProduct({ productId: product._id! })} className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors">Del</button>
+              </div>
             </div>
           ))}
-          <div className="flex justify-between items-center pt-2 pb-4 text-[11px]">
-            <div>{page}/{totalPages}</div>
-            <div className="flex gap-1">
-              <button className="btn btn-xs" disabled={page===1} onClick={() => setPage(p=>p-1)}>Prev</button>
-              <button className="btn btn-xs" disabled={page===totalPages} onClick={() => setPage(p=>p+1)}>Next</button>
+          <div className="flex justify-between items-center pt-2 pb-6 px-4">
+            <div className="text-[10px] font-label font-bold text-gray-400 uppercase tracking-widest">Dept. Page {page}/{totalPages}</div>
+            <div className="flex gap-2">
+              <button className="btn btn-xs rounded-lg border-primary/10 bg-white/50" disabled={page===1} onClick={() => setPage(p=>p-1)}>Prev</button>
+              <button className="btn btn-xs rounded-lg border-primary/10 bg-white/50" disabled={page===totalPages} onClick={() => setPage(p=>p+1)}>Next</button>
             </div>
           </div>
         </div>

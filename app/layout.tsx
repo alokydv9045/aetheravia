@@ -2,15 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
-import DrawerButton from '@/components/DrawerButton';
-import Footer from '@/components/footer/Footer';
-import Header from '@/components/header/Header';
 import Providers from '@/components/Providers';
-import Sidebar from '@/components/Sidebar';
-import FAQSection from '@/components/footer/FAQ';
-import TrustBar from '@/components/footer/TrustBar';
-import ResponsiveDrawerInit from '@/components/ResponsiveDrawerInit';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import BrowserExtensionFix from '@/components/BrowserExtensionFix';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { constructMetadata, getOrganizationSchema } from '@/lib/seo';
@@ -46,26 +38,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <BrowserExtensionFix />
         <Providers>
           <ErrorBoundary>
-            <div className='drawer'>
-              <DrawerButton />
-              <ResponsiveDrawerInit />
-              <div className='drawer-content'>
-                <div className='flex min-h-screen flex-col overflow-x-hidden'>
-                  <Header />
-                  {children}
-                  <Footer />
-                  <ScrollToTopButton />
-                </div>
-              </div>
-              <div className='drawer-side'>
-                <label
-                  htmlFor='my-drawer'
-                  aria-label='close sidebar'
-                  className='drawer-overlay'
-                ></label>
-                <Sidebar />
-              </div>
-            </div>
+            {children}
           </ErrorBoundary>
         </Providers>
       </body>

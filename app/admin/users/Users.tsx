@@ -245,26 +245,44 @@ export default function Users() {
       )}
 
       {!isLoading && filtered.length > 0 && view === 'cards' && (
-        <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4Snap snap-y'>
           {filtered.map((u: User) => (
-            <div key={u._id} className={`card bg-base-100 border border-base-300 shadow-sm relative ${selected.includes(u._id) ? 'ring-2 ring-primary' : ''}`}>
-              <div className="absolute top-2 left-2">
-                <input type="checkbox" className="checkbox checkbox-xs" checked={selected.includes(u._id)} onChange={()=>toggleSelect(u._id)} />
+            <div key={u._id} className={`p-6 bg-white/40 backdrop-blur-md border border-primary/10 rounded-[2rem] shadow-sm relative group transition-all hover:bg-white/60 ${selected.includes(u._id) ? 'ring-2 ring-primary bg-white/80' : ''}`}>
+              <div className="absolute top-4 right-4">
+                <input type="checkbox" className="checkbox checkbox-sm checkbox-primary" checked={selected.includes(u._id)} onChange={()=>toggleSelect(u._id)} />
               </div>
-              <div className="card-body p-4 space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1 min-w-0">
-                    <div className="font-semibold truncate" title={u.name}>{u.name}</div>
-                    <div className="text-xs font-mono opacity-70 truncate">{formatId(u._id)}</div>
-                    <div className="text-xs break-all leading-tight opacity-80 line-clamp-2" title={u.email}>{u.email}</div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+                    {u.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
-                  <div>
-                    <button onClick={()=>handleToggleAdmin(u)} className={`badge cursor-pointer ${u.isAdmin ? 'badge-primary' : 'badge-ghost'}`}>{u.isAdmin ? 'Admin' : 'Member'}</button>
+                  <div className="min-w-0">
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-0.5">Identity</div>
+                    <div className="font-bold text-sm text-primary truncate" title={u.name}>{u.name}</div>
                   </div>
                 </div>
-                <div className="flex gap-2 pt-1">
-                  <Link href={`/admin/users/${u._id}`} className='btn btn-xs btn-outline'>Edit</Link>
-                  <button disabled={deleting} onClick={()=>handleDelete(u._id)} className='btn btn-xs btn-outline btn-error'>Del</button>
+
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-0.5">Credentials</div>
+                    <div className="text-xs break-all leading-tight text-gray-600 line-clamp-1" title={u.email}>{u.email}</div>
+                    <div className="text-[10px] font-mono text-gray-300 mt-1 uppercase">ID: {formatId(u._id)}</div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-primary/5">
+                    <div className="flex flex-col">
+                      <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest">Privileges</div>
+                      <button onClick={()=>handleToggleAdmin(u)} className={`text-[10px] font-bold uppercase tracking-wider mt-1 ${u.isAdmin ? 'text-primary' : 'text-gray-400'}`}>
+                        {u.isAdmin ? '🛡️ Administrator' : '👤 Standard Member'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <Link href={`/admin/users/${u._id}`} className='flex-1 py-2 text-center text-[10px] font-bold uppercase tracking-widest bg-primary/5 text-primary rounded-xl hover:bg-primary/10 transition-colors'>Edit Record</Link>
+                  <button disabled={deleting} onClick={()=>handleDelete(u._id)} className='px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors'>Del</button>
                 </div>
               </div>
             </div>
