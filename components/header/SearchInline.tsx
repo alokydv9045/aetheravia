@@ -90,7 +90,7 @@ export default function SearchInline() {
               <motion.div key={product.slug} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
                 <Link href={`/product/${product.slug}`} onClick={() => setIsOpen(false)} className="group flex flex-col gap-4">
                   <div className="relative aspect-square rounded-xl overflow-hidden bg-surface-container-low">
-                    <Image src={product.image} alt={product.name} fill className="object-cover" />
+                    <Image src={product.image} alt={product.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px" className="object-cover" />
                   </div>
                   <div>
                     <h4 className="text-lg font-headline text-on-surface">{product.name}</h4>
@@ -189,7 +189,7 @@ export default function SearchInline() {
                       className="flex items-center gap-4 p-2.5 rounded-xl hover:bg-primary/5 transition-all group"
                     >
                       <div className="relative w-14 h-14 rounded-lg bg-gray-50 overflow-hidden border border-gray-100 flex-shrink-0">
-                        <Image src={product.image} alt={product.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <Image src={product.image} alt={product.name} fill sizes="56px" className="object-cover group-hover:scale-110 transition-transform duration-500" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-bold text-black truncate group-hover:text-primary transition-colors">{product.name}</h4>

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import useCartService from '@/lib/hooks/useCartStore';
 
-const Menu = ({ showSearch = true }: { showSearch?: boolean }) => {
+const Menu = ({ showSearch = true, showAccount = true }: { showSearch?: boolean; showAccount?: boolean }) => {
   const { items, init } = useCartService();
   const { data: session, status, update } = useSession();
   const router = useRouter();
@@ -45,47 +45,51 @@ const Menu = ({ showSearch = true }: { showSearch?: boolean }) => {
           )}
         </Link>
       </li>
-      {session && session.user ? (
-        <li>
-          <div className='dropdown dropdown-end dropdown-bottom'>
-            <label tabIndex={0} className='flex items-center gap-2 text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary cursor-pointer'>
-              {session.user.name}
-              <ChevronDown size={16} />
-            </label>
-            <ul
-              tabIndex={0}
-              className='menu dropdown-content z-[1] w-52 rounded-box bg-white border border-gray-200 p-2 shadow-lg'
-            >
-              {session.user.isAdmin && (
-                <li onClick={handleClick}>
-                  <Link href='/admin/dashboard' className='text-gray-700 hover:text-primary hover:bg-primary/5'>Admin Dashboard</Link>
-                </li>
-              )}
+      {showAccount && (
+        <>
+          {session && session.user ? (
+            <li>
+              <div className='dropdown dropdown-end dropdown-bottom'>
+                <label tabIndex={0} className='flex items-center gap-2 text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary cursor-pointer'>
+                  {session.user.name}
+                  <ChevronDown size={16} />
+                </label>
+                <ul
+                  tabIndex={0}
+                  className='menu dropdown-content z-[1] w-52 rounded-box bg-white border border-gray-200 p-2 shadow-lg'
+                >
+                  {session.user.isAdmin && (
+                    <li onClick={handleClick}>
+                      <Link href='/admin/dashboard' className='text-gray-700 hover:text-primary hover:bg-primary/5'>Admin Dashboard</Link>
+                    </li>
+                  )}
 
-              <li onClick={handleClick}>
-                <Link href='/order-history' className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>Order history</Link>
-              </li>
-              <li onClick={handleClick}>
-                <Link href='/profile' className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>Profile</Link>
-              </li>
-              <li onClick={handleClick}>
-                <button type='button' onClick={signOutHandler} className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>
-                  Sign out
-                </button>
-              </li>
-            </ul>
-          </div>
-        </li>
-      ) : (
-        <li>
-          <button
-            className='text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'
-            type='button'
-            onClick={() => signIn()}
-          >
-            Sign in
-          </button>
-        </li>
+                  <li onClick={handleClick}>
+                    <Link href='/order-history' className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>Order history</Link>
+                  </li>
+                  <li onClick={handleClick}>
+                    <Link href='/profile' className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>Profile</Link>
+                  </li>
+                  <li onClick={handleClick}>
+                    <button type='button' onClick={signOutHandler} className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>
+                      Sign out
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          ) : (
+            <li>
+              <button
+                className='text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'
+                type='button'
+                onClick={() => signIn()}
+              >
+                Sign in
+              </button>
+            </li>
+          )}
+        </>
       )}
     </ul>
   );

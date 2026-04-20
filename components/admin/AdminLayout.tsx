@@ -7,6 +7,23 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import AdminRealtimeListener from './AdminRealtimeListener';
 import Menu from '@/components/header/Menu';
 
+import { 
+  LayoutDashboard, 
+  BarChart3, 
+  BellRing, 
+  ClipboardList, 
+  ShoppingCart, 
+  Package, 
+  Zap, 
+  Ticket, 
+  Image as ImageIcon, 
+  Users, 
+  Award, 
+  Share2, 
+  Palette, 
+  MessageSquare 
+} from 'lucide-react';
+
 const AdminLayout = ({
   activeItem = 'dashboard',
   children,
@@ -75,43 +92,44 @@ const AdminLayout = ({
     {
       category: 'Main Portal',
       items: [
-        { key: 'dashboard', label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
-        { key: 'analytics', label: 'Analytics', href: '/admin/analytics', icon: '📈' },
-        { key: 'test-notifications', label: 'Test Notifications', href: '/admin/test-notifications', icon: '🔔' }
+        { key: 'dashboard', label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+        { key: 'analytics', label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+        { key: 'test-notifications', label: 'Test Notifications', href: '/admin/test-notifications', icon: BellRing }
       ]
     },
     {
       category: 'Commerce Hub',
       items: [
-        { key: 'orders-advanced', label: 'Advanced Orders', href: '/admin/orders/advanced', icon: '🔍' },
-        { key: 'orders-unified', label: 'Unified Orders', href: '/admin/orders/unified', icon: '🎯' },
-        { key: 'products', label: 'Products', href: '/admin/products', icon: '🛍️' }
+        { key: 'orders-advanced', label: 'Advanced Orders', href: '/admin/orders/advanced', icon: ClipboardList },
+        { key: 'orders-unified', label: 'Unified Orders', href: '/admin/orders/unified', icon: ShoppingCart },
+        { key: 'products', label: 'Products', href: '/admin/products', icon: Package }
       ]
     },
     {
       category: 'Marketing Center',
       items: [
-        { key: 'offers', label: 'Offers', href: '/admin/offers', icon: '🎯' },
-        { key: 'coupons', label: 'Coupons', href: '/admin/coupons', icon: '🎫' },
-        { key: 'carousel', label: 'Banners', href: '/admin/carousel', icon: '🖼️' }
+        { key: 'offers', label: 'Offers', href: '/admin/offers', icon: Zap },
+        { key: 'coupons', label: 'Coupons', href: '/admin/coupons', icon: Ticket },
+        { key: 'carousel', label: 'Banners', href: '/admin/carousel', icon: ImageIcon }
       ]
     },
     {
       category: 'Customer Vault',
       items: [
-        { key: 'users', label: 'Users', href: '/admin/users', icon: '👥' },
-        { key: 'loyalty', label: 'Loyalty', href: '/admin/loyalty', icon: '⭐' },
-        { key: 'referral', label: 'Referral', href: '/admin/referral', icon: '🔗' },
-        { key: 'personalization', label: 'Personalization', href: '/admin/personalization', icon: '🎨' }
+        { key: 'users', label: 'Users', href: '/admin/users', icon: Users },
+        { key: 'loyalty', label: 'Loyalty', href: '/admin/loyalty', icon: Award },
+        { key: 'referral', label: 'Referral', href: '/admin/referral', icon: Share2 },
+        { key: 'personalization', label: 'Personalization', href: '/admin/personalization', icon: Palette }
       ]
     },
     {
       category: 'Editorial',
       items: [
-        { key: 'testimonials', label: 'Testimonials', href: '/admin/testimonials', icon: '💬' }
+        { key: 'testimonials', label: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare }
       ]
     }
   ], []);
+
 
   // Initialize collapsed state (collapsed by default on mobile except first section)
   useEffect(() => {
@@ -227,7 +245,7 @@ const AdminLayout = ({
         <div className="p-6 border-b border-gray-50 flex-shrink-0">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative w-10 h-10 transition-transform group-hover:scale-110">
-              <Image src="/images/logo_mark.png" alt="Aetheravia" fill className="object-contain" priority />
+              <Image src="/images/logo_mark.png" alt="Aetheravia" fill sizes="40px" className="object-contain" priority />
             </div>
             <div>
               <h1 className="font-headline font-black text-sm tracking-tighter text-primary uppercase leading-tight">AETHRAVIA</h1>
@@ -268,7 +286,10 @@ const AdminLayout = ({
                         `}
                         onClick={() => isMobile && toggleSidebar(false)}
                       >
-                         <span className={`mr-3 text-lg transition-transform group-hover:scale-125 ${activeItem === item.key ? 'scale-110' : 'opacity-70'}`}>{item.icon}</span>
+                        <item.icon 
+                          size={20} 
+                          className={`mr-3 transition-transform group-hover:scale-125 ${activeItem === item.key ? 'scale-110' : 'opacity-70'}`} 
+                        />
                         <span className="text-sm tracking-tight">{item.label}</span>
                         {activeItem === item.key && (
                           <span className="ml-auto w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>

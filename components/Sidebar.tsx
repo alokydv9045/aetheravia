@@ -17,16 +17,26 @@ import {
   Leaf,
   History,
   LayoutDashboard,
+  LogOut,
   X
 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import useLayoutService from '@/lib/hooks/useLayout';
+import useCartService from '@/lib/hooks/useCartStore';
 
 const Sidebar = () => {
   const { toggleDrawer, drawerOpen } = useLayoutService();
   const { data: session, status } = useSession();
+  const { init: initCart } = useCartService();
+  
+  const logoutHandler = () => {
+    signOut({ callbackUrl: '/signin' });
+    initCart();
+    toggleDrawer();
+  };
+
   const {
     data: categories,
     error,
@@ -69,7 +79,7 @@ const Sidebar = () => {
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
             <Sparkles size={18} />
           </div>
-          <span className="text-xl font-black tracking-tighter uppercase text-primary">
+          <span className="hidden text-xl font-black tracking-tighter uppercase text-primary">
             AETHRAVIA
           </span>
         </div>
@@ -85,8 +95,8 @@ const Sidebar = () => {
         {/* Primary Site Navigation */}
         <SectionHeader>Ritual Navigation</SectionHeader>
         <div className="space-y-1">
-          <NavLink href="/" icon={Home} isPrimary>The Emporium (Home)</NavLink>
-          <NavLink href="/shop" icon={ShoppingBag}>The Archive (Shop)</NavLink>
+          <NavLink href="/" icon={Home} isPrimary>Home</NavLink>
+          <NavLink href="/shop" icon={ShoppingBag}>Shop</NavLink>
           <NavLink href="/ritual" icon={Sparkles}>Our Rituals</NavLink>
           <NavLink href="/ingredients" icon={Leaf}>Earthly Elements</NavLink>
         </div>
@@ -117,14 +127,24 @@ const Sidebar = () => {
 
         {/* Your Archive (Accounts) */}
         <SectionHeader>Your Archive</SectionHeader>
-        <div className="space-y-1 pb-12">
+        <div className="space-y-1 pb-4">
           {status === 'authenticated' && session?.user ? (
             <>
               <NavLink href="/profile" icon={User}>Account Profile</NavLink>
               <NavLink href="/order-history" icon={History}>Trove History</NavLink>
               {session.user.isAdmin && (
-                <NavLink href="/admin/dashboard" icon={LayoutDashboard}>Warden Dashboard</NavLink>
+                <NavLink href="/admin/dashboard" icon={LayoutDashboard}>Admin Dashboard</NavLink>
               )}
+              <button 
+                onClick={logoutHandler}
+                className="w-full flex items-center justify-between group py-3 px-4 rounded-xl transition-all duration-300 text-red-600 hover:bg-red-50 mt-4"
+              >
+                <div className="flex items-center gap-4">
+                  <LogOut size={20} className="text-red-400 group-hover:text-red-600 transition-colors" />
+                  <span className="text-base tracking-tight font-medium">Sign Out</span>
+                </div>
+                <ChevronRight size={16} className="opacity-0 group-hover:opacity-40 transition-opacity" />
+              </button>
             </>
           ) : (
             <>

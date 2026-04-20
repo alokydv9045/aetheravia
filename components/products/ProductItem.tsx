@@ -15,24 +15,6 @@ const ProductItem = ({ product }: { product: Product }) => {
   const { items, increase } = useCartService();
 
   const addItemHandler = () => {
-    if (!session) {
-      const msg = 'Please sign in to add to cart';
-      toast.error(msg, {
-        id: msg,
-        style: {
-          background: '#1c1c19',
-          color: '#fff',
-          borderRadius: '8px',
-          fontSize: '12px',
-          fontWeight: 'bold',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase'
-        }
-      });
-      router.push('/signin');
-      return;
-    }
-    
     increase({
       ...product,
       qty: 0,
@@ -57,24 +39,6 @@ const ProductItem = ({ product }: { product: Product }) => {
   };
 
   const buyNowHandler = () => {
-    if (!session) {
-      const msg = 'Please sign in to continue';
-      toast.error(msg, {
-        id: msg,
-        style: {
-          background: '#1c1c19',
-          color: '#fff',
-          borderRadius: '8px',
-          fontSize: '12px',
-          fontWeight: 'bold',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase'
-        }
-      });
-      router.push('/signin');
-      return;
-    }
-    
     increase({
       ...product,
       qty: 0,
