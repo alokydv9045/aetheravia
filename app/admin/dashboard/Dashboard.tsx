@@ -60,7 +60,6 @@ const Dashboard = () => {
         backgroundColor: 'rgba(144, 73, 23, 0.1)',
         pointBackgroundColor: '#904917',
         tension: 0.4,
-        fill: true,
       },
     ],
   };
@@ -77,7 +76,6 @@ const Dashboard = () => {
         backgroundColor: 'rgba(197, 160, 89, 0.1)',
         pointBackgroundColor: '#C5A059',
         tension: 0.4,
-        fill: true,
       },
     ],
   };

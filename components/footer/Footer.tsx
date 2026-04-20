@@ -23,6 +23,7 @@ const Footer = () => {
                   src="/images/logo_mark.png"
                   alt="Aetheravia Logo"
                   fill
+                  sizes="48px"
                   className="object-contain"
                 />
               </div>

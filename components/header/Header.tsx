@@ -49,11 +49,12 @@ const Header = () => {
                   src="/images/logo_mark.png"
                   alt="Aetheravia Logo"
                   fill
+                  sizes="(max-width: 640px) 32px, 40px"
                   className="object-contain"
                   priority
                 />
               </div>
-              <span className='text-lg sm:text-2xl font-black tracking-tighter uppercase text-primary hover:opacity-80 transition-opacity whitespace-nowrap'>
+              <span className='hidden sm:inline-block text-lg sm:text-2xl font-black tracking-tighter uppercase text-primary hover:opacity-80 transition-opacity whitespace-nowrap'>
                 AETHRAVIA
               </span>
             </Link>
@@ -90,7 +91,7 @@ const Header = () => {
             
             {/* Unified Mobile Actions */}
             <div className="sm:hidden flex items-center">
-              <Menu showSearch={false} />
+              <Menu showSearch={false} showAccount={false} />
             </div>
           </div>
         </div>

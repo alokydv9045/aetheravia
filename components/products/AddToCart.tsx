@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
+import toast from 'react-hot-toast';
+
 import useCartService from '@/lib/hooks/useCartStore';
 import { OrderItem } from '@/lib/models/OrderModel';
 
@@ -19,35 +21,34 @@ const AddToCart = ({ item }: { item: OrderItem }) => {
   }, [item, items]);
 
   const addToCartHandler = () => {
-    if (!session) {
-      router.push('/signin');
-      return;
-    }
     increase(item);
+    toast.success('Added to your bag', {
+      style: {
+        background: '#904917',
+        color: '#fff',
+        borderRadius: '8px',
+        fontSize: '12px',
+        fontWeight: 'bold',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase'
+      },
+      iconTheme: {
+        primary: '#fff',
+        secondary: '#904917',
+      },
+    });
   };
 
   const buyNowHandler = () => {
-    if (!session) {
-      router.push('/signin');
-      return;
-    }
     increase(item);
     router.push('/shipping');
   };
 
   const handleIncrease = (itemObj: OrderItem) => {
-    if (!session) {
-      router.push('/signin');
-      return;
-    }
     increase(itemObj);
   };
 
   const handleDecrease = (itemObj: OrderItem) => {
-    if (!session) {
-      router.push('/signin');
-      return;
-    }
     decrease(itemObj);
   };
 

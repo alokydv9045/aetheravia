@@ -9,9 +9,16 @@ import toast from 'react-hot-toast';
 
 import useCartService from '@/lib/hooks/useCartStore';
 import { formatPrice } from '@/lib/utils';
+import { OrderItem } from '@/lib/models/OrderModel';
+
+type CartItem = OrderItem & {
+  category: string;
+  brand: string;
+  countInStock: number;
+};
 
 const CartDetails = () => {
-  const { items, itemsPrice, shippingPrice, totalPrice, decrease, increase } = useCartService() as any;
+  const { items, itemsPrice, shippingPrice, totalPrice, decrease, increase } = useCartService();
   const [mounted, setMounted] = useState(false);
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const router = useRouter();
@@ -80,14 +87,14 @@ const CartDetails = () => {
       <div className="mb-12">
         <h1 className="font-headline italic text-5xl md:text-6xl text-primary tracking-tight">Your Ritual Bag</h1>
         <p className="text-secondary mt-4 font-body tracking-wide opacity-80">
-          {items.reduce((acc, item) => acc + item.qty, 0)} artisanal {items.length === 1 && items[0].qty === 1 ? 'blend' : 'blends'} awaiting their journey to you.
+          {items.reduce((acc: number, item: CartItem) => acc + item.qty, 0)} artisanal {items.length === 1 && items[0].qty === 1 ? 'blend' : 'blends'} awaiting their journey to you.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
         {/* Cart Items List */}
         <div className="lg:col-span-8 space-y-12">
-          {items.map((item) => (
+          {items.map((item: CartItem) => (
             <div key={item.slug} className="group flex flex-col md:flex-row gap-8 pb-12 items-start border-b border-outline-variant/20">
               <div className="w-full md:w-48 aspect-[4/5] bg-surface-container-low overflow-hidden rounded relative">
                 <Image
@@ -163,7 +170,7 @@ const CartDetails = () => {
             <h2 className="font-headline text-2xl text-secondary border-b border-outline-variant/20 pb-4 mb-6">Summary</h2>
             <div className="space-y-4 font-body">
               <div className="flex justify-between text-on-surface-variant">
-                <span>Subtotal ({items.reduce((acc, item) => acc + item.qty, 0)} items)</span>
+                <span>Subtotal ({items.reduce((acc: number, item: CartItem) => acc + item.qty, 0)} items)</span>
                 <span className="font-semibold">{formatPrice(itemsPrice)}</span>
               </div>
               <div className="flex justify-between text-on-surface-variant">

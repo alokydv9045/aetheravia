@@ -2,6 +2,18 @@
 import useSWR from "swr";
 import Link from "next/link";
 import { useMemo } from "react";
+import { 
+  TrendingUp, 
+  Target, 
+  Share2, 
+  BarChart3, 
+  Calendar, 
+  Package, 
+  AlertTriangle, 
+  Trophy, 
+  FileText,
+  LucideIcon
+} from "lucide-react";
 
 // Primary stats endpoint shape
 interface DashboardStats {
@@ -36,14 +48,15 @@ export default function AdminDashboard() {
   // Extended metrics (lazy; only run after stats present)
   const { data: ext, error: extError } = useSWR<ExtendedMetrics>(stats ? "/api/admin/dashboard/metrics" : null, fetcher, { refreshInterval: 120_000 });
 
-  // Pre-compute stable references for hook ordering safety; guard undefined with fallbacks
   const safeStats = stats ?? { totalUsers:0, activeOffers:0, totalCoupons:0, activeCoupons:0, totalOrders:0, totalRevenue:0, loyaltyUsers:0, referralCount:0 };
   const avgOrderValueTemp = safeStats.totalOrders > 0 ? Math.round(safeStats.totalRevenue / safeStats.totalOrders) : 0;
+  
   const keyPerformance = useMemo(() => ([
-    { key: 'aov', title: 'Average Order Value', icon: '📈', color: 'text-primary', value: avgOrderValueTemp ? `₹${avgOrderValueTemp.toLocaleString('en-IN')}` : '—', desc: 'Efficiency measure' },
-    { key: 'engagement', title: 'Loyalty Engagement', icon: '🎯', color: 'text-[#C5A059]', value: safeStats.totalUsers ? `${Math.round((safeStats.loyaltyUsers / safeStats.totalUsers) * 100)}%` : '0%', desc: 'Brand affinity' },
-    { key: 'referrals', title: 'Referral Pipeline', icon: '🔗', color: 'text-[#2D4B3C]', value: safeStats.totalUsers ? `${Math.round((safeStats.referralCount / safeStats.totalUsers) * 100)}%` : '0%', desc: 'Organic growth' }
+    { key: 'aov', title: 'Average Order Value', icon: TrendingUp, color: 'text-primary', value: avgOrderValueTemp ? `₹${avgOrderValueTemp.toLocaleString('en-IN')}` : '—', desc: 'Efficiency measure' },
+    { key: 'engagement', title: 'Loyalty Engagement', icon: Target, color: 'text-[#C5A059]', value: safeStats.totalUsers ? `${Math.round((safeStats.loyaltyUsers / safeStats.totalUsers) * 100)}%` : '0%', desc: 'Brand affinity' },
+    { key: 'referrals', title: 'Referral Pipeline', icon: Share2, color: 'text-[#2D4B3C]', value: safeStats.totalUsers ? `${Math.round((safeStats.referralCount / safeStats.totalUsers) * 100)}%` : '0%', desc: 'Organic growth' }
   ]), [avgOrderValueTemp, safeStats.loyaltyUsers, safeStats.totalUsers, safeStats.referralCount]);
+
 
   /* ================= Skeleton / Error States ================= */
   if (statsLoading) {
@@ -110,7 +123,7 @@ export default function AdminDashboard() {
       <Header stats={stats} />
 
       {/* Key Performance */}
-      <SectionShell id="performance" title="Performance Metrics" description="Core commerce efficiency indicators" icon="📊">
+      <SectionShell id="performance" title="Performance Metrics" description="Core commerce efficiency indicators" icon={BarChart3}>
         <HorizontalMetricScroller metrics={keyPerformance} />
         <div className="grid gap-4 grid-cols-2 lg:grid-cols-5 mt-6">
           {secondaryStats.map(s => (
@@ -123,7 +136,7 @@ export default function AdminDashboard() {
       </SectionShell>
 
       {/* Sales & Orders (extended) */}
-      <SectionShell id="sales" title="Recent Sales Window" description="Last 14 days order & revenue distribution" icon="🗓️" loading={!ext && !extError}>
+      <SectionShell id="sales" title="Recent Sales Window" description="Last 14 days order & revenue distribution" icon={Calendar} loading={!ext && !extError}>
         {dailyTotals.length === 0 ? (
           <EmptyState message={extError ? 'Failed to load sales data' : 'No recent sales data'} />
         ) : (
@@ -184,7 +197,7 @@ export default function AdminDashboard() {
 
       {/* Orders by Status / Low Stock / Top Products */}
   <div className="grid gap-8 lg:grid-cols-3 xl:grid-cols-3" data-late-grid>
-        <SectionShell id="orders-status" title="Orders by Status" description="Current distribution" icon="📦" className="lg:col-span-1" loading={!ext && !extError}>
+        <SectionShell id="orders-status" title="Orders by Status" description="Current distribution" icon={Package} className="lg:col-span-1" loading={!ext && !extError}>
           {Object.keys(ordersByStatus).length === 0 ? <EmptyState message="No status data" /> : (
             <ul className="space-y-2 text-xs sm:text-sm">
               {Object.entries(ordersByStatus).map(([status, count]) => (
@@ -196,7 +209,7 @@ export default function AdminDashboard() {
             </ul>
           )}
         </SectionShell>
-        <SectionShell id="low-stock" title="Low Stock" description="Items at or below threshold" icon="⚠️" className="lg:col-span-1" loading={!ext && !extError}>
+        <SectionShell id="low-stock" title="Low Stock" description="Items at or below threshold" icon={AlertTriangle} className="lg:col-span-1" loading={!ext && !extError}>
           {lowStock.length === 0 ? <EmptyState message="Inventory healthy" /> : (
             <ul className="divide-y divide-base-300 text-sm">
               {lowStock.map(p => (
@@ -208,7 +221,7 @@ export default function AdminDashboard() {
             </ul>
           )}
         </SectionShell>
-        <SectionShell id="top-products" title="Top Products" description="Best performers (30d)" icon="🏆" className="lg:col-span-1" loading={!ext && !extError}>
+        <SectionShell id="top-products" title="Top Products" description="Best performers (30d)" icon={Trophy} className="lg:col-span-1" loading={!ext && !extError}>
           {topProducts.length === 0 ? <EmptyState message="No product data" /> : (
             <>
               <div className="overflow-x-auto hidden sm:block">
@@ -246,7 +259,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Orders */}
-      <SectionShell id="recent-orders" title="Recent Orders" description="Latest activity feed" icon="🧾" loading={!ext && !extError}>
+      <SectionShell id="recent-orders" title="Recent Orders" description="Latest activity feed" icon={FileText} loading={!ext && !extError}>
         {recentOrders.length === 0 ? <EmptyState message="No recent orders" /> : (
           <>
             <div className="overflow-x-auto rounded-lg border border-base-300/50 hidden sm:block">
@@ -326,17 +339,17 @@ interface SectionShellProps {
   id?: string;
   title: string;
   description?: string;
-  icon?: string;
+  icon?: LucideIcon;
   className?: string;
   loading?: boolean;
   children?: React.ReactNode;
 }
-function SectionShell({ id, title, description, icon, className = '', loading, children }: SectionShellProps) {
+function SectionShell({ id, title, description, icon: Icon, className = '', loading, children }: SectionShellProps) {
   return (
     <section id={id} aria-labelledby={id ? id + '-title' : undefined} className={"space-y-4 " + className}>
       <div className="flex flex-col xs:flex-row xs:items-end xs:justify-between gap-2">
         <h2 id={id ? id + '-title' : undefined} className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-[0.3em] flex items-center gap-2">
-          {icon && <span className="text-lg opacity-60" aria-hidden="true">{icon}</span>} {title}
+          {Icon && <Icon size={18} className="opacity-60" aria-hidden="true" />} {title}
         </h2>
         {description && <p className="text-[9px] font-label font-bold text-primary/20 uppercase tracking-wider line-clamp-1">{description}</p>}
       </div>
@@ -364,7 +377,7 @@ function InlineLoader() {
   );
 }
 
-interface HMProps { metrics: Array<{ key: string; title: string; icon: string; color: string; value: string; desc: string }>; }
+interface HMProps { metrics: Array<{ key: string; title: string; icon: LucideIcon; color: string; value: string; desc: string }>; }
 function HorizontalMetricScroller({ metrics }: HMProps) {
   return (
     <div className="relative group">
@@ -381,7 +394,7 @@ function HorizontalMetricScroller({ metrics }: HMProps) {
           >
             <div className="flex items-start justify-between mb-4 gap-2">
               <span className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest leading-none group-hover:text-primary/40 transition-colors">{m.title}</span>
-              <span className={`${m.color} text-xl transition-transform group-hover:scale-110`} aria-hidden="true">{m.icon}</span>
+              <m.icon size={24} className={`${m.color} transition-transform group-hover:scale-110`} aria-hidden="true" />
             </div>
             <div className="text-3xl font-bold tracking-tight text-primary">{m.value}</div>
             <p className="text-[9px] font-medium text-gray-300 mt-3 uppercase tracking-tight line-clamp-1">{m.desc}</p>
