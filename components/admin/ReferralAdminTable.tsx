@@ -1,6 +1,6 @@
 "use client";
 import useSWR from 'swr';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, Fragment } from 'react';
 import toast from 'react-hot-toast';
 
 // Lightweight SSE subscription hook (mirrors pattern used elsewhere)
@@ -245,8 +245,8 @@ export default function ReferralAdminTable() {
                 const isSelected = selected.includes(u._id);
                 const expanded = expandedRows.includes(u._id);
                 return (
-                  <>
-                    <tr key={u._id} className={isSelected? 'bg-primary/5':''}>
+                  <Fragment key={u._id}>
+                    <tr className={isSelected? 'bg-primary/5':''}>
                       <td><input aria-label={`Select ${u.name}`} type="checkbox" className="checkbox checkbox-xs" checked={isSelected} onChange={()=>toggleSelect(u._id)} /></td>
                       <td className="align-middle sm:hidden">
                         <button
@@ -317,7 +317,7 @@ export default function ReferralAdminTable() {
                         </div>
                       </td>
                     </tr>
-                  </>
+                  </Fragment>
                 );
               })}
             </tbody>

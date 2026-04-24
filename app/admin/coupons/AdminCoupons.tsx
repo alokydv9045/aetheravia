@@ -791,92 +791,66 @@ const AdminCoupons = () => {
       )}
 
       {viewMode === 'cards' && (
-        <div className="grid gap-5 md:gap-6 [grid-template-columns:repeat(auto-fill,minmax(260px,1fr))]">
+        <div className="grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
           {loading && Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="card bg-base-100 border border-base-300 rounded-xl p-5 animate-pulse">
-              <div className="flex items-start gap-3 mb-4">
-                <div className="w-12 h-12 bg-base-300 rounded-md" />
-                <div className="space-y-2 flex-1">
-                  <div className="h-4 w-24 bg-base-300 rounded" />
-                  <div className="h-3 w-32 bg-base-300 rounded" />
-                </div>
-              </div>
-              <div className="space-y-3 text-xs">
-                <div className="h-3 w-full bg-base-300 rounded" />
-                <div className="h-3 w-3/4 bg-base-300 rounded" />
-                <div className="h-3 w-1/2 bg-base-300 rounded" />
-              </div>
-            </div>
+            <div key={i} className="card bg-base-100 border border-base-300 rounded-[2rem] p-6 animate-pulse" />
           ))}
-          {!loading && filteredCoupons.map(coupon => {
+          {!loading && filteredCoupons.map((coupon) => {
             const now = new Date();
             const exp = new Date(coupon.expiryDate);
             const start = new Date(coupon.startDate);
             const soon = exp.getTime() - now.getTime() < 1000*60*60*24*3 && exp > now;
             const expired = exp < now;
-            const upcoming = start > now;
             const progress = coupon.usageLimit ? Math.min(100, Math.round((coupon.usageCount / coupon.usageLimit) * 100)) : null;
+
             return (
-              <div
-                key={coupon._id}
-                className={`relative group card bg-base-100 border rounded-xl transition-all duration-200 hover:shadow-lg ${soon ? 'border-warning' : expired ? 'border-error' : 'border-base-300'}`}
-              >
-                {/* Accent bar */}
-                <div className={`absolute inset-x-0 top-0 h-1 rounded-t-xl ${expired ? 'bg-error' : soon ? 'bg-warning' : upcoming ? 'bg-info' : 'bg-primary/60'} opacity-80`}></div>
-                <div className="card-body pt-5 pb-5 px-5 flex flex-col gap-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-start gap-3">
-                      <div className="w-12 h-12 rounded-md flex items-center justify-center text-lg font-bold bg-primary/10 text-primary shadow-inner">
-                        {getTypeIcon(coupon)}
-                      </div>
-                      <div className="space-y-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-base sm:text-lg font-extrabold tracking-wide select-all" title="Coupon Code">{coupon.code}</span>
-                          <button
-                            type="button"
-                            onClick={() => { navigator.clipboard.writeText(coupon.code); toast.success('Code copied'); }}
-                            className="btn btn-ghost btn-xs opacity-60 hover:opacity-100"
-                            title="Copy code"
-                          >📋</button>
-                        </div>
-                        <div className="font-semibold text-sm sm:text-base truncate" title={coupon.name}>{coupon.name}</div>
-                        {coupon.description && (
-                          <p className="text-xs sm:text-[13px] leading-snug line-clamp-2 opacity-70" title={coupon.description}>{coupon.description}</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-1 text-[10px] sm:text-[11px]">
-                      <span className={`badge badge-sm ${getStatusBadgeClass(coupon.status)}`}>{coupon.status}</span>
-                      {soon && !expired && <span className="badge badge-warning badge-xs">Soon</span>}
-                      {upcoming && <span className="badge badge-info badge-xs">Upcoming</span>}
-                      {expired && <span className="badge badge-error badge-xs">Expired</span>}
-                    </div>
+              <div key={coupon._id} className={`p-6 bg-white/40 backdrop-blur-md border border-primary/10 rounded-[2rem] shadow-sm relative group transition-all hover:bg-white/60 ${soon && !expired ? 'bg-amber-50/50' : ''}`}>
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black bg-primary/10 text-primary ${expired ? 'opacity-30' : ''}`}>
+                    {getTypeIcon(coupon)}
                   </div>
-                  <div className="grid grid-cols-2 gap-4 text-xs sm:text-[13px]">
-                    <div className="space-y-1">
-                      <div className="font-medium">{getDiscountText(coupon)}</div>
-                      <div className="opacity-70 flex items-center gap-1">
-                        <span className="font-medium">Validity:</span>
-                        <span>{start.toLocaleDateString()} → {exp.toLocaleDateString()}</span>
-                      </div>
-                      {soon && !expired && <div className="text-warning text-[11px]">Ends soon</div>}
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium">Usage</span>
-                        <span>{coupon.usageCount}/{coupon.usageLimit || '∞'}</span>
-                      </div>
-                      {progress !== null && (
-                        <progress className="progress progress-primary h-2 w-full" value={progress} max={100}></progress>
-                      )}
-                      {progress !== null && <div className="text-right text-[11px] opacity-60">{progress}% used</div>}
-                    </div>
+                  <div className="text-right">
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-1">Catalog Status</div>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter ${expired ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                      {coupon.status}
+                    </span>
                   </div>
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    <button className="btn btn-xs btn-outline" onClick={() => handleEdit(coupon)}>Edit</button>
-                    <button className={`btn btn-xs ${coupon.status === COUPON_STATUS.ACTIVE ? 'bg-green-600 hover:bg-green-700 text-white' : 'btn-success'}`} onClick={() => handleToggleStatus(coupon)}>{coupon.status === COUPON_STATUS.ACTIVE ? 'Pause' : 'Activate'}</button>
-                    <button className="btn btn-xs btn-error" onClick={() => handleDelete(coupon._id)}>Delete</button>
+                </div>
+
+                <div className="mb-4">
+                  <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-1">Access Token</div>
+                  <div className="flex items-center gap-2">
+                    <div className="font-mono font-black text-primary text-base tracking-widest">{coupon.code}</div>
+                    <button onClick={() => { navigator.clipboard.writeText(coupon.code); toast.success('Copied'); }} className="opacity-40 hover:opacity-100">📋</button>
                   </div>
+                  <div className="font-bold text-gray-700 text-sm mt-1">{coupon.name}</div>
+                </div>
+
+                <div className="py-4 border-y border-primary/5 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest">Incentive</div>
+                    <div className="text-sm font-black text-primary">{getDiscountText(coupon)}</div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest">Catalog Life</div>
+                    <div className="text-[10px] font-bold text-gray-500">{start.toLocaleDateString()} — {exp.toLocaleDateString()}</div>
+                  </div>
+                  <div className="pt-1">
+                    <div className="flex justify-between text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-1.5">
+                      <span>Vault Exhaustion</span>
+                      <span className="text-primary">{coupon.usageCount}/{coupon.usageLimit || '∞'}</span>
+                    </div>
+                    {progress !== null && (
+                      <div className="w-full h-1.5 bg-primary/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-primary transition-all duration-1000" style={{ width: `${progress}%` }} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mt-5">
+                  <button onClick={() => handleEdit(coupon)} className="flex-1 py-2 text-[10px] font-bold uppercase tracking-widest bg-primary text-white rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">Edit Protocol</button>
+                  <button onClick={() => handleDelete(coupon._id)} className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors">Del</button>
                 </div>
               </div>
             );

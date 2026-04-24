@@ -122,7 +122,14 @@ export default function ProductEditForm({ productId }: { productId: string }) {
       if (uploaded.length) {
         const newImages = [...images, ...uploaded];
         setValue('images', newImages);
-        if (!watch('image')) setValue('image', newImages[0]);
+        
+        // If current image is empty or the default placeholder, set the first uploaded one as primary
+        const currentImage = watch('image');
+        const isPlaceholder = currentImage && currentImage.includes('No_Image_Available');
+        if (!currentImage || isPlaceholder) {
+          setValue('image', newImages[0]);
+        }
+        
         setReviewImages(uploaded);
         setCurrentReviewIndex(0);
         setIsReviewOpen(true);
