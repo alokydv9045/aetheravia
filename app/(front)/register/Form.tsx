@@ -143,7 +143,7 @@ const Form = () => {
                 {/* Google Auth Button */}
                 <div className="space-y-3">
                   <button 
-                    onClick={() => signIn('google', { callbackUrl: '/' })}
+                    onClick={() => signIn('google', { callbackUrl })}
                     className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-surface-container-lowest border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 group rounded-sm"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24">

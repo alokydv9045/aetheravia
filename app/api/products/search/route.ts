@@ -18,7 +18,8 @@ export async function GET(req: NextRequest) {
     });
     
     return NextResponse.json(result.products);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+  } catch (error: any) {
+    console.error('[API_SEARCH_ERROR]', error);
+    return NextResponse.json({ error: error.message || 'Failed to fetch products' }, { status: 500 });
   }
 }

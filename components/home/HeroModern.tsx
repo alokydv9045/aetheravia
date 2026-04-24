@@ -14,6 +14,7 @@ export default function HeroModern() {
           fill
           priority
           className="object-cover brightness-95"
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-surface/60 via-surface/30 to-transparent" />
       </div>

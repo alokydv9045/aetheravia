@@ -5,6 +5,7 @@ export type Product = {
   name: string;
   slug: string;
   image: string;
+  images?: string[];
   banner?: string;
   price: number;
   brand: string;
@@ -13,8 +14,8 @@ export type Product = {
   rating: number;
   numReviews: number;
   countInStock: number;
-  colors?: [];
-  sizes?: [];
+  colors?: string[];
+  sizes?: string[];
 };
 
 const productSchema = new mongoose.Schema(
@@ -23,6 +24,7 @@ const productSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true },
     category: { type: String, required: true },
     image: { type: String, required: true },
+    images: { type: [String], default: [] },
     price: { type: Number, required: true },
     brand: { type: String, required: true },
     rating: { type: Number, required: true, default: 0 },
@@ -31,6 +33,8 @@ const productSchema = new mongoose.Schema(
     description: { type: String, required: true },
     isFeatured: { type: Boolean, default: false },
     banner: String,
+    sizes: { type: [String], default: [] },
+    colors: { type: [String], default: [] },
   },
   {
     timestamps: true,

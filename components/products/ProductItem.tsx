@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 
 const ProductItem = ({ product }: { product: Product }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { items, increase } = useCartService();
 
   const addItemHandler = () => {
@@ -21,7 +21,7 @@ const ProductItem = ({ product }: { product: Product }) => {
       color: '',
       size: '',
     });
-    toast.success('Added to your cart', {
+    toast.success('Added to your bag', {
       style: {
         background: '#904917',
         color: '#fff',
@@ -39,13 +39,24 @@ const ProductItem = ({ product }: { product: Product }) => {
   };
 
   const buyNowHandler = () => {
-    increase({
-      ...product,
-      qty: 0,
-      color: '',
-      size: '',
-    });
-    router.push('/shipping');
+    // Add to cart if not already present
+    const existItem = items.find((x) => x.slug === product.slug);
+    if (!existItem) {
+      increase({
+        ...product,
+        qty: 0,
+        color: '',
+        size: '',
+      });
+    }
+    
+    // Proceed to shipping step with a refresh to ensure state sync
+    router.refresh();
+    if (status === 'unauthenticated') {
+      router.push('/signin?callbackUrl=/shipping');
+    } else {
+      router.push('/shipping');
+    }
   };
 
   return (
@@ -75,7 +86,7 @@ const ProductItem = ({ product }: { product: Product }) => {
               onClick={addItemHandler}
               className="flex-1 bg-white/10 backdrop-blur-md text-white border border-white/20 py-2.5 font-body text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-white/20 transition-colors active:scale-[0.98]"
             >
-              Quick Add
+              Add to Bag
             </button>
             <button 
               onClick={buyNowHandler}
@@ -104,15 +115,14 @@ const ProductItem = ({ product }: { product: Product }) => {
         
         <div className="flex items-center gap-2">
           <span className="bg-[#f0ede8] px-2 py-1 rounded text-[10px] text-secondary font-bold uppercase tracking-tighter">
-            {product.brand} & Silt
+            {product.brand}
           </span>
           <span className="w-1 h-1 rounded-full bg-outline/30"></span>
-          <span className="text-[10px] text-secondary/70 uppercase tracking-wider font-medium">Detoxifying</span>
+          <span className="text-[10px] text-secondary/70 uppercase tracking-wider font-medium">Ancient Blend</span>
         </div>
       </div>
     </article>
   );
 };
-
 
 export default ProductItem;

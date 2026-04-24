@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { formatDistanceToNow, format } from 'date-fns';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import OrderCancelButton from '@/components/order/OrderCancelButton';
 import OrderTimeline from '@/components/order/OrderTimeline';
@@ -25,170 +26,105 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
   const { data: session, status: authStatus } = useSession();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'tracking' | 'details' | 'timeline'>('tracking');
-  const [showAllItems, setShowAllItems] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Authentication check
   useEffect(() => {
-    if (authStatus === 'loading') return; // Still loading
-    
+    setMounted(true);
+    if (authStatus === 'loading') return;
     if (authStatus === 'unauthenticated' || !session) {
-      toast.error('Please sign in to view your order');
+      toast.error('Please sign in to view your ritual details');
       router.push(`/signin?callbackUrl=/order/${orderId}`);
-      return;
     }
   }, [authStatus, session, router, orderId]);
 
-  const handleReorderSuccess = () => {
-    toast.success('Items added to cart successfully!');
-  };
-
   const { trigger: deliverOrder, isMutating: isDelivering } = useSWRMutation(
     `/api/orders/${orderId}`,
-    async (url) => {
+    async () => {
       const res = await fetch(`/api/admin/orders/${orderId}/deliver`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
       const data = await res.json();
-      res.ok
-        ? toast.success('Order delivered successfully')
-        : toast.error(data.message);
+      res.ok ? toast.success('Ritual delivered successfully') : toast.error(data.message);
     },
   );
 
+  const { data, error, mutate } = useSWR(`/api/orders/${orderId}`);
+
   // Load Razorpay script
   useEffect(() => {
-    // Check if script is already loaded
-    if (document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]')) {
-      return;
+    if (typeof window !== 'undefined' && !window.Razorpay) {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      document.body.appendChild(script);
     }
-
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    script.onload = () => {
-      console.log('Razorpay script loaded successfully');
-    };
-    script.onerror = () => {
-      console.error('Failed to load Razorpay script');
-    };
-    document.body.appendChild(script);
-    
-    return () => {
-      const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
-      if (existingScript) {
-        document.body.removeChild(existingScript);
-      }
-    };
   }, []);
 
-  function createRazorpayOrder() {
-    return fetch(`/api/orders/${orderId}/create-razorpay-order`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json());
-  }
+  const handleRazorpayPayment = async () => {
+    try {
+      const res = await fetch(`/api/orders/${orderId}/create-razorpay-order`, { method: 'POST' });
+      const razorpayOrder = await res.json();
+      
+      const options = {
+        key: razorpayKeyId,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: 'AETHERAVIA',
+        description: `Order Manifest #${orderId.slice(-6)}`,
+        order_id: razorpayOrder.id,
+        handler: async (response: any) => {
+          const verifyRes = await fetch(`/api/orders/${orderId}/verify-razorpay-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(response),
+          });
+          const data = await verifyRes.json();
+          if (data.isPaid) {
+            toast.success('Ritual payment complete');
+            mutate();
+          } else {
+            toast.error('Verification failure');
+          }
+        },
+        prefill: {
+          name: session?.user?.name || '',
+          email: session?.user?.email || '',
+        },
+        theme: { color: '#725a39' },
+      };
+      
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      toast.error('Failed to initiate exchange');
+    }
+  };
 
-  function handleRazorpayPayment() {
-    createRazorpayOrder()
-      .then((razorpayOrder) => {
-        const options = {
-          key: razorpayKeyId,
-          amount: razorpayOrder.amount,
-          currency: razorpayOrder.currency,
-          name: 'BELLA MODA',
-          description: `Order #${orderId}`,
-          order_id: razorpayOrder.id,
-          handler: function (response: any) {
-            verifyRazorpayPayment(response);
-          },
-          prefill: {
-            name: session?.user?.name || '',
-            email: session?.user?.email || '',
-          },
-          theme: {
-            color: '#3399cc',
-          },
-        };
-        
-        const rzp = new (window as any).Razorpay(options);
-        rzp.open();
-      })
-      .catch((error) => {
-        toast.error('Failed to create payment order');
-        console.error(error);
-      });
-  }
-
-  function verifyRazorpayPayment(response: any) {
-    fetch(`/api/orders/${orderId}/verify-razorpay-payment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(response),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.isPaid) {
-          toast.success('Payment successful!');
-          window.location.reload();
-        } else {
-          toast.error('Payment verification failed');
-        }
-      })
-      .catch((error) => {
-        toast.error('Payment verification failed');
-        console.error(error);
-      });
-  }
-
-  const { data, error } = useSWR(`/api/orders/${orderId}`);
-
-  // Show loading while checking authentication
-  if (authStatus === 'loading') {
+  if (!mounted || authStatus === 'loading') {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
-        <span className="ml-2">Loading order details...</span>
-      </div>
-    );
-  }
-
-  // Show loading while redirecting unauthenticated users
-  if (authStatus === 'unauthenticated' || !session) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
-        <span className="ml-2">Redirecting to sign in...</span>
+      <div className="flex justify-center items-center min-h-screen bg-surface">
+        <div className="animate-pulse font-headline italic text-2xl text-primary">Recalling ritual manifest...</div>
       </div>
     );
   }
 
   if (error) return (
-    <div className="min-h-96 flex items-center justify-center">
-      <div className="text-center">
-        <div className="text-6xl mb-4">⚠️</div>
-        <h2 className="text-2xl font-bold mb-2">Order Not Found</h2>
-        <p className="text-gray-600 mb-4">The order you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.</p>
-        <Link href="/order-history" className="inline-block bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all">
-          View Order History
+    <div className="min-h-screen bg-surface flex items-center justify-center p-8">
+      <div className="text-center max-w-lg">
+        <h2 className="font-headline text-5xl text-primary italic mb-6">Manifest Lost</h2>
+        <p className="text-secondary font-body mb-12 opacity-80 leading-relaxed">
+          The record you seek has vanished from our archives or remains obscured by privilege.
+        </p>
+        <Link href="/order-history" className="bg-primary text-on-primary px-12 py-5 rounded-lg font-bold tracking-[0.3em] uppercase text-[10px] hover:bg-primary-container transition-all shadow-2xl shadow-primary/20">
+          Return to Archives
         </Link>
       </div>
     </div>
   );
 
   if (!data) return (
-    <div className="min-h-96 flex items-center justify-center">
-      <div className="text-center">
-        <div className="loading loading-spinner loading-lg mb-4"></div>
-        <p className="text-lg">Loading your order details...</p>
-      </div>
+    <div className="flex justify-center items-center min-h-screen bg-surface">
+      <div className="animate-pulse font-headline italic text-2xl text-primary">Sourcing record data...</div>
     </div>
   );
 
@@ -200,365 +136,248 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
     taxPrice,
     shippingPrice,
     totalPrice,
-    isDelivered,
-    deliveredAt,
     isPaid,
     paidAt,
+    isDelivered,
+    deliveredAt,
     createdAt,
     status = 'pending',
     timeline = [],
-    progress = { percentage: 0, currentPhase: 'pending' },
-    statusInfo = { label: 'Processing', description: 'Order is being processed', color: 'primary', icon: '📋' },
+    progress = { percentage: 0 },
+    statusInfo = { label: 'Processing', description: 'Order is being processed', icon: '📋' },
     tracking = {},
   } = data;
 
-  // Enhanced status mapping
-  const getStatusInfo = (status: string) => {
-    const statusMap = {
-      pending: { 
-        label: 'Order Placed', 
-        description: 'Your order has been received and is being processed',
-        color: 'bg-blue-500', 
-        icon: '📋',
-        progress: 10
-      },
-      confirmed: { 
-        label: 'Confirmed', 
-        description: 'Your order has been confirmed and payment verified',
-        color: 'bg-green-500', 
-        icon: '✅',
-        progress: 25
-      },
-      processing: { 
-        label: 'Processing', 
-        description: 'Your items are being prepared for shipment',
-        color: 'bg-green-600', 
-        icon: '📦',
-        progress: 50
-      },
-      shipped: { 
-        label: 'Shipped', 
-        description: 'Your order is on its way!',
-        color: 'bg-blue-600', 
-        icon: '🚚',
-        progress: 75
-      },
-      out_for_delivery: { 
-        label: 'Out for Delivery', 
-        description: 'Your package is out for delivery',
-        color: 'bg-purple-500', 
-        icon: '🚛',
-        progress: 90
-      },
-      delivered: { 
-        label: 'Delivered', 
-        description: 'Your order has been successfully delivered',
-        color: 'bg-green-600', 
-        icon: '🎉',
-        progress: 100
-      },
-      cancelled: { 
-        label: 'Cancelled', 
-        description: 'This order has been cancelled',
-        color: 'bg-red-500', 
-        icon: '❌',
-        progress: 0
-      },
-      returned: { 
-        label: 'Returned', 
-        description: 'This order has been returned',
-        color: 'bg-orange-500', 
-        icon: '↩️',
-        progress: 0
-      }
-    };
-    return statusMap[status as keyof typeof statusMap] || statusMap.pending;
-  };
-
-  const currentStatusInfo = getStatusInfo(status);
-  const estimatedDelivery = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000); // 5 days from now
-
   return (
-    <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-      {/* Header Section */}
-      <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-              Order #{orderId.slice(-8).toUpperCase()}
-            </h1>
-            <p className="text-gray-600">
-              Placed on {format(new Date(createdAt), 'MMMM dd, yyyy')} • 
-              <span className="ml-1">{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-3">
-            <ReorderButton
-              orderId={orderId}
-              orderStatus={status}
-              size="md"
-              variant="secondary"
-              onSuccess={handleReorderSuccess}
-            />
-            <OrderCancelButton
-              orderId={orderId}
-              orderStatus={status}
-              onCancelSuccess={() => {
-                // Refresh the page to show updated order status
-                window.location.reload();
-              }}
-            />
-            {tracking?.number && (
-              <a 
-                href={tracking.url || '#'} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="btn btn-outline"
-              >
-                <span className="hidden sm:inline">Track Package</span>
-                <span className="sm:hidden">Track</span>
-                🔗
-              </a>
-            )}
-          </div>
-        </div>
+    <div className="min-h-screen bg-surface pb-32">
+      <div className="fixed inset-0 noise-overlay z-0 pointer-events-none opacity-40"></div>
 
-        {/* Status Banner */}
-        <div className="mt-6 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div className={`w-10 h-10 rounded-full ${currentStatusInfo.color} flex items-center justify-center text-white text-xl`}>
-              {currentStatusInfo.icon}
-            </div>
+      <div className="max-w-7xl mx-auto px-4 relative z-10 pt-12">
+        {/* Header Record */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-surface-container-low rounded-lg border border-outline-variant/10 shadow-xl overflow-hidden mb-12"
+        >
+          <div className="p-8 md:p-12 border-b border-outline-variant/10 bg-primary/[0.02] flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">{currentStatusInfo.label}</h3>
-              <p className="text-gray-600 text-sm">{currentStatusInfo.description}</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary mb-2">Formal Record</p>
+              <h1 className="font-headline text-4xl md:text-5xl text-on-surface italic">
+                Manifest #{orderId.slice(-8).toUpperCase()}
+              </h1>
+              <p className="text-secondary font-body text-sm mt-4 opacity-70">
+                Recorded on {format(new Date(createdAt), 'MMMM dd, yyyy')} • 
+                <span className="italic ml-2">{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
+              </p>
             </div>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className={`${currentStatusInfo.color} h-2 rounded-full transition-all duration-500 ease-out`}
-              style={{ width: `${currentStatusInfo.progress}%` }}
-            ></div>
-          </div>
-          
-          {status !== 'delivered' && status !== 'cancelled' && (
-            <p className="text-sm text-gray-500 mt-2">
-              Estimated delivery: {format(estimatedDelivery, 'EEEE, MMMM dd')}
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Navigation Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="flex space-x-8 px-6" aria-label="Tabs">
-            {[
-              { id: 'tracking', name: 'Tracking', icon: '📍' },
-              { id: 'details', name: 'Order Details', icon: '📄' },
-              { id: 'timeline', name: 'Timeline', icon: '📋' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                  activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <span className="mr-2">{tab.icon}</span>
-                {tab.name}
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        <div className="p-6">
-          {/* Tracking Tab */}
-          {activeTab === 'tracking' && (
-            <div className="space-y-6">
-              <OrderTimeline
+            
+            <div className="flex flex-wrap gap-4">
+              <ReorderButton
                 orderId={orderId}
-                timeline={timeline}
-                currentStatus={status}
-                progress={progress}
-                statusInfo={currentStatusInfo}
-                trackingInfo={tracking}
-                enableRealTime={true}
+                orderStatus={status}
+                onSuccess={() => toast.success('Rituals added to your bag')}
               />
-              
-              {/* Shipping Details */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-medium text-gray-900 mb-3 flex items-center">
-                    <span className="mr-2">📍</span>
-                    Delivery Address
-                  </h4>
-                  <div className="text-gray-700">
-                    <p className="font-medium">{shippingAddress.fullName}</p>
-                    <p>{shippingAddress.address}</p>
-                    <p>{shippingAddress.city}, {shippingAddress.postalCode}</p>
-                    <p>{shippingAddress.country}</p>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-medium text-gray-900 mb-3 flex items-center">
-                    <span className="mr-2">💳</span>
-                    Payment Information
-                  </h4>
-                  <div className="text-gray-700">
-                    <p>Method: <span className="font-medium">{paymentMethod}</span></p>
-                    <p>Status: 
-                      <span className={`ml-1 px-2 py-1 rounded-full text-xs font-medium ${
-                        isPaid ? 'bg-green-100 text-green-800' : 'bg-green-50 text-green-700'
-                      }`}>
-                        {isPaid ? 'Paid' : 'Pending'}
-                      </span>
-                    </p>
-                    {paidAt && <p className="text-sm text-gray-500">Paid on {format(new Date(paidAt), 'MMM dd, yyyy')}</p>}
-                  </div>
-                </div>
-              </div>
+              <OrderCancelButton
+                orderId={orderId}
+                orderStatus={status}
+                onCancelSuccess={() => mutate()}
+              />
             </div>
-          )}
+          </div>
 
-          {/* Order Details Tab */}
-          {activeTab === 'details' && (
-            <div className="space-y-6">
-              {/* Items List */}
+          {/* Status Bar */}
+          <div className="p-8 md:p-12">
+            <div className="flex items-center gap-6 mb-8">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-3xl">
+                <span className="material-symbols-outlined text-4xl">{statusInfo.icon || 'history_edu'}</span>
+              </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Order Items ({items.length})</h3>
-                <div className="space-y-4">
-                  {(showAllItems ? items : items.slice(0, 3)).map((item: OrderItem, index: number) => (
-                    <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                      <div className="relative w-16 h-16 bg-white rounded-lg border overflow-hidden">
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium text-gray-900 truncate">{item.name}</h4>
-                        <p className="text-sm text-gray-500">Qty: {item.qty}</p>
-                        {item.color && <p className="text-sm text-gray-500">Color: {item.color}</p>}
-                        {item.size && <p className="text-sm text-gray-500">Size: {item.size}</p>}
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium text-gray-900">{formatPrice(item.price)}</p>
-                        <p className="text-sm text-gray-500">each</p>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {items.length > 3 && !showAllItems && (
-                    <button
-                      onClick={() => setShowAllItems(true)}
-                      className="w-full py-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
-                    >
-                      Show {items.length - 3} more items
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Order Summary */}
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Order Summary</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="text-gray-900">{formatPrice(itemsPrice)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="text-gray-900">{formatPrice(shippingPrice)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tax</span>
-                    <span className="text-gray-900">{formatPrice(taxPrice)}</span>
-                  </div>
-                  <div className="border-t border-gray-200 pt-2">
-                    <div className="flex justify-between text-base font-medium">
-                      <span className="text-gray-900">Total</span>
-                      <span className="text-gray-900">{formatPrice(totalPrice)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="mt-6 space-y-3">
-                  {!isPaid && paymentMethod === 'Razorpay' && (
-                    <button
-                      className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all"
-                      onClick={handleRazorpayPayment}
-                    >
-                      Complete Payment
-                    </button>
-                  )}
-                  
-                  {session?.user.isAdmin && !isDelivered && (
-                    <button
-                      className="w-full btn btn-outline"
-                      onClick={() => deliverOrder()}
-                      disabled={isDelivering}
-                    >
-                      {isDelivering && <span className="loading loading-spinner loading-sm mr-2"></span>}
-                      Mark as Delivered
-                    </button>
-                  )}
-                </div>
+                <h3 className="font-headline text-2xl text-on-surface italic">{statusInfo.label}</h3>
+                <p className="text-secondary font-body text-sm opacity-70">{statusInfo.description}</p>
               </div>
             </div>
-          )}
-
-          {/* Timeline Tab */}
-          {activeTab === 'timeline' && (
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Detailed Timeline</h3>
-              <OrderTimeline
-                orderId={orderId}
-                timeline={timeline}
-                currentStatus={status}
-                progress={progress}
-                statusInfo={currentStatusInfo}
-                trackingInfo={tracking}
-                enableRealTime={false}
-              />
+            
+            <div className="relative h-1 bg-outline-variant/20 rounded-full overflow-hidden">
+               <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progress.percentage}%` }}
+                className="absolute inset-0 bg-primary"
+               />
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        </motion.div>
 
-      {/* Help Section */}
-      <div className="bg-white rounded-xl shadow-sm border p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Need Help?</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="text-center p-4 bg-gray-50 rounded-lg">
-            <div className="text-2xl mb-2">📞</div>
-            <h4 className="font-medium text-gray-900">Customer Support</h4>
-            <p className="text-sm text-gray-600">Get help with your order</p>
-            <button className="mt-2 text-sm text-blue-600 hover:text-blue-700">Contact Us</button>
+        {/* Navigation Manifest */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-8 space-y-12">
+            {/* Tabs */}
+            <div className="flex gap-8 border-b border-outline-variant/20 pb-4">
+              {[
+                { id: 'tracking', label: 'Manifest Status', icon: 'location_on' },
+                { id: 'details', label: 'Ritual Items', icon: 'inventory_2' },
+                { id: 'timeline', label: 'Historical Log', icon: 'history' }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${
+                    activeTab === tab.id ? 'text-primary' : 'text-secondary opacity-40 hover:opacity-100'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm">{tab.icon}</span>
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <AnimatePresence mode="wait">
+              {activeTab === 'tracking' && (
+                <motion.div 
+                  key="tracking"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-12"
+                >
+                  <OrderTimeline
+                    orderId={orderId}
+                    timeline={timeline}
+                    currentStatus={status}
+                    progress={progress}
+                    statusInfo={statusInfo}
+                    trackingInfo={tracking}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="bg-surface-container-low p-8 rounded border border-outline-variant/10 shadow-lg">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-4">Destination</p>
+                      <div className="font-body text-on-surface text-sm leading-relaxed">
+                        <p className="font-label font-bold text-lg mb-2">{shippingAddress.fullName}</p>
+                        <p>{shippingAddress.address}</p>
+                        <p>{shippingAddress.city}, {shippingAddress.postalCode}</p>
+                        <p>{shippingAddress.country}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-surface-container-low p-8 rounded border border-outline-variant/10 shadow-lg">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/40 mb-4">Exchange Conduit</p>
+                      <div className="font-body text-on-surface text-sm leading-relaxed">
+                        <p className="font-label font-bold text-lg mb-2">{paymentMethod}</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className={`w-2 h-2 rounded-full ${isPaid ? 'bg-primary' : 'bg-secondary/30'}`} />
+                          <span className="text-[10px] font-bold uppercase tracking-widest">{isPaid ? 'Acquisition Verified' : 'Exchange Pending'}</span>
+                        </div>
+                        {paidAt && <p className="text-[10px] text-secondary opacity-60 mt-2 uppercase tracking-widest">Confirmed {format(new Date(paidAt), 'MMM dd, yyyy')}</p>}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === 'details' && (
+                <motion.div 
+                  key="details"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="bg-surface-container-low rounded border border-outline-variant/10 shadow-lg overflow-hidden"
+                >
+                  <div className="divide-y divide-outline-variant/10">
+                    {items.map((item: OrderItem, idx: number) => (
+                      <div key={idx} className="p-8 flex items-center gap-8">
+                        <div className="relative w-24 aspect-square bg-surface rounded overflow-hidden flex-shrink-0">
+                          <Image src={item.image} alt={item.name} fill className="object-cover grayscale-[20%]" sizes="96px" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-headline text-2xl text-on-surface italic truncate">{item.name}</h4>
+                          <p className="text-[11px] text-secondary font-bold uppercase tracking-widest mt-1">
+                            {item.qty} Ritual Unit{item.qty > 1 ? 's' : ''} • {item.color && `${item.color} • `}{item.size}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-headline text-xl text-primary">{formatPrice(item.price)}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === 'timeline' && (
+                <motion.div 
+                  key="timeline"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <OrderTimeline
+                    orderId={orderId}
+                    timeline={timeline}
+                    currentStatus={status}
+                    progress={progress}
+                    statusInfo={statusInfo}
+                    trackingInfo={tracking}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-          
-          <div className="text-center p-4 bg-gray-50 rounded-lg">
-            <div className="text-2xl mb-2">🔄</div>
-            <h4 className="font-medium text-gray-900">Returns</h4>
-            <p className="text-sm text-gray-600">Start a return or exchange</p>
-            <button className="mt-2 text-sm text-blue-600 hover:text-blue-700">Return Items</button>
-          </div>
-          
-          <div className="text-center p-4 bg-gray-50 rounded-lg">
-            <div className="text-2xl mb-2">❓</div>
-            <h4 className="font-medium text-gray-900">FAQ</h4>
-            <p className="text-sm text-gray-600">Find answers to common questions</p>
-            <Link href="/help" className="mt-2 text-sm text-blue-600 hover:text-blue-700 block">View FAQ</Link>
+
+          {/* Value Summary */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="bg-surface-container-high p-8 rounded-lg shadow-2xl border border-outline-variant/10 sticky top-32">
+              <h3 className="font-headline text-2xl text-secondary border-b border-outline-variant/20 pb-4 mb-6 italic">Record Summary</h3>
+              <ul className="space-y-4 font-body text-sm">
+                <li className="flex justify-between text-secondary">
+                  <span>Ritual Value</span>
+                  <span>{formatPrice(itemsPrice)}</span>
+                </li>
+                <li className="flex justify-between text-secondary">
+                  <span>Logistics</span>
+                  <span>{formatPrice(shippingPrice)}</span>
+                </li>
+                <li className="flex justify-between text-secondary">
+                  <span>Treasury</span>
+                  <span>{formatPrice(taxPrice)}</span>
+                </li>
+                <li className="border-t border-outline-variant/20 pt-6 mt-6">
+                  <div className="flex justify-between items-baseline">
+                    <span className="font-headline text-xl text-secondary italic">Final Exchange</span>
+                    <span className="font-headline text-3xl text-primary">{formatPrice(totalPrice)}</span>
+                  </div>
+                </li>
+              </ul>
+
+              <div className="mt-12 space-y-4">
+                {!isPaid && paymentMethod?.toLowerCase().includes('razorpay') && (
+                  <button
+                    onClick={handleRazorpayPayment}
+                    className="w-full bg-primary text-on-primary py-6 rounded-lg font-bold tracking-[0.3em] uppercase text-xs hover:bg-primary-container transition-all shadow-xl shadow-primary/20 flex justify-center items-center gap-3"
+                  >
+                    Complete Exchange
+                    <span className="material-symbols-outlined text-sm">verified</span>
+                  </button>
+                )}
+                
+                {session?.user.isAdmin && !isDelivered && (
+                  <button
+                    onClick={() => deliverOrder()}
+                    disabled={isDelivering}
+                    className="w-full bg-secondary text-white py-6 rounded-lg font-bold tracking-[0.3em] uppercase text-xs hover:bg-on-surface transition-all disabled:opacity-50 flex justify-center items-center gap-3"
+                  >
+                    {isDelivering ? 'Recording...' : 'Mark as Delivered'}
+                    <span className="material-symbols-outlined text-sm">local_shipping</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="p-8 bg-surface-container-low rounded border border-outline-variant/10 text-center">
+              <span className="material-symbols-outlined text-primary text-3xl mb-4">help_center</span>
+              <h4 className="font-headline text-xl italic text-on-surface mb-2">Seek Guidance?</h4>
+              <p className="text-xs text-secondary font-body mb-6 opacity-70">If this record holds anomalies, our curators are available for discourse.</p>
+              <Link href="/contact" className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline">Connect with Support</Link>
+            </div>
           </div>
         </div>
       </div>

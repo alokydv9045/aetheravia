@@ -27,6 +27,12 @@ const users = [
     password: bcrypt.hashSync('test1234', 12),
     isAdmin: false,
   },
+  {
+    name: 'Heritage Seeker',
+    email: 'user@example.com',
+    password: bcrypt.hashSync('user1234', 12),
+    isAdmin: false,
+  },
 ];
 
 // Product Data
