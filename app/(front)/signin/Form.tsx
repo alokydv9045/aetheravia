@@ -114,6 +114,7 @@ const Form = () => {
                 alt="Artisanal textures"
                 fill
                 priority
+                sizes="50vw"
               />
               {/* Overlapping Caption Element */}
               <div className="absolute -bottom-4 -left-4 bg-surface-container-lowest p-6 max-w-xs shadow-xl rounded border border-outline-variant/10 z-20">

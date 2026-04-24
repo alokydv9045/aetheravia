@@ -12,9 +12,6 @@ export default async function proxy(request: NextRequest) {
   response.headers.set('X-XSS-Protection', '1; mode=block');
   
   // Simplified route handling (no NextAuth for now to avoid PostCSS crash)
-  if (pathname.startsWith('/shipping')) {
-    return NextResponse.redirect(new URL('/order-history', request.url));
-  }
   
   return response;
 }

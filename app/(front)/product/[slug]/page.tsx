@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import AddToCart from '@/components/products/AddToCart';
 import { Rating } from '@/components/products/Rating';
 import ProductGallery from '@/components/products/ProductGallery';
+import WishlistButton from '@/components/products/WishlistButton';
 import productService from '@/lib/services/productService';
 import { convertDocToObj, formatPrice } from '@/lib/utils';
 import FAQSection from '@/components/footer/FAQ';
@@ -93,17 +94,20 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
           </div>
 
           {/* Selectors */}
-          <div className="space-y-6 pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 pt-4 items-stretch sm:items-center">
             {product.countInStock > 0 && (
-               <AddToCart
-                 item={{
-                   ...convertDocToObj(product),
-                   qty: 0,
-                   color: '',
-                   size: '',
-                 }}
-               />
+               <div className="flex-1">
+                 <AddToCart
+                   item={{
+                     ...convertDocToObj(product),
+                     qty: 0,
+                     color: '',
+                     size: '',
+                   }}
+                 />
+               </div>
             )}
+            <WishlistButton product={convertDocToObj(product)} />
           </div>
 
           {/* Chips (Ingredients) */}
