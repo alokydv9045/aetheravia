@@ -46,12 +46,14 @@ export const POST = auth(async (req: any) => {
     session = null;
   }
 
+  // ✅ Read body once outside any potential retry loops
+  const rawPayload = await req.json();
+  const payload = sanitizeRequestBody(rawPayload);
+
   let createdOrder: any = null;
   
   // Helper to perform the actual order creation logic
   const performOrderCreation = async (currentSession: mongoose.ClientSession | null) => {
-    const rawPayload = await req.json();
-    const payload = sanitizeRequestBody(rawPayload);
     
     // Validate required fields
     const requiredFieldsCheck = validateRequiredFields(payload, [
@@ -112,9 +114,10 @@ export const POST = auth(async (req: any) => {
         product: p._id,
       });
 
+      // Atomic stock update: only decrement if enough stock exists
       stockUpdates.push({
         updateOne: {
-          filter: { _id: p._id },
+          filter: { _id: p._id, countInStock: { $gte: qty } },
           update: { $inc: { countInStock: -qty } },
         },
       });
@@ -171,7 +174,10 @@ export const POST = auth(async (req: any) => {
     const [order] = await OrderModel.create([newOrderData], { session: currentSession || undefined });
     
     if (stockUpdates.length > 0) {
-      await ProductModel.bulkWrite(stockUpdates, { session: currentSession || undefined });
+      const bulkResult = await ProductModel.bulkWrite(stockUpdates, { session: currentSession || undefined });
+      if (bulkResult.matchedCount < stockUpdates.length) {
+        throw new Error("One or more items in your cart became unavailable. Please review your cart.");
+      }
     }
     
     return order;

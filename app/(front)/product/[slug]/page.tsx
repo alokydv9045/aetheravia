@@ -9,6 +9,7 @@ import WishlistButton from '@/components/products/WishlistButton';
 import productService from '@/lib/services/productService';
 import { convertDocToObj, formatPrice } from '@/lib/utils';
 import FAQSection from '@/components/footer/FAQ';
+import ProductTabs from '@/components/products/ProductTabs';
 
 export const generateMetadata = async ({
   params,
@@ -121,35 +122,7 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
       </section>
 
       {/* Detailed Content Tabs */}
-      <section className="mt-24 bg-surface-container-low relative py-20">
-        <div className="absolute inset-0 pointer-events-none noise-overlay opacity-[0.03]"></div>
-        <div className="max-w-4xl mx-auto px-6 relative">
-          <div className="flex border-b border-outline-variant/20 mb-12 overflow-x-auto scrollbar-hide">
-            <button className="px-8 pb-4 text-primary border-b-2 border-primary font-headline italic text-xl whitespace-nowrap">The Ritual</button>
-            <button className="px-8 pb-4 text-on-surface-variant hover:text-primary font-headline italic text-xl transition-colors whitespace-nowrap">Ingredients</button>
-            <button className="px-8 pb-4 text-on-surface-variant hover:text-primary font-headline italic text-xl transition-colors whitespace-nowrap">Our Ethics</button>
-          </div>
-          <div className="space-y-12">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                <h2 className="font-headline text-3xl text-primary italic leading-tight">Cleansing as Meditation</h2>
-                <p className="text-on-surface-variant leading-relaxed">
-                  Dispense a small amount onto your palm or a natural loofah. Massage onto damp skin in gentle circular motions, focusing on areas that hold tension. Inhale the grounding scent of sandalwood. Rinse with lukewarm water to reveal skin that feels soft, detoxified, and deeply nourished.
-                </p>
-              </div>
-              <div className="rounded-lg overflow-hidden aspect-square shadow-xl">
-                <Image 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRSmWpCzGLgiS4xXmXgcabj9yx-1jx55OCHnwhDI3KqgH2AC44z2R07FpIInuLyJ7I4r6s6JSVjFP_LXmVVWBNjVTxxt5nA5rD4S21VwQUkW8jdtrSvyrLHXPYxV639zShq0Z99BvF5UqyfftFQJGSkv4TBKKzzLLgNxevvtTYnsjff9KUK0MtUGHeWc1Sh_yMDO05HjHhBZmd9BVWQtvR47azLXZo3mNeIPaTGYd2EVsEV_ByExW58R37rG_PJLipBo71W9uwSoEF"
-                  alt="Ritual cleansing"
-                  width={600}
-                  height={600}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ProductTabs description={product.description} />
 
       {/* Related Products (Bento/Card Style) */}
       <section className="mt-24 max-w-screen-2xl mx-auto px-6 md:px-12">

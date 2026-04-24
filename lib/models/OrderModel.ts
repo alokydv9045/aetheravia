@@ -121,6 +121,10 @@ const orderSchema = new mongoose.Schema(
       enum: ['low', 'normal', 'high', 'urgent'],
       default: 'normal',
     },
+    pointsAwarded: {
+      type: Boolean,
+      default: false,
+    },
     
     // Delivery Partner Information
     deliveryPartner: {
@@ -306,6 +310,7 @@ export type Order = {
   timeline: TimelineEvent[];
   notes: string;
   priority: 'low' | 'normal' | 'high' | 'urgent';
+  pointsAwarded: boolean;
   
   deliveryPartner?: {
     provider: string;

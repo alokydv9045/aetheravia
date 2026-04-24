@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import OrderModel from '@/lib/models/OrderModel';
 import { razorpay } from '@/lib/razorpay';
+import { awardPointsForOrder } from '@/lib/services/loyaltyService';
 
 export const POST = auth(async (...request: any) => {
   const [req, { params: paramsPromise }] = request;
@@ -26,7 +27,10 @@ export const POST = auth(async (...request: any) => {
         razorpay_signature
       );
       
-      if (isValidSignature) {
+        if (order.isPaid) {
+          return Response.json(order);
+        }
+
         order.isPaid = true;
         order.paidAt = Date.now();
         order.paymentResult = {
@@ -35,6 +39,15 @@ export const POST = auth(async (...request: any) => {
           email_address: req.auth.user?.email || '',
         };
         const updatedOrder = await order.save();
+        
+        // Award Loyalty Points & Handle Referrals
+        try {
+          await awardPointsForOrder(order._id.toString(), req.auth.user._id || req.auth.user.id);
+        } catch (loyaltyError) {
+          console.error('[LOYALTY_ERROR]:', loyaltyError);
+          // Don't fail the payment response if loyalty awarding fails
+        }
+
         return Response.json(updatedOrder);
       } else {
         return Response.json(
