@@ -1,5 +1,15 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
 import env from './env';
+
+// Fix for Node.js SRV DNS resolution issues on some systems (e.g. Windows)
+if (typeof dns.setServers === 'function') {
+  try {
+    dns.setServers(['1.1.1.1', '8.8.8.8']);
+  } catch (e) {
+    console.error('[db] Failed to set DNS servers:', e);
+  }
+}
 
 interface Connection {
   isConnected?: number;

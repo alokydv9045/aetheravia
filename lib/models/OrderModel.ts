@@ -121,6 +121,25 @@ const orderSchema = new mongoose.Schema(
       enum: ['low', 'normal', 'high', 'urgent'],
       default: 'normal',
     },
+    
+    // Delivery Partner Information
+    deliveryPartner: {
+      provider: String,
+      trackingId: String,
+      estimatedDelivery: Date,
+      assignedAt: Date,
+      courierName: String,
+      assignedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    },
+    
+    // Compatibility field for orderStatus
+    orderStatus: {
+      type: String,
+      enum: Object.values(ORDER_STATUS),
+    },
   },
   {
     timestamps: true,
@@ -166,6 +185,9 @@ orderSchema.pre('save', function(next) {
       this.deliveredAt = new Date();
       this.isDelivered = true;
     }
+    
+    // Sync orderStatus with status
+    this.orderStatus = this.status;
   }
   next();
 });
@@ -280,9 +302,19 @@ export type Order = {
   
   // Enhanced fields
   status: OrderStatus;
+  orderStatus?: OrderStatus;
   timeline: TimelineEvent[];
   notes: string;
   priority: 'low' | 'normal' | 'high' | 'urgent';
+  
+  deliveryPartner?: {
+    provider: string;
+    trackingId: string;
+    estimatedDelivery: string | Date;
+    assignedAt: string | Date;
+    courierName: string;
+    assignedBy?: string | { name: string; email: string };
+  };
   
   // Virtual methods
   getProgressPercentage?: () => number;

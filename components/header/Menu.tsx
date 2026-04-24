@@ -1,14 +1,16 @@
 'use client';
 
-import { ChevronDown, ShoppingCart } from 'lucide-react';
+import { ChevronDown, ShoppingCart, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { signOut, signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 import useCartService from '@/lib/hooks/useCartStore';
+import useWishlistService from '@/lib/hooks/useWishlistStore';
 
 const Menu = ({ showSearch = true, showAccount = true }: { showSearch?: boolean; showAccount?: boolean }) => {
   const { items, init } = useCartService();
+  const { items: wishlistItems } = useWishlistService();
   const { data: session, status, update } = useSession();
   const router = useRouter();
 
@@ -28,6 +30,23 @@ const Menu = ({ showSearch = true, showAccount = true }: { showSearch?: boolean;
 
   return (
     <ul className='flex gap-2'>
+      <li className='flex items-center'>
+        <Link
+          href='/wishlist'
+          className='flex items-center gap-2 text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-3 sm:px-5 rounded-full hover:bg-primary group relative'
+          aria-label='Wishlist'
+        >
+          <Heart size={20} className="transition-colors group-hover:text-white" />
+          <span className="hidden md:inline">Wishlist</span>
+          {wishlistItems.length !== 0 && (
+            <span className='absolute top-0 right-2 -mt-2 -mr-1'>
+              <div className='badge badge-secondary badge-sm h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-secondary border-none text-white'>
+                {wishlistItems.length}
+              </div>
+            </span>
+          )}
+        </Link>
+      </li>
       <li className='flex items-center'>
         <Link
           href='/cart'
