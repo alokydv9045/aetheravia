@@ -167,10 +167,12 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
           {/* Card 1 */}
           <Link href="/shop" className="group cursor-pointer">
             <div className="bg-surface-container-low aspect-[3/4] rounded-lg overflow-hidden mb-6 relative">
-              <img 
+              <Image 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvfZ1HRdQkI-sVHntwLxpzLEcYC1r9WGAxunHcir3JCrd3SkPGGpb6_fL5UpXpWqKGvMnrxJmBLdv6StBXOot3bfM-25YSqBfeDul3NJRrrKn4WBA3L5NHYeKQ9p-91EPj0GabLT48hIais8eEVZd5yTqlyFX-QgzxdAJRL2dh5isAxhFi0TChkZA_sL4cbE6SkdyIGXZAGR-8mzeF3iKCG3k9OO83hd6Uf1Otoq0ayh4skK4lrd9PtO6yCAVZ6YRaLMIVbV0_SwI5"
                 alt="Body Scrub"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-on-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
@@ -184,10 +186,12 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
           {/* Card 2 */}
           <Link href="/shop" className="group cursor-pointer">
             <div className="bg-surface-container-low aspect-[3/4] rounded-lg overflow-hidden mb-6 relative">
-              <img 
+              <Image 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8sgx9kGEcknuqTJQdZ2BJNzl8qxNV8YlktQzPmzphSqdjvrg8LC88pGNxXvsahm1HpgPSEujoykTjvfRO5nMHnlE7crED6NEkzpmOLl1m-yCFZ6w95R6oH43kGU9Tu4B-S2UghiVEXZOkBl_yhO3KHsKo4ctU3_fIj1aoL1dp58795RKSn_eYTKmceZSGM8mjMiXlyoYOsfDMKTcXt0sERoEz4YZLgSMoHzS3SdDQHPaMI_Nz76CqBfLHwt7pNFeP0_ukbVjoCtdx"
                 alt="Face Wash"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
             <h4 className="font-headline text-2xl text-primary italic">Pure Reetha Face Wash</h4>

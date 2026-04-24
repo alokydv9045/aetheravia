@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { AlertCircle, RefreshCw, Settings, ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface PaymentErrorHandlerProps {
   error: any;
@@ -16,19 +17,18 @@ export default function PaymentErrorHandler({
 }: PaymentErrorHandlerProps) {
   const [showDetails, setShowDetails] = useState(false);
   
-  // Analyze error type
   const getErrorInfo = (error: any) => {
     if (error?.message?.includes('500') || error?.status === 500) {
       return {
         type: 'server_error',
-        title: 'Payment Service Unavailable',
-        message: 'There is a temporary issue with the payment service. Please try again in a moment.',
+        title: 'Manifest Disruption',
+        message: 'A temporary resonance issue has occurred within our gateway. Please attempt the ritual again.',
         severity: 'high',
         canRetry: true,
         suggestions: [
-          'Wait a few moments and try again',
-          'Check your internet connection',
-          'Try a different payment method'
+          'Wait for the digital landscape to stabilize',
+          'Verify your connection to the archive',
+          'Consider an alternative conduit of exchange'
         ]
       };
     }
@@ -36,153 +36,116 @@ export default function PaymentErrorHandler({
     if (error?.message?.includes('credentials') || error?.message?.includes('unauthorized')) {
       return {
         type: 'configuration_error',
-        title: 'Payment Configuration Issue',
-        message: 'There is a configuration issue with the payment system.',
+        title: 'Authentication Anomaly',
+        message: 'Your credentials could not be verified by the heritage vault.',
         severity: 'critical',
         canRetry: false,
         suggestions: [
-          'Please contact customer support',
-          'Try again later',
-          'Use alternative payment methods'
-        ]
-      };
-    }
-    
-    if (error?.message?.includes('network') || error?.message?.includes('fetch')) {
-      return {
-        type: 'network_error',
-        title: 'Connection Issue',
-        message: 'Unable to connect to payment services. Please check your internet connection.',
-        severity: 'medium',
-        canRetry: true,
-        suggestions: [
-          'Check your internet connection',
-          'Disable VPN if using one',
-          'Try refreshing the page'
+          'Seek guidance from the archive curators',
+          'Verify your identity credentials',
+          'Attempt the ritual at a later cycle'
         ]
       };
     }
     
     return {
       type: 'unknown_error',
-      title: 'Payment Error',
-      message: 'An unexpected error occurred during payment processing.',
+      title: 'Unexpected Divergence',
+      message: 'An unforeseen anomaly occurred during the manifest recording.',
       severity: 'medium',
       canRetry: true,
       suggestions: [
-        'Try again in a moment',
-        'Refresh the page',
-        'Contact support if the issue persists'
+        'Refresh your current perspective',
+        'Attempt the exchange once more',
+        'Contact support if the anomaly persists'
       ]
     };
   };
 
   const errorInfo = getErrorInfo(error);
   
-  const getSeverityColor = (severity: string) => {
+  const getSeverityStyle = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'text-error border-error bg-error/10';
-      case 'high': return 'text-warning border-warning bg-warning/10';
-      case 'medium': return 'text-info border-info bg-info/10';
-      default: return 'text-base-content border-base-300 bg-base-200/50';
+      case 'critical': return 'border-error bg-error/[0.03] text-error';
+      case 'high': return 'border-primary bg-primary/[0.03] text-primary';
+      default: return 'border-outline-variant/30 bg-surface-container-high/20 text-secondary';
     }
   };
 
   return (
-    <div className={`border rounded-lg p-4 ${getSeverityColor(errorInfo.severity)}`}>
-      <div className="flex items-start gap-3">
-        <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
-        <div className="flex-1">
-          <h3 className="font-semibold text-lg mb-2">{errorInfo.title}</h3>
-          <p className="mb-3">{errorInfo.message}</p>
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`border rounded p-6 shadow-sm ${getSeverityStyle(errorInfo.severity)}`}
+    >
+      <div className="flex items-start gap-4">
+        <div className={`p-2 rounded-full ${errorInfo.severity === 'critical' ? 'bg-error/10' : 'bg-primary/10'}`}>
+          <AlertCircle className="h-5 w-5" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-headline text-xl italic mb-2">{errorInfo.title}</h3>
+          <p className="font-body text-sm opacity-90 leading-relaxed mb-4">{errorInfo.message}</p>
           
-          {errorInfo.suggestions.length > 0 && (
-            <div className="mb-3">
-              <p className="font-medium mb-2">Suggested Actions:</p>
-              <ul className="list-disc list-inside space-y-1 text-sm">
-                {errorInfo.suggestions.map((suggestion, index) => (
-                  <li key={index}>{suggestion}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <div className="space-y-2 mb-6">
+            <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Recommended Disciplines:</p>
+            <ul className="space-y-1">
+              {errorInfo.suggestions.map((suggestion, index) => (
+                <li key={index} className="flex items-center gap-2 text-[11px] font-body italic opacity-80">
+                  <span className="w-1 h-1 rounded-full bg-current" />
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          </div>
           
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex flex-wrap gap-4 pt-2">
             {errorInfo.canRetry && onRetry && (
               <button
                 onClick={onRetry}
-                className="btn btn-sm btn-primary"
+                className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity"
               >
-                <RefreshCw className="h-4 w-4 mr-1" />
-                Try Again
-              </button>
-            )}
-            
-            {onDismiss && (
-              <button
-                onClick={onDismiss}
-                className="btn btn-sm btn-ghost"
-              >
-                Dismiss
+                <RefreshCw className="h-3 w-3" />
+                Retry Ritual
               </button>
             )}
             
             <button
               onClick={() => setShowDetails(!showDetails)}
-              className="btn btn-sm btn-ghost"
+              className="text-[10px] font-bold uppercase tracking-widest opacity-50 flex items-center gap-2 hover:opacity-100 transition-opacity"
             >
-              <Settings className="h-4 w-4 mr-1" />
-              {showDetails ? 'Hide' : 'Show'} Details
+              <Settings className="h-3 w-3" />
+              {showDetails ? 'Conceal' : 'Expose'} Details
             </button>
+
+            {onDismiss && (
+              <button
+                onClick={onDismiss}
+                className="text-[10px] font-bold uppercase tracking-widest opacity-50 hover:opacity-100 ml-auto"
+              >
+                Dismiss
+              </button>
+            )}
           </div>
           
-          {showDetails && (
-            <div className="mt-3 p-3 bg-base-100/50 rounded border">
-              <h4 className="font-medium mb-2">Technical Details:</h4>
-              <div className="text-sm space-y-2">
-                <div>
-                  <span className="font-medium">Error Type:</span> {errorInfo.type}
-                </div>
-                <div>
-                  <span className="font-medium">Message:</span> {error?.message || 'Unknown error'}
-                </div>
-                {error?.status && (
-                  <div>
-                    <span className="font-medium">Status Code:</span> {error.status}
-                  </div>
-                )}
-                {error?.code && (
-                  <div>
-                    <span className="font-medium">Error Code:</span> {error.code}
-                  </div>
-                )}
-                <div>
-                  <span className="font-medium">Timestamp:</span> {new Date().toLocaleString()}
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {errorInfo.severity === 'critical' && (
-            <div className="mt-3 p-3 bg-error/20 border border-error/50 rounded">
-              <div className="flex items-center gap-2 mb-2">
-                <AlertCircle className="h-4 w-4" />
-                <span className="font-medium">Need Help?</span>
-              </div>
-              <p className="text-sm mb-2">
-                If this issue persists, please contact our support team with the error details above.
-              </p>
-              <a
-                href="mailto:support@bellamoda.com"
-                className="btn btn-sm btn-error btn-outline"
+          <AnimatePresence>
+            {showDetails && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
               >
-                <ExternalLink className="h-4 w-4 mr-1" />
-                Contact Support
-              </a>
-            </div>
-          )}
+                <div className="mt-6 pt-6 border-t border-current/10 font-mono text-[10px] space-y-2 opacity-60">
+                  <p>Type: {errorInfo.type}</p>
+                  <p>Detail: {error?.message || 'Unknown resonance'}</p>
+                  {error?.status && <p>Pulse: {error.status}</p>}
+                  <p>Epoch: {new Date().toISOString()}</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

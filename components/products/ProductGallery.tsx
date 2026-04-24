@@ -36,6 +36,8 @@ export default function ProductGallery({ images }: { images: string[] }) {
             alt="Product View"
             fill
             className="w-full h-full object-cover transition-opacity duration-500"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority={true}
           />
         </div>
         {/* Offset Caption (Editorial Rule) */}

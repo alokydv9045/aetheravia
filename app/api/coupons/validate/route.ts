@@ -76,7 +76,7 @@ export const POST = auth(async (...request: any) => {
       },
       discountAmount,
       finalAmount: Math.max(0, orderValue - discountAmount),
-      message: `Coupon applied successfully! You saved $${discountAmount.toFixed(2)}`
+      message: `Coupon applied successfully! You saved ₹${discountAmount.toFixed(2)}`
     });
 
   } catch (error: any) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 
 type Address = {
   _id: string;
@@ -56,60 +57,86 @@ export default function AddressList({ addresses, reload }: Props) {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <div role="region" aria-label="Address form" className="form-control gap-3">
-        <label className="label">
-          <span className="label-text font-medium">{editing ? "Edit address" : "Add a new address"}</span>
-        </label>
-        <input className="input input-bordered" placeholder="Full name" value={addrForm.fullName} onChange={(e) => setAddrForm({ ...addrForm, fullName: e.target.value })} />
-        <textarea className="textarea textarea-bordered min-h-[80px]" placeholder="Street address" value={addrForm.address} onChange={(e) => setAddrForm({ ...addrForm, address: e.target.value })} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input className="input input-bordered" placeholder="City" value={addrForm.city} onChange={(e) => setAddrForm({ ...addrForm, city: e.target.value })} />
-          <input className="input input-bordered" placeholder="Postal code" value={addrForm.postalCode} onChange={(e) => setAddrForm({ ...addrForm, postalCode: e.target.value })} />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input className="input input-bordered" placeholder="Country (optional)" value={addrForm.country} onChange={(e) => setAddrForm({ ...addrForm, country: e.target.value })} />
-          <input className="input input-bordered" placeholder="Phone (optional)" value={addrForm.phone} onChange={(e) => setAddrForm({ ...addrForm, phone: e.target.value })} />
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <button className="btn btn-primary flex-1" disabled={!canSubmit} onClick={submit}>{editing ? "Update Address" : "Save Address"}</button>
-          {editing && <button className="btn btn-outline flex-1" onClick={() => { setEditing(null); setAddrForm({ fullName: "", address: "", city: "", postalCode: "", country: "", phone: "" }); }}>Cancel</button>}
-        </div>
-      </div>
-      <div role="region" aria-label="Saved addresses list">
-        {!addresses && <div className="flex items-center justify-center py-8"><span className="loading loading-spinner"></span> Loading addresses...</div>}
-        {addresses && addresses.length === 0 && (
-          <div className='text-center py-8'>
-            <div className='text-4xl mb-2'>📍</div>
-            <p className='opacity-70'>No saved addresses yet.</p>
-            <p className='text-sm opacity-60 mt-1'>Add your first address using the form.</p>
+    <div className="grid gap-12 lg:grid-cols-2">
+      <div className="space-y-8">
+        <h3 className="font-headline text-2xl text-secondary italic">{editing ? "Refine Destination" : "New Logistics Record"}</h3>
+        <div className="space-y-6">
+          <div className="space-y-2">
+             <label className="text-[9px] font-bold uppercase tracking-widest text-secondary opacity-60 ml-1">Full Identity</label>
+             <input className="w-full bg-surface border border-outline-variant/30 px-4 py-3 font-body focus:border-primary outline-none transition-all rounded" placeholder="Receiver's name" value={addrForm.fullName} onChange={(e) => setAddrForm({ ...addrForm, fullName: e.target.value })} />
           </div>
-        )}
-        {addresses && addresses.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="font-medium">Saved Addresses ({addresses.length})</h3>
-            <div className="space-y-3">
-              {addresses.map((a) => (
-                <div key={a._id} className='card bg-base-200 p-4 transition hover:shadow-md'>
-                  <div className='flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3'>
-                    <div className='text-sm flex-1'>
-                      <div className='font-medium text-base mb-1'>{a.fullName}</div>
-                      <div className='opacity-80 leading-relaxed'>{a.address}</div>
-                      <div className='opacity-80'>
-                        {a.city}, {a.postalCode} {a.country ? `• ${a.country}` : ''}
-                      </div>
-                      {a.phone && <div className='opacity-80 mt-1'>📞 {a.phone}</div>}
-                    </div>
-                    <div className="flex gap-2 shrink-0">
-                      <button className='btn btn-sm btn-outline' onClick={() => { setEditing(a); setAddrForm({ fullName: a.fullName, address: a.address, city: a.city, postalCode: a.postalCode, country: a.country || "", phone: a.phone || "" }); }}>Edit</button>
-                      <button className='btn btn-sm btn-outline btn-error' aria-label={`Remove address for ${a.fullName}`} onClick={async () => { await fetch(`/api/auth/profile/addresses?id=${a._id}`, { method: 'DELETE', credentials: 'include' }); reload(); }}>Remove</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+          <div className="space-y-2">
+             <label className="text-[9px] font-bold uppercase tracking-widest text-secondary opacity-60 ml-1">Street Conduit</label>
+             <textarea className="w-full bg-surface border border-outline-variant/30 px-4 py-3 font-body focus:border-primary outline-none transition-all rounded min-h-[100px]" placeholder="Detailed address" value={addrForm.address} onChange={(e) => setAddrForm({ ...addrForm, address: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+               <label className="text-[9px] font-bold uppercase tracking-widest text-secondary opacity-60 ml-1">City</label>
+               <input className="w-full bg-surface border border-outline-variant/30 px-4 py-3 font-body focus:border-primary outline-none transition-all rounded" value={addrForm.city} onChange={(e) => setAddrForm({ ...addrForm, city: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+               <label className="text-[9px] font-bold uppercase tracking-widest text-secondary opacity-60 ml-1">Postal Code</label>
+               <input className="w-full bg-surface border border-outline-variant/30 px-4 py-3 font-body focus:border-primary outline-none transition-all rounded" value={addrForm.postalCode} onChange={(e) => setAddrForm({ ...addrForm, postalCode: e.target.value })} />
             </div>
           </div>
+          <div className="flex gap-4 pt-4">
+            <button className="flex-1 bg-primary text-on-primary py-4 rounded font-bold tracking-widest uppercase text-[9px] hover:bg-primary-container transition-all shadow-lg disabled:opacity-50" disabled={!canSubmit} onClick={submit}>
+              {editing ? "Commit Revisions" : "Establish Address"}
+            </button>
+            {editing && (
+              <button className="flex-1 border border-outline-variant/30 text-on-surface py-4 rounded font-bold tracking-widest uppercase text-[9px] hover:bg-surface-container-high transition-all" onClick={() => { setEditing(null); setAddrForm({ fullName: "", address: "", city: "", postalCode: "", country: "", phone: "" }); }}>
+                Cancel
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-8">
+        <h3 className="font-headline text-2xl text-secondary italic">Archived Destinations</h3>
+        {!addresses && <div className="animate-pulse text-[10px] font-bold uppercase tracking-widest text-secondary/40">Recalling records...</div>}
+        {addresses && addresses.length === 0 && (
+          <div className='py-12 px-8 bg-surface-container-high/20 rounded border border-dashed border-outline-variant/30 text-center'>
+            <p className='text-secondary font-body italic opacity-60'>No logistical records established.</p>
+          </div>
         )}
+        <div className="space-y-4">
+          <AnimatePresence>
+            {addresses?.map((a) => (
+              <motion.div 
+                key={a._id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className='bg-surface border border-outline-variant/20 p-6 rounded-lg group hover:border-primary/30 transition-all'
+              >
+                <div className='flex justify-between items-start gap-4'>
+                  <div className='flex-1'>
+                    <h4 className='font-label font-bold text-sm tracking-widest text-primary mb-2 uppercase'>{a.fullName}</h4>
+                    <p className='font-body text-xs text-secondary opacity-80 leading-relaxed'>{a.address}</p>
+                    <p className='font-body text-xs text-secondary opacity-60 mt-1 uppercase tracking-wider'>
+                      {a.city}, {a.postalCode} {a.country && `• ${a.country}`}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      className='p-2 hover:text-primary transition-colors' 
+                      onClick={() => { setEditing(a); setAddrForm({ fullName: a.fullName, address: a.address, city: a.city, postalCode: a.postalCode, country: a.country || "", phone: a.phone || "" }); }}
+                    >
+                      <span className="material-symbols-outlined text-[18px]">edit_note</span>
+                    </button>
+                    <button 
+                      className='p-2 hover:text-error transition-colors'
+                      onClick={async () => { await fetch(`/api/auth/profile/addresses?id=${a._id}`, { method: 'DELETE', credentials: 'include' }); reload(); }}
+                    >
+                      <span className="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
