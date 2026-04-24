@@ -3,19 +3,23 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import Image from 'next/image';
 import toast from 'react-hot-toast';
-import { LogIn, Mail, Lock } from 'lucide-react';
+import { LogIn, Mail, Lock, ShieldCheck } from 'lucide-react';
 
 type Inputs = {
   email: string;
   password: string;
+  otp: string;
 };
 
 const Form = () => {
   const params = useSearchParams();
   const { data: session } = useSession();
+  const [step, setStep] = useState<'credentials' | 'otp'>('credentials');
+  const [resending, setResending] = useState(false);
 
   const callbackUrl = params?.get('callbackUrl') ?? '/';
   const router = useRouter();
@@ -23,28 +27,52 @@ const Form = () => {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>({
     defaultValues: {
       email: '',
       password: '',
+      otp: '',
     },
   });
 
   useEffect(() => {
     if (session && session.user) {
-      // Immediate redirect without delay
       router.replace(callbackUrl);
     }
   }, [callbackUrl, router, session]);
 
+  const sendOtp = async () => {
+    const { email, password } = getValues();
+    try {
+      const response = await fetch('/api/auth/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send verification code');
+      }
+
+      toast.success(data.message);
+      setStep('otp');
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   const formSubmit: SubmitHandler<Inputs> = async (form) => {
     const { email, password } = form;
     
-    // Sign in with redirect: false for faster response
     const result = await signIn('credentials', {
       email,
       password,
+      // Pass a dummy OTP since the backend now ignores it but the provider might still expect the field
+      otp: '000000', 
       redirect: false,
       callbackUrl,
     });
@@ -52,177 +80,228 @@ const Form = () => {
     if (result?.error) {
       toast.error(result.error === 'CredentialsSignin' 
         ? 'Invalid email or password' 
-        : result.error
+        : result.error,
+        { id: 'signin-error' }
       );
     } else if (result?.ok) {
-      // Show success message
-      toast.success('Login successful! Redirecting...');
-      
-      // Force immediate session refresh and redirect
+      toast.success('Login successful! Welcome back.', { id: 'signin-success' });
       router.refresh();
       router.push(callbackUrl);
     }
   };
 
+  const handleResendOtp = async () => {
+    setResending(true);
+    await sendOtp();
+    setTimeout(() => setResending(false), 30000); // 30s cooldown
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-gray-50 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
-        {/* Decorative top bar */}
-        <div className="h-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full mb-8" />
-        
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-green-50 to-gray-50 px-8 py-8 border-b border-green-100">
-            <div className="flex items-center justify-center mb-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
-                <LogIn className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            <h1 className="text-3xl font-bold text-center text-gray-900 mb-2">Welcome Back</h1>
-            <p className="text-center text-gray-600 text-sm">Sign in to your Aetheravia account</p>
-          </div>
+    <div className="bg-surface text-on-surface antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+      {/* Noise grain for tactile texture */}
+      <div className="fixed inset-0 noise-overlay z-[100] pointer-events-none"></div>
 
-          {/* Error/Success Alerts */}
-          {params?.get('error') && (
-            <div className="mx-8 mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <div>
-                  <p className="text-red-800 font-medium">
-                    {params?.get('error') === 'CredentialsSignin'
-                      ? 'Invalid email or password'
-                      : params?.get('error')}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {params?.get('success') && (
-            <div className="mx-8 mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-green-800 font-medium">{params?.get('success')}</p>
-              </div>
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit(formSubmit)} className="px-8 py-8 space-y-6">
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-green-600" />
-                  Email Address
-                </div>
-              </label>
-              <input
-                type="email"
-                id="email"
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: 'Please enter a valid email address',
-                  },
-                })}
-                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 ${
-                  errors.email
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                    : 'border-gray-200 focus:border-green-500 focus:ring-green-100'
-                }`}
-                placeholder="your.email@example.com"
+      {/* Main Content Canvas */}
+      <main className="flex-grow flex flex-col md:flex-row w-full overflow-hidden">
+        {/* Editorial Image Side */}
+        <div className="hidden md:flex md:w-1/2 h-[calc(100vh-100px)] sticky top-0 bg-surface-container overflow-hidden">
+          <div className="relative w-full h-full p-12 lg:p-20 flex items-center justify-center">
+            {/* Asymmetric Image Layout */}
+            <div className="relative w-full h-full">
+              <Image 
+                className="w-full h-full object-cover rounded shadow-sm grayscale-[20%]" 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYPGw_IvTtJyadjquc80iyRZtUZk-KYwK8xYFlnXifY4-cIEuZR_4c5VV63RbRXWe6VCQuxdSPlZwxQKVadMgXVvUbRD-MewRYgY1E-IrBp0karW0U2Nb_Kr5vZfBAQoIvxfsFPbD6hFanKS6H8VTbeYHBCYr765-E1yV5AAW1OmsFy7qO1qrMCta4-RU3c5rxjTDlnZKKB9cMEHItLQdY51J9MvHbyKlyajebezGZ21kHV5-JvIWes6EbHDvJJlm_0YocVD7A54eL"
+                alt="Artisanal textures"
+                fill
+                priority
               />
-              {errors.email?.message && (
-                <div className="mt-2 flex items-start gap-2 text-red-600 text-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  <span>{errors.email.message}</span>
-                </div>
-              )}
+              {/* Overlapping Caption Element */}
+              <div className="absolute -bottom-4 -left-4 bg-surface-container-lowest p-6 max-w-xs shadow-xl rounded border border-outline-variant/10 z-20">
+                <p className="font-headline italic text-primary text-xl leading-relaxed">
+                  A synergy of Heritage: Multani Mitti, Chandan, and Reetha blended for timeless skin.
+                </p>
+              </div>
             </div>
-
-            {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-2">
-                <div className="flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-green-600" />
-                  Password
-                </div>
-              </label>
-              <input
-                type="password"
-                id="password"
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: {
-                    value: 1,
-                    message: 'Password cannot be empty',
-                  },
-                })}
-                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 ${
-                  errors.password
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                    : 'border-gray-200 focus:border-green-500 focus:ring-green-100'
-                }`}
-                placeholder="Enter your password"
-              />
-              {errors.password?.message && (
-                <div className="mt-2 flex items-start gap-2 text-red-600 text-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  <span>{errors.password.message}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-400 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 transform hover:shadow-lg hover:scale-105 active:scale-95"
-            >
-              {isSubmitting ? (
-                <>
-                  <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Signing in...</span>
-                </>
-              ) : (
-                <>
-                  <LogIn className="w-5 h-5" />
-                  <span>Sign in to your account</span>
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Footer */}
-          <div className="px-8 py-6 bg-gray-50 border-t border-gray-100">
-            <p className="text-center text-gray-700">
-              Don&apos;t have an account?{' '}
-              <Link 
-                href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`}
-                className="font-semibold text-green-600 hover:text-green-700 transition-colors"
-              >
-                Create one now
-              </Link>
-            </p>
           </div>
         </div>
 
-        {/* Bottom decorative bar */}
-        <div className="h-1 bg-gradient-to-r from-green-600 to-green-400 rounded-full mt-8" />
-      </div>
+        {/* Login Form Side */}
+        <div className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-surface min-h-[calc(100vh-100px)]">
+          <div className="w-full max-w-md">
+            {/* Brand Header */}
+            <div className="mb-12">
+              <h1 className="text-2xl font-headline tracking-tight text-primary italic mb-2">The Artisanal Archive</h1>
+              <h2 className="text-4xl font-headline font-bold text-on-surface leading-tight mb-4">Welcome back</h2>
+              <p className="text-secondary font-body font-light">Return to your curated rituals of self-care.</p>
+            </div>
+
+            {/* Google Login Action */}
+            <button 
+              onClick={() => signIn('google', { callbackUrl })}
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 border border-outline-variant/30 rounded bg-surface-container-lowest hover:bg-surface-container-low transition-colors duration-300 group mb-8 shadow-sm"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+              </svg>
+              <span className="font-label font-medium text-on-surface">Continue with Google</span>
+            </button>
+
+            <div className="relative mb-8 flex items-center">
+              <div className="flex-grow border-t border-outline-variant/20"></div>
+              <span className="px-4 text-[10px] font-label uppercase tracking-widest text-[#725a39]/60">Or use email</span>
+              <div className="flex-grow border-t border-outline-variant/20"></div>
+            </div>
+
+            {/* Credentials Form */}
+            <form onSubmit={handleSubmit(formSubmit)} className="space-y-6">
+              {step === 'credentials' ? (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-label text-secondary uppercase tracking-[0.2em] font-bold" htmlFor="email">Email Address</label>
+                    <input 
+                      className={`w-full bg-surface-container border-0 border-b-2 transition-all duration-300 px-4 py-4 rounded-t focus:ring-0 font-body text-on-surface ${
+                        errors.email ? 'border-error' : 'border-transparent focus:border-primary'
+                      }`} 
+                      id="email" 
+                      {...register('email', {
+                        required: 'Email is required',
+                        pattern: {
+                          value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                          message: 'Please enter a valid email address',
+                        },
+                      })}
+                      placeholder="your@archive.com" 
+                      type="email"
+                    />
+                    {errors.email?.message && <p className="text-error text-[10px] font-bold uppercase tracking-widest mt-1">{errors.email.message}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[10px] font-label text-secondary uppercase tracking-[0.2em] font-bold" htmlFor="password">Password</label>
+                      <Link href="/contact" className="text-[10px] font-label text-primary hover:text-primary-container transition-colors uppercase tracking-widest font-bold">Forgot Password?</Link>
+                    </div>
+                    <input 
+                      className={`w-full bg-surface-container border-0 border-b-2 transition-all duration-300 px-4 py-4 rounded-t focus:ring-0 font-body text-on-surface ${
+                        errors.password ? 'border-error' : 'border-transparent focus:border-primary'
+                      }`} 
+                      id="password" 
+                      {...register('password', {
+                        required: 'Password is required',
+                        minLength: {
+                          value: 1,
+                          message: 'Password cannot be empty',
+                        },
+                      })}
+                      placeholder="••••••••" 
+                      type="password"
+                    />
+                    {errors.password?.message && <p className="text-error text-[10px] font-bold uppercase tracking-widest mt-1">{errors.password.message}</p>}
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[10px] font-label text-secondary uppercase tracking-[0.2em] font-bold" htmlFor="otp">Verification Code</label>
+                      <button 
+                        type="button"
+                        onClick={handleResendOtp}
+                        disabled={resending || isSubmitting}
+                        className="text-[10px] font-label text-primary hover:text-primary-container transition-colors uppercase tracking-widest font-bold disabled:opacity-50"
+                      >
+                        {resending ? 'Sending...' : 'Resend Code'}
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
+                      <input 
+                        className={`w-full bg-surface-container border-0 border-b-2 transition-all duration-300 pl-12 pr-4 py-4 rounded-t focus:ring-0 font-headline text-2xl tracking-[0.5em] text-center text-on-surface ${
+                          errors.otp ? 'border-error' : 'border-transparent focus:border-primary'
+                        }`} 
+                        id="otp" 
+                        {...register('otp', {
+                          required: 'Verification code is required',
+                          pattern: {
+                            value: /^[0-9]{6}$/,
+                            message: 'Please enter a 6-digit code',
+                          },
+                        })}
+                        placeholder="000000" 
+                        maxLength={6}
+                        type="text"
+                        autoFocus
+                      />
+                    </div>
+                    <p className="text-[10px] text-secondary font-body mt-2">
+                      Enter the 6-digit code sent to your archive email.
+                    </p>
+                    {errors.otp?.message && <p className="text-error text-[10px] font-bold uppercase tracking-widest mt-1">{errors.otp.message}</p>}
+                  </div>
+
+                  <button 
+                    type="button" 
+                    onClick={() => setStep('credentials')}
+                    className="text-[10px] font-label text-secondary hover:text-primary transition-colors uppercase tracking-widest font-bold flex items-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-sm">arrow_back</span>
+                    Change Email/Password
+                  </button>
+                </div>
+              )}
+
+              <div className="pt-4">
+                <button 
+                  disabled={isSubmitting}
+                  className="w-full bg-primary hover:bg-primary-container text-white font-label font-bold py-5 rounded shadow-lg transition-all duration-300 tracking-[0.15em] text-[10px] uppercase flex items-center justify-center gap-3 disabled:opacity-70" 
+                  type="submit"
+                >
+                  {isSubmitting ? (
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                  ) : (
+                    <>
+                      {step === 'credentials' ? 'Access My Archive' : 'Verify My Identity'}
+                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+
+            {/* Footer Navigation */}
+            <div className="mt-12 text-center">
+              <p className="font-body text-sm text-secondary">
+                New to our heritage? 
+                <Link 
+                  href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+                  className="text-primary font-bold hover:underline underline-offset-4 ml-2 transition-all"
+                >
+                  Create an account
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Embedded Footer (Page Specific Layout) */}
+      <footer className="bg-surface-container-highest text-primary font-body text-[10px] uppercase tracking-[0.2em] font-bold w-full mt-auto flex flex-col md:flex-row justify-between items-center px-12 py-16 gap-8">
+        <div className="flex-shrink-0">
+          <span className="font-headline italic text-lg normal-case">The Artisanal Archive</span>
+        </div>
+        <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+          <Link className="text-secondary hover:text-primary transition-colors" href="/our-story">Sustainability</Link>
+          <Link className="text-secondary hover:text-primary transition-colors" href="/shipping">Shipping</Link>
+          <Link className="text-secondary hover:text-primary transition-colors" href="/privacy">Privacy Policy</Link>
+          <Link className="text-secondary hover:text-primary transition-colors" href="/terms">Terms</Link>
+        </div>
+        <div className="text-[#a09e9a]">
+          © 2024 The Artisanal Archive. Handcrafted Heritage.
+        </div>
+      </footer>
     </div>
   );
 };

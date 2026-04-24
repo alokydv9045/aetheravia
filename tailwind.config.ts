@@ -61,6 +61,11 @@ const config: Config = {
             highest: '#e5e2dd',
           }
         },
+        'on-primary': '#ffffff',
+        'on-secondary': '#ffffff',
+        'on-secondary-container': '#765f3d',
+        'on-surface': '#1c1c19',
+        'on-surface-variant': '#50443d',
         brand: {
           DEFAULT: '#904917',
           black: '#1c1c19',

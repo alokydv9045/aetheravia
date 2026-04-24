@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { Calendar, RefreshCcw } from 'lucide-react';
 
 interface AnalyticsFiltersProps {
   onFiltersChange: (filters: {
@@ -146,13 +147,19 @@ export default function AnalyticsFilters({ onFiltersChange, isLoading = false }:
       </div>
 
       {/* Current Selection Display */}
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-gray-600 flex items-center gap-2">
+        <Calendar size={14} className="text-primary/40" />
         {selectedPeriod === 'custom' && startDate && endDate ? (
-          <span>📅 Custom range: {startDate} to {endDate}</span>
+          <span>Custom range: {startDate} to {endDate}</span>
         ) : (
-          <span>📅 {periodOptions.find(p => p.value === selectedPeriod)?.label}</span>
+          <span>{periodOptions.find(p => p.value === selectedPeriod)?.label}</span>
         )}
-        {isLoading && <span className="ml-2">🔄 Loading...</span>}
+        {isLoading && (
+          <span className="ml-2 flex items-center gap-1">
+            <RefreshCcw size={12} className="animate-spin" />
+            Loading...
+          </span>
+        )}
       </div>
     </div>
   );

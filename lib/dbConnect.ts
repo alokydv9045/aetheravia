@@ -37,13 +37,15 @@ const dbConnect = async () => {
     const startTs = Date.now();
     const uri = env.MONGODB_URI?.trim();
     if (!uri) {
+      log('❌ MONGODB_URI is empty or undefined!');
       throw new Error('MONGODB_URI environment variable is not set');
     }
-    if (!uri.startsWith('mongodb://') && !uri.startsWith('mongodb+srv://')) {
-      throw new Error('Invalid MongoDB URI format');
-    }
+    
+    const redacted = uri.replace(/(mongodb\+srv:\/\/)([^:@]+)(:[^@]+)?@/, (_, p, user) => `${p}${user}:***@`);
+    log(`Connecting (attempt ${connectionAttempt}) to cluster...`);
+
     const options = {
-      serverSelectionTimeoutMS: 15000, // quicker feedback if cluster unreachable
+      serverSelectionTimeoutMS: 15000, 
       socketTimeoutMS: 45000,
       connectTimeoutMS: 15000,
       heartbeatFrequencyMS: 10000,
@@ -54,17 +56,15 @@ const dbConnect = async () => {
       retryReads: true,
       w: 'majority' as const,
       bufferCommands: true,
-      // NOTE: authSource only needed for SCRAM on non-SRV connection to specific DB
-      // Keep if you intentionally authenticate against admin.
       authSource: 'admin',
     } as const;
 
-    // Provide partially redacted URI for logs (avoid leaking credentials)
-    const redacted = uri.replace(/(mongodb\+srv:\/\/)([^:@]+)(:[^@]+)?@/, (_, p, user) => `${p}${user}:***@`);
-    log(`Connecting (attempt ${connectionAttempt}) to ${redacted}`);
     if (process.env.NODE_ENV === 'development') {
       if (!(global as any)._mongooseConnectionPromise) {
+        log('Creating new Mongoose connection promise...');
         (global as any)._mongooseConnectionPromise = mongoose.connect(uri, options);
+      } else {
+        log('Reusing existing Mongoose connection promise...');
       }
       await (global as any)._mongooseConnectionPromise;
       connection.isConnected = mongoose.connection.readyState;
@@ -72,7 +72,7 @@ const dbConnect = async () => {
       await mongoose.connect(uri, options);
       connection.isConnected = mongoose.connection.readyState;
     }
-    log(`Connected in ${Date.now() - startTs}ms (state=${mongoose.connection.readyState})`);
+    log(`Connected! (state=${mongoose.connection.readyState})`);
     mongoose.connection.on('connected', () => {
       connection.isConnected = 1;
       log('MongoDB connected (event)');

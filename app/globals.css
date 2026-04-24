@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @layer base {
   :root {
@@ -42,11 +42,13 @@
 
 @layer base {
   * { border-color: hsl(var(--border)); }
-  body { 
+  html, body {
     background: hsl(var(--background)); 
     color: hsl(var(--foreground)); 
     font-family: 'Manrope', sans-serif;
-    scroll-behavior:smooth; 
+    scroll-behavior: smooth; 
+    overflow-x: hidden;
+    width: 100%;
   }
 }
 

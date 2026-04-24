@@ -3,10 +3,12 @@ import { Suspense } from 'react';
 import HeroModern from '@/components/home/HeroModern';
 import IngredientGallery from '@/components/home/IngredientGallery';
 import SkincareRitual from '@/components/home/SkincareRitual';
+import FAQ from '@/components/home/FAQ';
 import Newsletter from '@/components/home/Newsletter';
 import Slider from '@/components/slider/Slider';
 import ProductItems, { ProductItemsSkeleton } from '@/components/products/ProductItems';
 import TrustBarModern from '@/components/home/TrustBarModern';
+import TrustBar from '@/components/footer/TrustBar';
 
 export const metadata: Metadata = {
   title: 'Aethravia | Artisanal Heritage Body Care',
@@ -23,7 +25,7 @@ const HomePage = () => {
       <IngredientGallery />
 
       {/* Top Rated & New Arrivals Sliders */}
-      <section className="py-24 px-4 md:px-12 max-w-screen-2xl mx-auto space-y-32">
+      <section className="py-24 w-full space-y-32">
         <Suspense fallback={<ProductItemsSkeleton qty={4} layout="slider" />}>
           <ProductItems 
             layout="slider" 
@@ -49,8 +51,14 @@ const HomePage = () => {
       {/* Artisanal Rituals Section */}
       <SkincareRitual />
 
+      {/* FAQ Section */}
+      <FAQ />
+
       {/* Newsletter / Editorial Section */}
       <Newsletter />
+      
+      {/* Features TrustBar */}
+      <TrustBar />
     </div>
   );
 };

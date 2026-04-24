@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type Props = {
   user?: {
@@ -52,63 +54,111 @@ export default function Overview({ user, onUpdateAvatar, onSaveAbout }: Props) {
   };
 
   return (
-    <div className="card bg-base-300 transition-shadow hover:shadow-md">
-      <div className="card-body">
-        <h2 className="card-title text-base-content">Account Overview</h2>
-        {user?.createdAt && (
-          <p className="mb-3 text-sm opacity-70">
-            Member since: {new Date(user.createdAt).toLocaleDateString()}
-          </p>
-        )}
-        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-          <div className="tooltip tooltip-bottom" data-tip="Click to change photo">
-          <div className="group relative h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full border border-base-300 cursor-pointer"
-               onClick={() => fileRef.current?.click()}
-               aria-label="Change profile photo">
-            <Image src={avatar} alt={name || "Avatar"} fill sizes="(max-width: 640px) 64px, 80px" style={{ objectFit: "cover" }} />
-            <div className={`absolute inset-0 flex items-center justify-center text-xs text-base-content transition-opacity ${uploading ? 'opacity-100 bg-base-300/70' : 'opacity-0 group-hover:opacity-100 bg-base-300/60'}`}>
-              {uploading ? 'Uploading…' : 'Change'}
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="bg-surface-container-low p-8 md:p-12 rounded-lg border border-outline-variant/10 shadow-xl"
+    >
+      <div className="flex flex-col md:flex-row items-center gap-12">
+        <div className="relative group">
+          <div 
+            className="w-32 h-32 rounded-full overflow-hidden border-2 border-primary/20 relative cursor-pointer ring-offset-4 ring-offset-surface ring-2 ring-transparent group-hover:ring-primary/40 transition-all duration-500"
+            onClick={() => fileRef.current?.click()}
+          >
+            <Image 
+              src={avatar} 
+              alt={name || "Avatar"} 
+              fill 
+              sizes="128px" 
+              className="object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700" 
+            />
+            <div className={`absolute inset-0 bg-primary/40 flex flex-col items-center justify-center text-[9px] font-bold uppercase tracking-widest text-white transition-opacity duration-500 ${uploading ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+              {uploading ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mb-2" />
+              ) : (
+                <span className="material-symbols-outlined mb-1">photo_camera</span>
+              )}
+              {uploading ? 'Syncing...' : 'Modify'}
             </div>
           </div>
-          </div>
-          <div className="flex-1 w-full max-w-xl">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-2">
-              <input className="input input-bordered w-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="Name" value={name} onChange={(e) => setName(e.target.value)} />
-              <input className="input input-bordered w-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30" aria-label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            {onUpdateAvatar && (
-              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAvatarUpload(f); }} />
-            )}
-          </div>
+          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAvatarUpload(f); }} />
         </div>
-        {onSaveAbout && (
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <button
-              className="btn btn-primary transition hover:brightness-110"
-              disabled={saving}
-              onClick={async () => {
-                setSaving(true); setError(null);
-                try {
-                  const n = (name || '').trim();
-                  const e = (email || '').trim();
-                  if (!n) throw new Error('Name is required');
-                  if (!e) throw new Error('Email is required');
-                  const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                  if (!emailRx.test(e)) throw new Error('Invalid email format');
-                  await onSaveAbout({ name: n, email: e });
-                } catch (e: any) {
-                  setError(e?.message || 'Update failed');
-                } finally {
-                  setSaving(false);
-                }
-              }}
-            >
-              {saving ? 'Saving…' : 'Save changes'}
-            </button>
-            {error && <span className="text-error text-sm opacity-90">{error}</span>}
+
+        <div className="flex-1 space-y-6 w-full">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary mb-2">Artisan Identity</p>
+            <h2 className="font-headline text-4xl text-on-surface italic">{name || 'Unnamed Heritage Seeker'}</h2>
+            <p className="text-secondary font-body text-sm opacity-60 mt-1">{email}</p>
           </div>
-        )}
+
+          {user?.createdAt && (
+            <div className="flex items-center gap-2 py-2 px-4 bg-primary/5 rounded-full w-fit border border-primary/10">
+              <span className="material-symbols-outlined text-[14px] text-primary">verified</span>
+              <span className="text-[9px] font-bold uppercase tracking-widest text-primary">
+                Established {new Date(user.createdAt).getFullYear()}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+
+      <div className="mt-12 pt-12 border-t border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-2">
+           <label className="text-[10px] font-bold uppercase tracking-widest text-secondary block">Display Name</label>
+           <input 
+             className="w-full bg-surface border-b border-outline-variant/30 py-3 font-body focus:border-primary transition-colors outline-none text-on-surface"
+             value={name} 
+             onChange={(e) => setName(e.target.value)} 
+           />
+        </div>
+        <div className="space-y-2">
+           <label className="text-[10px] font-bold uppercase tracking-widest text-secondary block">Contact Archive</label>
+           <input 
+             className="w-full bg-surface border-b border-outline-variant/30 py-3 font-body focus:border-primary transition-colors outline-none text-on-surface"
+             value={email} 
+             onChange={(e) => setEmail(e.target.value)} 
+           />
+        </div>
+      </div>
+
+      <div className="mt-12 flex items-center justify-between gap-4">
+        <div className="flex-1">
+          <AnimatePresence>
+            {error && (
+              <motion.span 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                className="text-error text-[10px] font-bold uppercase tracking-widest"
+              >
+                {error}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
+        <button
+          className="bg-primary text-on-primary px-12 py-5 rounded-lg font-bold tracking-[0.3em] uppercase text-[10px] hover:bg-primary-container transition-all shadow-xl shadow-primary/10 flex items-center gap-3 disabled:opacity-50"
+          disabled={saving}
+          onClick={async () => {
+            setSaving(true); setError(null);
+            try {
+              const n = (name || '').trim();
+              const e = (email || '').trim();
+              if (!n) throw new Error('Name required');
+              if (!e) throw new Error('Email required');
+              if (onSaveAbout) await onSaveAbout({ name: n, email: e });
+              toast.success('Archive updated');
+            } catch (e: any) {
+              setError(e?.message || 'Update failure');
+            } finally {
+              setSaving(false);
+            }
+          }}
+        >
+          {saving ? 'Syncing...' : 'Commit Changes'}
+          {!saving && <span className="material-symbols-outlined text-sm">auto_fix_high</span>}
+        </button>
+      </div>
+    </motion.div>
   );
 }

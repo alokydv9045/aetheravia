@@ -52,6 +52,8 @@ export type User = {
       tags?: string[];
     }>;
   };
+  loginOtp?: string;
+  loginOtpExpiry?: Date;
 };
 
 const SavedAddressSchema = new mongoose.Schema(
@@ -94,7 +96,7 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     isAdmin: { type: Boolean, required: true, default: false },
     avatar: { type: String },
@@ -138,6 +140,8 @@ const UserSchema = new mongoose.Schema(
       },
       default: {},
     },
+    loginOtp: { type: String },
+    loginOtpExpiry: { type: Date },
   },
   { timestamps: true },
 );

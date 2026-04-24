@@ -76,6 +76,162 @@ class EmailService {
     }
   }
 
+  async sendLoginOtp(email: string, otp: string): Promise<EmailResult> {
+    const subject = `Your Verification Code - ${brandName}`;
+    
+    const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${subject}</title>
+  <style>
+    body { font-family: 'Georgia', serif; margin: 0; padding: 0; background-color: #fcfbf9; color: #1a1a1a; }
+    .container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border: 1px solid #e5e1da; }
+    .header { padding: 40px 30px; text-align: center; border-bottom: 1px solid #f0eee9; }
+    .header h1 { margin: 0; font-size: 24px; font-style: italic; color: #904917; font-weight: 300; }
+    .content { padding: 50px 40px; text-align: center; }
+    .otp-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: #7c7c7c; margin-bottom: 20px; font-weight: 700; }
+    .otp-code { font-size: 48px; letter-spacing: 0.15em; color: #1a1a1a; margin: 30px 0; font-family: 'Helvetica', sans-serif; font-weight: 200; }
+    .message { font-size: 15px; line-height: 1.7; color: #4a4a4a; margin-bottom: 40px; }
+    .expiry { font-size: 12px; color: #a09e9a; font-style: italic; }
+    .footer { padding: 30px; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: #b0ada8; border-top: 1px solid #f0eee9; background-color: #faf9f7; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>${brandName}</h1>
+    </div>
+    <div class="content">
+      <div class="otp-label">Verification Code</div>
+      <div class="message">Please use the following code to complete your login to the Artisanal Archive.</div>
+      <div class="otp-code">${otp}</div>
+      <div class="expiry">This code will expire in 10 minutes.</div>
+    </div>
+    <div class="footer">
+      © ${new Date().getFullYear()} ${brandName}. Handcrafted Heritage.
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    const text = `
+${brandName} Verification Code
+
+Please use the following code to complete your login:
+${otp}
+
+This code will expire in 10 minutes.
+
+© ${new Date().getFullYear()} ${brandName}.
+    `;
+
+    const mailOptions = {
+      from: `"${brandName}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to: email,
+      subject,
+      html,
+      text,
+    };
+
+    try {
+      const result = await this.transporter.sendMail(mailOptions);
+      console.log('OTP email sent successfully:', result.messageId);
+      return {
+        messageId: result.messageId,
+        accepted: result.accepted,
+        rejected: result.rejected,
+      };
+    } catch (error) {
+      console.error('OTP email send failed:', error);
+      throw error;
+    }
+  }
+
+  async sendRegisterOtp(email: string, otp: string): Promise<EmailResult> {
+    const subject = `Complete Your Ritual - Registration Code - ${brandName}`;
+    
+    const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${subject}</title>
+  <style>
+    body { font-family: 'Georgia', serif; margin: 0; padding: 0; background-color: #fcf9f4; color: #1c1c19; }
+    .container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border: 1px solid #e5e2dd; border-radius: 4px; overflow: hidden; }
+    .header { padding: 40px; text-align: center; background-color: #fcf9f4; border-bottom: 1px solid #e5e2dd; }
+    .header h1 { margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; color: #904917; font-family: 'Times New Roman', serif; }
+    .content { padding: 60px 40px; text-align: center; }
+    .welcome-text { font-size: 14px; text-transform: uppercase; letter-spacing: 0.3em; color: #725a39; margin-bottom: 24px; font-weight: 600; }
+    .main-title { font-size: 24px; line-height: 1.4; color: #1c1c19; margin-bottom: 32px; font-style: italic; }
+    .otp-container { background-color: #f6f3ee; padding: 40px; border-radius: 2px; margin: 40px 0; }
+    .otp-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: #82746c; margin-bottom: 16px; font-weight: 700; }
+    .otp-code { font-size: 56px; letter-spacing: 0.2em; color: #904917; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 200; margin: 0; }
+    .expiry { font-size: 12px; color: #82746c; font-style: italic; margin-top: 40px; }
+    .footer { padding: 40px; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: #d4c3b9; background-color: #fcf9f4; border-top: 1px solid #e5e2dd; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Aethravia</h1>
+    </div>
+    <div class="content">
+      <div class="welcome-text">Begin Your Ritual</div>
+      <div class="main-title">You are one step away from joining our artisanal collective.</div>
+      <div class="otp-container">
+        <div class="otp-label">Verification Code</div>
+        <div class="otp-code">${otp}</div>
+      </div>
+      <p style="font-size: 15px; color: #50443d; line-height: 1.8;">Use this code to verify your email and complete the creation of your account.</p>
+      <div class="expiry">This code will expire in 15 minutes.</div>
+    </div>
+    <div class="footer">
+      © ${new Date().getFullYear()} Aethravia Artisanal Collective. Handcrafted Heritage.
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    const text = `
+Aethravia - Begin Your Ritual
+
+Please use the following code to complete your registration:
+${otp}
+
+This code will expire in 15 minutes.
+
+© ${new Date().getFullYear()} Aethravia Artisanal Collective.
+    `;
+
+    const mailOptions = {
+      from: `"${brandName}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to: email,
+      subject,
+      html,
+      text,
+    };
+
+    try {
+      const result = await this.transporter.sendMail(mailOptions);
+      console.log('Registration OTP email sent successfully:', result.messageId);
+      return {
+        messageId: result.messageId,
+        accepted: result.accepted,
+        rejected: result.rejected,
+      };
+    } catch (error) {
+      console.error('Registration OTP email send failed:', error);
+      throw error;
+    }
+  }
+
   private generateEmailContent(data: OrderNotificationData): {
     subject: string;
     html: string;

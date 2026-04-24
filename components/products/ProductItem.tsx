@@ -2,12 +2,16 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Product } from '@/lib/models/ProductModel';
 import { formatPrice } from '@/lib/utils';
 import useCartService from '@/lib/hooks/useCartStore';
 import toast from 'react-hot-toast';
 
 const ProductItem = ({ product }: { product: Product }) => {
+  const router = useRouter();
+  const { data: session, status } = useSession();
   const { items, increase } = useCartService();
 
   const addItemHandler = () => {
@@ -17,7 +21,7 @@ const ProductItem = ({ product }: { product: Product }) => {
       color: '',
       size: '',
     });
-    toast.success('Added to your cart', {
+    toast.success('Added to your bag', {
       style: {
         background: '#904917',
         color: '#fff',
@@ -32,6 +36,27 @@ const ProductItem = ({ product }: { product: Product }) => {
         secondary: '#904917',
       },
     });
+  };
+
+  const buyNowHandler = () => {
+    // Add to cart if not already present
+    const existItem = items.find((x) => x.slug === product.slug);
+    if (!existItem) {
+      increase({
+        ...product,
+        qty: 0,
+        color: '',
+        size: '',
+      });
+    }
+    
+    // Proceed to shipping step with a refresh to ensure state sync
+    router.refresh();
+    if (status === 'unauthenticated') {
+      router.push('/signin?callbackUrl=/shipping');
+    } else {
+      router.push('/shipping');
+    }
   };
 
   return (
@@ -55,13 +80,21 @@ const ProductItem = ({ product }: { product: Product }) => {
         </div>
 
         {/* Quick Add Overlay */}
-        <div className="absolute bottom-0 left-0 w-full p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/20 to-transparent z-20">
-          <button 
-            onClick={addItemHandler}
-            className="w-full bg-primary text-white py-3 font-body text-xs font-bold uppercase tracking-widest rounded-lg shadow-lg hover:bg-primary-container transition-colors active:scale-[0.98]"
-          >
-            Quick Add
-          </button>
+        <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 translate-y-0 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/60 to-transparent z-20">
+          <div className="flex gap-2">
+            <button 
+              onClick={addItemHandler}
+              className="flex-1 bg-white/10 backdrop-blur-md text-white border border-white/20 py-2.5 font-body text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-white/20 transition-colors active:scale-[0.98]"
+            >
+              Add to Bag
+            </button>
+            <button 
+              onClick={buyNowHandler}
+              className="flex-1 bg-primary text-white py-2.5 font-body text-[10px] font-bold uppercase tracking-widest rounded-lg shadow-lg hover:bg-opacity-90 transition-colors active:scale-[0.98]"
+            >
+              Buy Now
+            </button>
+          </div>
         </div>
       </div>
 
@@ -82,15 +115,14 @@ const ProductItem = ({ product }: { product: Product }) => {
         
         <div className="flex items-center gap-2">
           <span className="bg-[#f0ede8] px-2 py-1 rounded text-[10px] text-secondary font-bold uppercase tracking-tighter">
-            {product.brand} & Silt
+            {product.brand}
           </span>
           <span className="w-1 h-1 rounded-full bg-outline/30"></span>
-          <span className="text-[10px] text-secondary/70 uppercase tracking-wider font-medium">Detoxifying</span>
+          <span className="text-[10px] text-secondary/70 uppercase tracking-wider font-medium">Ancient Blend</span>
         </div>
       </div>
     </article>
   );
 };
-
 
 export default ProductItem;

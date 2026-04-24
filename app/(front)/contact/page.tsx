@@ -1,341 +1,163 @@
-import { Metadata } from 'next'
-import { Mail, Phone, MapPin, Clock, Send, MessageSquare, HeadphonesIcon, Globe, Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card } from '@/components/ui/card'
+import { Metadata } from 'next';
+import React from 'react';
+import ContactFAQ from './ContactFAQ';
+import ContactForm from './ContactForm';
 
 export const metadata: Metadata = {
-  title: 'Contact Us - Aetheravia',
-  description: 'Get in touch with Aetheravia. We&apos;re here to help with your skincare questions, orders, and support needs.',
-}
+  title: 'Contact Us | Aethravia',
+  description: 'Whether you seek guidance on a personalized ritual or have a question about our artisanal ingredients, our archive is open to you.',
+};
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-green-50 to-blue-50 py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Contact Us
-            </h1>
-            <p className="text-xl text-gray-700">
-              We&apos;re here to help! Reach out to us with any questions about our products,
-              orders, or skincare concerns.
-            </p>
+    <main className="relative pt-24 pb-24 bg-surface text-on-surface overflow-x-hidden antialiased">
+      <div 
+        className="fixed inset-0 pointer-events-none z-[100]"
+        style={{
+          opacity: 0.03,
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
+        }}
+      ></div>
+
+      {/* Hero Header */}
+      <header className="max-w-4xl mx-auto text-center px-6 mb-24 relative z-10">
+        <h1 className="text-5xl md:text-7xl font-headline tracking-tight text-primary mb-6">Contact Us</h1>
+        <p className="text-lg md:text-xl font-body text-secondary max-w-2xl mx-auto leading-relaxed">
+          Whether you seek guidance on a personalized ritual or have a question about our artisanal ingredients, our archive is open to you.
+        </p>
+      </header>
+
+      {/* Contact Cards */}
+      <section className="max-w-7xl mx-auto px-6 mb-32 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Card 1 */}
+          <div className="bg-surface-container-low p-8 transition-all hover:bg-surface-container-high group rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-secondary-container flex items-center justify-center rounded-full mb-6 text-on-secondary-container">
+              <span className="material-symbols-outlined">mail</span>
+            </div>
+            <h3 className="text-xl font-headline text-primary mb-2">Email Us</h3>
+            <p className="text-secondary font-body text-sm mb-4">Expect a response within 24 hours.</p>
+            <a className="text-on-surface font-semibold font-body hover:text-primary transition-colors underline decoration-outline-variant underline-offset-4 block" href="mailto:hello@aethravia.com">hello@aethravia.com</a>
+          </div>
+          {/* Card 2 */}
+          <div className="bg-surface-container-low p-8 transition-all hover:bg-surface-container-high group rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-secondary-container flex items-center justify-center rounded-full mb-6 text-on-secondary-container">
+              <span className="material-symbols-outlined">call</span>
+            </div>
+            <h3 className="text-xl font-headline text-primary mb-2">Call Us</h3>
+            <p className="text-secondary font-body text-sm mb-4">Mon-Fri, 9am to 6pm IST.</p>
+            <a className="text-on-surface font-semibold font-body hover:text-primary transition-colors underline decoration-outline-variant underline-offset-4 block" href="tel:+910000000000">+91 (800) 123-4567</a>
+          </div>
+          {/* Card 3 */}
+          <div className="bg-surface-container-low p-8 transition-all hover:bg-surface-container-high group rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-secondary-container flex items-center justify-center rounded-full mb-6 text-on-secondary-container">
+              <span className="material-symbols-outlined">location_on</span>
+            </div>
+            <h3 className="text-xl font-headline text-primary mb-2">Visit Us</h3>
+            <p className="text-secondary font-body text-sm mb-4">Our Flagship Heritage Store.</p>
+            <span className="text-on-surface font-semibold font-body block">12/A, Janpath Road, New Delhi</span>
+          </div>
+          {/* Card 4 */}
+          <div className="bg-surface-container-low p-8 transition-all hover:bg-surface-container-high group rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-secondary-container flex items-center justify-center rounded-full mb-6 text-on-secondary-container">
+              <span className="material-symbols-outlined">schedule</span>
+            </div>
+            <h3 className="text-xl font-headline text-primary mb-2">Business Hours</h3>
+            <p className="text-secondary font-body text-sm mb-4 relative z-10 bg-transparent">Weekdays: 09:00 - 18:00</p>
+            <p className="text-on-surface font-semibold font-body">Weekends: 10:00 - 16:00</p>
           </div>
         </div>
       </section>
 
-      {/* Contact Information Cards */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {/* Email */}
-            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Email Us</h3>
-              <p className="text-gray-600 mb-3">Get in touch via email</p>
-              <a href="mailto:support@aetheravia.com" className="text-blue-600 hover:text-blue-700 font-medium">
-                support@aetheravia.com
-              </a>
-            </Card>
-
-            {/* Phone */}
-            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Phone className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Call Us</h3>
-              <p className="text-gray-600 mb-3">Speak with our team</p>
-              <a href="tel:+91-9876543210" className="text-green-600 hover:text-green-700 font-medium">
-                +91-9876543210
-              </a>
-            </Card>
-
-            {/* Location */}
-            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Visit Us</h3>
-              <p className="text-gray-600 mb-3">Our office location</p>
-              <address className="text-purple-600 not-italic text-sm">
-                Mumbai, Maharashtra<br />
-                India - 400001
-              </address>
-            </Card>
-
-            {/* Business Hours */}
-            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-6 h-6 text-orange-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Business Hours</h3>
-              <p className="text-gray-600 mb-3">When we&apos;re available</p>
-              <div className="text-orange-600 text-sm">
-                <p>Mon-Fri: 9AM-6PM</p>
-                <p>Sat: 10AM-4PM</p>
-              </div>
-            </Card>
-          </div>
-
-          {/* Contact Form and Map */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div className="bg-white rounded-lg shadow-sm p-8">
-              <div className="flex items-center mb-6">
-                <MessageSquare className="w-6 h-6 text-green-600 mr-3" />
-                <h2 className="text-2xl font-bold text-gray-900">Send us a Message</h2>
-              </div>
-
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name *
-                    </label>
-                    <Input
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      required
-                      placeholder="Your first name"
-                      className="w-full"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name *
-                    </label>
-                    <Input
-                      id="lastName"
-                      name="lastName"
-                      type="text"
-                      required
-                      placeholder="Your last name"
-                      className="w-full"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="your.email@example.com"
-                    className="w-full"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    placeholder="+91-9876543210"
-                    className="w-full"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject *
-                  </label>
-                  <select
-                    id="subject"
-                    name="subject"
-                    required
-                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  >
-                    <option value="">Select a subject</option>
-                    <option value="order">Order Inquiry</option>
-                    <option value="product">Product Information</option>
-                    <option value="returns">Returns & Exchanges</option>
-                    <option value="support">Technical Support</option>
-                    <option value="feedback">Feedback</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={5}
-                    placeholder="Please describe your inquiry in detail..."
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
-                  />
-                </div>
-
-                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
-                  <Send className="w-4 h-4 mr-2" />
-                  Send Message
-                </Button>
-              </form>
-            </div>
-
-            {/* Map and Additional Info */}
-            <div className="space-y-8">
-              {/* Map Placeholder */}
-              <div className="bg-white rounded-lg shadow-sm p-8">
-                <div className="flex items-center mb-6">
-                  <MapPin className="w-6 h-6 text-purple-600 mr-3" />
-                  <h2 className="text-2xl font-bold text-gray-900">Find Us</h2>
-                </div>
-
-                <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center mb-4">
-                  <div className="text-center text-gray-500">
-                    <MapPin className="w-12 h-12 mx-auto mb-2" />
-                    <p>Interactive Map</p>
-                    <p className="text-sm">Mumbai, Maharashtra</p>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-sm text-gray-600">
-                  <p><strong>Address:</strong> 123 Green Street, Andheri West, Mumbai, Maharashtra 400058, India</p>
-                  <p><strong>Landmark:</strong> Near Metro Station</p>
-                  <p><strong>Parking:</strong> Available on premises</p>
-                </div>
-              </div>
-
-              {/* Quick Response Info */}
-              <div className="bg-blue-50 rounded-lg p-6">
-                <div className="flex items-center mb-4">
-                  <HeadphonesIcon className="w-6 h-6 text-blue-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">Quick Response Guarantee</h3>
-                </div>
-                <p className="text-gray-700 mb-4">
-                  We strive to respond to all inquiries within 24 hours during business days.
-                </p>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p>📧 Email responses: Within 24 hours</p>
-                  <p>📞 Phone calls: Immediate assistance</p>
-                  <p>💬 Live chat: Available 9AM-6PM IST</p>
-                </div>
-              </div>
-
-              {/* Social Media */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <div className="flex items-center mb-4">
-                  <Globe className="w-6 h-6 text-green-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">Follow Us</h3>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  Stay connected and get the latest updates on new products and skincare tips.
-                </p>
-                <div className="flex space-x-4">
-                  <a href="#" className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-shadow">
-                    <Facebook className="w-5 h-5" />
-                  </a>
-                  <a href="#" className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-shadow">
-                    <Instagram className="w-5 h-5" />
-                  </a>
-                  <a href="#" className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-shadow">
-                    <Twitter className="w-5 h-5" />
-                  </a>
-                  <a href="#" className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-shadow">
-                    <Youtube className="w-5 h-5" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Interactive Section */}
+      <section className="max-w-7xl mx-auto px-6 mb-32 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start relative z-10">
+        {/* Form Column */}
+        <div className="bg-surface-container-lowest p-8 md:p-12 shadow-sm rounded-lg border border-outline-variant/20">
+          <h2 className="text-3xl font-headline text-primary mb-8">Send us a Message</h2>
+          <ContactForm />
         </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Quick answers to common questions about contacting us and our services.
-            </p>
+        
+        {/* Map Column */}
+        <div className="space-y-12">
+          <div className="relative overflow-hidden aspect-[4/3] w-full bg-surface-container shadow-md rounded-lg">
+            <img 
+              alt="Map location" 
+              className="w-full h-full object-cover grayscale opacity-60" 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkM-XH6eAU4fbtGisH8wyMM-CSLVWmXYq25f-5ia_BXHvuBguj7gVYTF3ZMmOGR1ftoaX481Qau0MttcJg_sDJcqkcYCbGzOJa187ZXeWiRICIXq1NpIpueYqEhxm9dNXZ3HwjBZvsUHYbegImWZjPXYWEa8y8rZul9fm5gbsWw-wfsYv6o_ryU0M3h8lm1ToioNmkIah9ngwUQJHqg0TfV4VElJUWUdacgidETMMc3Li3HVbcNGmgDKqYa6QGCI9SAnkq8_Jad1f-"
+            />
+            <div className="absolute inset-0 bg-primary/5"></div>
+            <div className="absolute bottom-6 left-6 bg-surface p-4 shadow-xl rounded">
+              <p className="font-headline text-primary text-lg">Aethravia Flagship</p>
+              <p className="text-sm font-body text-secondary">Janpath Road, New Delhi</p>
+            </div>
           </div>
-
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                How quickly will I receive a response?
-              </h3>
-              <p className="text-gray-600">
-                We aim to respond to all inquiries within 24 hours during business days.
-                For urgent matters, please call us directly.
+          <div className="space-y-8 pl-4 border-l-2 border-primary/20">
+            <div>
+              <h4 className="font-headline text-xl text-primary mb-2">Physical Address</h4>
+              <p className="text-secondary font-body leading-relaxed">
+                The Heritage Archive Building, Suite 402<br/>
+                12/A Janpath Road, New Delhi, 110001
               </p>
             </div>
-
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Can I visit your office?
-              </h3>
-              <p className="text-gray-600">
-                Yes, our office is open to visitors during business hours. We recommend
-                scheduling an appointment in advance for the best experience.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Do you offer international shipping?
-              </h3>
-              <p className="text-gray-600">
-                Currently, we ship within India. For international inquiries,
-                please contact us to discuss options.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                How can I track my order?
-              </h3>
-              <p className="text-gray-600">
-                Once your order ships, you&apos;ll receive a tracking number via email.
-                You can also check your order status in your account dashboard.
+            <div>
+              <h4 className="font-headline text-xl text-primary mb-2">Parking Info</h4>
+              <p className="text-secondary font-body leading-relaxed">
+                Complimentary valet parking is available at the front entrance for all patrons visiting the Archive.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-green-600 to-blue-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Need Immediate Help?
-          </h2>
-          <p className="text-xl text-green-50 mb-8 max-w-2xl mx-auto">
-            Our customer support team is ready to assist you with any questions
-            or concerns you may have.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white hover:bg-green-50 text-green-600 font-semibold px-8 py-4 text-lg">
-              <Phone className="w-5 h-5 mr-2" />
-              Call Now
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-4 text-lg">
-              <Mail className="w-5 h-5 mr-2" />
-              Email Us
-            </Button>
+      {/* Support Details & Socials */}
+      <section className="max-w-7xl mx-auto px-6 mb-32 grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-surface-container-low p-12 rounded-lg relative z-10 shadow-sm border border-outline-variant/10">
+        <div>
+          <div className="inline-flex items-center gap-3 text-primary mb-4">
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+            <span className="text-xs font-label uppercase tracking-widest font-bold">Quick Response Guarantee</span>
+          </div>
+          <h2 className="text-3xl font-headline text-on-surface mb-4 leading-snug">We value your time as much as your skin.</h2>
+          <p className="text-secondary font-body leading-relaxed">Our concierge team of herbalists and skincare specialists aims to respond to every inquiry within a single business day.</p>
+        </div>
+        <div className="flex flex-col md:items-end gap-6">
+          <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold">Follow Our Story</span>
+          <div className="flex gap-4">
+            <a className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" href="#">
+              <span className="material-symbols-outlined">share</span>
+            </a>
+            <a className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" href="#">
+              <span className="material-symbols-outlined">photo_camera</span>
+            </a>
+            <a className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" href="#">
+              <span className="material-symbols-outlined">play_circle</span>
+            </a>
           </div>
         </div>
       </section>
-    </div>
-  )
+
+      {/* FAQ Snippet */}
+      <section className="max-w-4xl mx-auto px-6 mb-32 relative z-10">
+        <h2 className="text-4xl font-headline text-primary text-center mb-12">Frequently Asked Questions</h2>
+        <ContactFAQ />
+      </section>
+
+      {/* CTA Banner */}
+      <section className="max-w-7xl mx-auto px-6 relative z-10 mb-8">
+        <div className="bg-primary-container p-12 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden rounded-lg shadow-xl">
+          <div className="absolute right-0 top-0 opacity-10 pointer-events-none">
+            <span className="material-symbols-outlined text-[200px]" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+          </div>
+          <div className="relative z-10 text-center md:text-left">
+            <h2 className="text-3xl font-headline text-on-primary-container mb-2">Need Immediate Help?</h2>
+            <p className="text-on-primary-container/80 font-body">Our concierge is standing by to assist with urgent order issues.</p>
+          </div>
+          <a className="relative z-10 px-10 py-4 bg-on-primary-container text-primary font-bold tracking-widest uppercase text-xs hover:bg-surface transition-all flex items-center gap-3 shadow-xl rounded" href="tel:+911234567890">
+            <span className="material-symbols-outlined text-sm">phone_in_talk</span>
+            Call Now
+          </a>
+        </div>
+      </section>
+
+    </main>
+  );
 }

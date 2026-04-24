@@ -4,6 +4,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
+import { 
+  Package, 
+  Eye, 
+  Settings, 
+  Plus, 
+  Minus 
+} from 'lucide-react';
 
 interface Order {
   _id: string;
@@ -127,7 +134,7 @@ export default function UnifiedOrderList({
   if (orders.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-6xl mb-4">📦</div>
+        <Package className="w-16 h-16 mx-auto mb-4 opacity-20" />
         <h3 className="text-lg font-medium mb-2">No orders found</h3>
         <p className="text-base-content/70">Try adjusting your filters to see more results.</p>
       </div>
@@ -274,7 +281,7 @@ export default function UnifiedOrderList({
                       className="btn btn-ghost btn-xs"
                       onClick={() => toggleOrderExpansion(order._id)}
                     >
-                      {expandedOrders.has(order._id) ? '−' : '+'}
+                      {expandedOrders.has(order._id) ? <Minus size={14} /> : <Plus size={14} />}
                     </button>
                   </div>
                 </td>
@@ -292,13 +299,14 @@ export default function UnifiedOrderList({
                     <Link 
                       href={`/order/${order._id}`} 
                       className="btn btn-ghost btn-xs"
+                      title="View Details"
                     >
-                      👁️
+                      <Eye size={16} />
                     </Link>
                     
                     <div className="dropdown dropdown-end">
-                      <label tabIndex={0} className="btn btn-ghost btn-xs">
-                        📝
+                      <label tabIndex={0} className="btn btn-ghost btn-xs" title="Update Status">
+                        <Settings size={16} />
                       </label>
                       <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
                         <li><a onClick={() => onStatusUpdate(order._id, 'processing')}>Processing</a></li>

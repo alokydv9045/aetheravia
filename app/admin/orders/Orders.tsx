@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
@@ -82,28 +82,51 @@ export default function Orders() {
 
       {!isLoading && (
         <>
-          {/* Mobile Card List */}
-          <ul className="space-y-3 sm:hidden" aria-label="Orders list (mobile)">
+          {/* Mobile Card List (Vault System) */}
+          <ul className="space-y-4 sm:hidden" aria-label="Orders list (mobile)">
             {filtered.map(o => (
-              <li key={o._id} className="rounded-lg border bg-base-100 p-3 flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] bg-base-200 px-2 py-0.5 rounded">
-                    …{o._id.slice(-6)}
-                  </span>
-                  <StatusBadge status={o.status} />
+              <li key={o._id} className="p-6 bg-white/40 backdrop-blur-md border border-primary/10 rounded-[2rem] shadow-sm relative group transition-all hover:bg-white/60">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-0.5">Reference No.</div>
+                    <div className="font-mono text-xs font-bold text-primary">
+                      ARCHIVE-{o._id.slice(-8).toUpperCase()}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-0.5">Asset Status</div>
+                    <StatusBadge status={o.status} />
+                  </div>
                 </div>
-                <div className="text-xs flex flex-wrap gap-x-4 gap-y-1">
-                  <span>{o.user?.name || 'Deleted user'}</span>
-                  <span>{new Date(o.createdAt).toLocaleDateString(undefined,{ month:'short', day:'numeric' })}</span>
-                  <span className="font-semibold">{formatPrice(o.totalPrice)}</span>
+
+                <div className="space-y-3 pt-4 border-t border-primary/5">
+                  <div className="flex justify-between items-end">
+                    <div className="min-w-0">
+                      <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-0.5">Archivist / Client</div>
+                      <div className="font-bold text-sm text-gray-700 truncate">{o.user?.name || 'Anonymous Guest'}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[9px] font-label font-bold text-gray-300 uppercase tracking-widest mb-0.5">Catalog Date</div>
+                      <div className="text-[10px] font-bold text-gray-500">{new Date(o.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' })}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center py-3 bg-stone-50/50 rounded-xl px-4 mt-2">
+                    <div className="text-[10px] font-label font-bold text-gray-400 uppercase tracking-widest">Valuation</div>
+                    <div className="text-lg font-black text-primary">{formatPrice(o.totalPrice)}</div>
+                  </div>
                 </div>
-                <div>
-                  <Link href={'/order/' + o._id} className="btn btn-xs btn-primary">View</Link>
+
+                <div className="mt-5">
+                  <Link href={'/order/' + o._id} className="block w-full py-3 text-center text-[10px] font-bold uppercase tracking-widest bg-primary text-white rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">Inspect Manifest</Link>
                 </div>
               </li>
             ))}
             {filtered.length === 0 && (
-              <li className="text-center text-xs opacity-60 py-6">No matching orders</li>
+              <li className="p-12 text-center bg-white/40 backdrop-blur-md border border-dashed border-primary/10 rounded-[2rem]">
+                <div className="text-4xl mb-3 opacity-20">📂</div>
+                <div className="text-[10px] font-label font-bold text-gray-400 uppercase tracking-widest">No matching archives found</div>
+              </li>
             )}
           </ul>
 

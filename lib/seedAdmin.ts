@@ -6,46 +6,38 @@ export default async function seedAdmin() {
   await dbConnect();
   
   try {
-    // Check if admin already exists
+    // 1. Ensure Admin exists
     const existingAdmin = await UserModel.findOne({ email: 'admin@admin.com' });
-    
-    if (existingAdmin) {
-      console.log('Admin user already exists:', {
-        name: existingAdmin.name,
-        email: existingAdmin.email,
-        isAdmin: existingAdmin.isAdmin
+    if (!existingAdmin) {
+      const hashedAdminPassword = await bcrypt.hash('admin123', 12);
+      await UserModel.create({
+        name: 'Admin',
+        email: 'admin@admin.com',
+        password: hashedAdminPassword,
+        isAdmin: true
       });
-      
-      // If admin exists but isAdmin is false, update it
-      if (!existingAdmin.isAdmin) {
-        existingAdmin.isAdmin = true;
-        await existingAdmin.save();
-        console.log('Updated admin user with isAdmin: true');
-      }
-      
-      return existingAdmin;
+      console.log('Admin user created');
+    } else if (!existingAdmin.isAdmin) {
+      existingAdmin.isAdmin = true;
+      await existingAdmin.save();
     }
-    
-    // Create admin user if doesn't exist
-    const hashedPassword = await bcrypt.hash('admin123', 12);
-    
-    const admin = await UserModel.create({
-      name: 'Admin',
-      email: 'admin@admin.com',
-      password: hashedPassword,
-      isAdmin: true
-    });
-    
-    console.log('Admin user created:', {
-      name: admin.name,
-      email: admin.email,
-      isAdmin: admin.isAdmin,
-      _id: admin._id.toString()
-    });
-    
-    return admin;
+
+    // 2. Ensure Test user exists (test@test.com / test)
+    const existingTest = await UserModel.findOne({ email: 'test@test.com' });
+    if (!existingTest) {
+      const hashedTestPassword = await bcrypt.hash('test', 12);
+      await UserModel.create({
+        name: 'Test Account',
+        email: 'test@test.com',
+        password: hashedTestPassword,
+        isAdmin: false
+      });
+      console.log('Test user created');
+    }
+
+    return await UserModel.findOne({ email: 'admin@admin.com' });
   } catch (error) {
-    console.error('Error creating admin user:', error);
+    console.error('Error seeding users:', error);
     throw error;
   }
 }

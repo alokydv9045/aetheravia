@@ -18,8 +18,10 @@ const calcPrices = (orderItems: OrderItem[]) => {
   const itemsPrice = round2(
     orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
-  const shippingPrice = round2(itemsPrice > 100 ? 0 : 10);
-  const taxPrice = round2(Number((0.15 * itemsPrice).toFixed(2)));
+  // Shipping Policy: Free above 2000, else 200
+  const shippingPrice = round2(itemsPrice > 2000 ? 0 : 200);
+  // Tax Policy: 18%
+  const taxPrice = round2(Number(0.18 * itemsPrice));
   const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
   return { itemsPrice, shippingPrice, taxPrice, totalPrice };
 };
@@ -34,148 +36,172 @@ export const POST = auth(async (req: any) => {
 
   // ✅ Ensure DB is connected before session
   await dbConnect();
-  const session = await mongoose.startSession();
+  
+  // Use session for transactions, but fall back to non-transactional if sessions aren't supported
+  let session: mongoose.ClientSession | null = null;
+  try {
+    session = await mongoose.startSession();
+  } catch (error) {
+    console.warn("MongoDB sessions not supported, falling back to non-transactional flow");
+    session = null;
+  }
 
   let createdOrder: any = null;
-  try {
-    await session.withTransaction(async () => {
-      try {
-        const rawPayload = await req.json();
-        const payload = sanitizeRequestBody(rawPayload);
-        // Validate required fields
-        const requiredFieldsCheck = validateRequiredFields(payload, [
-          "items",
-          "shippingAddress",
-          "paymentMethod",
-        ]);
-        if (!requiredFieldsCheck.isValid) {
-          throw new Error(
-            `Missing required fields: ${requiredFieldsCheck.missingFields.join(", ")}`
-          );
-        }
-        if (!Array.isArray(payload.items) || payload.items.length === 0) {
-          throw new Error("Cart is empty or invalid");
-        }
-        for (const item of payload.items) {
-          if (!item.slug || typeof item.slug !== "string") {
-            throw new Error("Invalid item data: missing or invalid slug");
-          }
-          if (!validateNumeric(item.qty, 1, 100)) {
-            throw new Error(`Invalid quantity for item ${item.slug}`);
-          }
-        }
-        const slugs: string[] = payload.items.map(
-          (x: OrderItem & { slug: string }) => x.slug
-        );
-        const dbProducts = await ProductModel.find(
-          { slug: { $in: slugs } },
-          "slug price countInStock"
-        ).session(session);
-        const productBySlug = new Map(dbProducts.map((p) => [p.slug, p]));
-        const dbOrderItems: (OrderItem & { product: any })[] = [];
-        const stockUpdates: any[] = [];
-        for (const x of payload.items as (OrderItem & { slug: string; qty: number })[]) {
-          const p = productBySlug.get(x.slug);
-          if (!p) {
-            throw new Error(`Product not found: ${x.slug}`);
-          }
-          const qty = Number(x.qty);
-          if (!Number.isInteger(qty) || qty <= 0 || qty > 100) {
-            throw new Error(
-              `Invalid quantity for ${x.slug}: must be between 1 and 100`
-            );
-          }
-          if (typeof p.countInStock === "number" && qty > p.countInStock) {
-            throw new Error(
-              `Insufficient stock for ${x.slug}. Available: ${p.countInStock}, Requested: ${qty}`
-            );
-          }
-          dbOrderItems.push({
-            ...(x as any),
-            product: (p as any)._id,
-            price: (p as any).price,
-            qty,
-            _id: undefined as any,
-          });
-          stockUpdates.push({
-            updateOne: {
-              filter: { _id: p._id },
-              update: { $inc: { countInStock: -qty } },
-            },
-          });
-        }
-        const { itemsPrice, taxPrice, shippingPrice, totalPrice } = calcPrices(
-          dbOrderItems as OrderItem[]
-        );
-        let finalTotalPrice = totalPrice;
-        let couponInfo = null;
-        if (payload.coupon?.code) {
-          const coupon = await CouponModel.findOne({
-            code: payload.coupon.code,
-          }).session(session);
-          if (coupon && coupon.isActive) {
-            const userOrders = await OrderModel.find({
-              user: safeUserId,
-              isPaid: true,
-            }).session(session);
-            const validation = coupon.isValidForUser(
-              safeUserId,
-              totalPrice,
-              userOrders
-            );
-            if (validation.valid) {
-              const discountAmount = coupon.calculateDiscount(
-                totalPrice,
-                shippingPrice
-              );
-              finalTotalPrice = Math.max(0, totalPrice - discountAmount);
-              await coupon.applyCoupon(safeUserId, totalPrice, discountAmount);
-              await coupon.save({ session });
-              couponInfo = {
-                code: payload.coupon.code,
-                name: payload.coupon.name,
-                type: payload.coupon.type,
-                discountAmount,
-                originalOrderValue: totalPrice,
-              };
-            }
-          }
-        }
-        const newOrderData = {
-          items: dbOrderItems,
-          itemsPrice,
-          taxPrice,
-          shippingPrice,
-          totalPrice: finalTotalPrice,
-          coupon: couponInfo,
-          shippingAddress: payload.shippingAddress,
-          paymentMethod: payload.paymentMethod,
-          user: safeUserId,
-        };
-        const [order] = await OrderModel.create([newOrderData], { session });
-        createdOrder = order;
-        if (stockUpdates.length > 0) {
-          await ProductModel.bulkWrite(stockUpdates, { session });
-        }
-      } catch (err: any) {
-        console.error("Order creation transaction error:", err);
-        throw err;
+  
+  // Helper to perform the actual order creation logic
+  const performOrderCreation = async (currentSession: mongoose.ClientSession | null) => {
+    const rawPayload = await req.json();
+    const payload = sanitizeRequestBody(rawPayload);
+    
+    // Validate required fields
+    const requiredFieldsCheck = validateRequiredFields(payload, [
+      "items",
+      "shippingAddress",
+      "paymentMethod",
+    ]);
+    
+    if (!requiredFieldsCheck.isValid) {
+      throw new Error(`Missing required fields: ${requiredFieldsCheck.missingFields.join(", ")}`);
+    }
+    
+    if (!Array.isArray(payload.items) || payload.items.length === 0) {
+      throw new Error("Your cart is empty. Please add items before placing an order.");
+    }
+
+    // Secondary validation for items
+    for (const item of payload.items) {
+      if (!item.slug || typeof item.slug !== "string") {
+        throw new Error("Invalid item data: missing or invalid product slug");
       }
-    });
+    }
+
+    const slugs: string[] = payload.items.map((x: any) => x.slug);
+    const dbProducts = await ProductModel.find(
+      { slug: { $in: slugs } },
+      "slug price countInStock name"
+    ).session(currentSession);
+    
+    const productBySlug = new Map(dbProducts.map((p) => [p.slug, p]));
+    const dbOrderItems: any[] = [];
+    const stockUpdates: any[] = [];
+
+    for (const x of payload.items as any[]) {
+      const p = productBySlug.get(x.slug);
+      if (!p) {
+        throw new Error(`Product not found: ${x.slug}`);
+      }
+      
+      const qty = Number(x.qty);
+      if (qty <= 0) throw new Error(`Invalid quantity for ${p.name}`);
+
+      if (typeof p.countInStock === "number" && qty > p.countInStock) {
+        throw new Error(
+          `Insufficient stock for ${p.name}. Only ${p.countInStock} remaining.`
+        );
+      }
+
+      // Prepare order item with all metadata from client + verified price from DB
+      dbOrderItems.push({
+        name: x.name || p.name,
+        slug: x.slug,
+        qty: qty,
+        image: x.image,
+        price: p.price, // Trust DB price
+        color: x.color || 'Standard',
+        size: x.size || 'Regular',
+        product: p._id,
+      });
+
+      stockUpdates.push({
+        updateOne: {
+          filter: { _id: p._id },
+          update: { $inc: { countInStock: -qty } },
+        },
+      });
+    }
+
+    const { itemsPrice, taxPrice, shippingPrice, totalPrice } = calcPrices(dbOrderItems);
+    
+    let finalTotalPrice = totalPrice;
+    let couponInfo = null;
+
+    // Handle Coupons
+    if (payload.coupon?.code) {
+      const coupon = await CouponModel.findOne({ code: payload.coupon.code }).session(currentSession);
+      if (coupon && coupon.isActive) {
+        const userOrders = await OrderModel.find({
+          user: safeUserId,
+          isPaid: true,
+        }).session(currentSession);
+        
+        const validation = coupon.isValidForUser(safeUserId, totalPrice, userOrders);
+        if (validation.valid) {
+          const discountAmount = coupon.calculateDiscount(totalPrice, shippingPrice);
+          finalTotalPrice = Math.max(0, totalPrice - discountAmount);
+          
+          await coupon.applyCoupon(safeUserId, totalPrice, discountAmount);
+          await coupon.save({ session: currentSession || undefined });
+          
+          couponInfo = {
+            code: payload.coupon.code,
+            name: payload.coupon.name,
+            type: payload.coupon.type,
+            discountAmount,
+            originalOrderValue: totalPrice,
+          };
+        }
+      }
+    }
+
+    const newOrderData = {
+      items: dbOrderItems,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice: finalTotalPrice,
+      coupon: couponInfo,
+      shippingAddress: payload.shippingAddress,
+      paymentMethod: payload.paymentMethod,
+      user: safeUserId,
+      status: 'pending',
+      isPaid: false,
+      isDelivered: false,
+    };
+
+    const [order] = await OrderModel.create([newOrderData], { session: currentSession || undefined });
+    
+    if (stockUpdates.length > 0) {
+      await ProductModel.bulkWrite(stockUpdates, { session: currentSession || undefined });
+    }
+    
+    return order;
+  };
+
+  try {
+    if (session) {
+      // Try with transaction
+      await session.withTransaction(async () => {
+        createdOrder = await performOrderCreation(session);
+      });
+    } else {
+      // Direct execution if sessions not supported
+      createdOrder = await performOrderCreation(null);
+    }
+
     return NextResponse.json(
       { message: "Order has been created", order: createdOrder },
       { status: 201 }
     );
   } catch (err: any) {
-    console.error("Order creation error (outer):", err);
+    console.error("[ORDER_API_ERROR]:", err);
     return NextResponse.json(
-      { message: err?.message || "Failed to create order. Please try again." },
-      { status: 500 }
+      { message: err?.message || "Failed to place order. Please try again." },
+      { status: 400 } // Use 400 for validation/business logic errors
     );
   } finally {
-    session.endSession();
+    if (session) session.endSession();
+    
     if (createdOrder) {
-      // Fire realtime event post-transaction
       emitAdminEvent({
         type: 'order.created',
         ts: Date.now(),
