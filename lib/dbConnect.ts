@@ -34,30 +34,29 @@ const log = (...args: any[]) => {
 };
 
 const dbConnect = async () => {
-  if (connection.isConnected) {
-    // Already connected
+  if (connection.isConnected === 1) {
     return;
   }
-  if (mongoose.connection.readyState >= 1) {
-    connection.isConnected = mongoose.connection.readyState;
+  
+  if (mongoose.connection.readyState === 1) {
+    connection.isConnected = 1;
     return;
   }
+
   try {
     connectionAttempt += 1;
-    const startTs = Date.now();
     const uri = env.MONGODB_URI?.trim();
     if (!uri) {
       log('❌ MONGODB_URI is empty or undefined!');
       throw new Error('MONGODB_URI environment variable is not set');
     }
     
-    const redacted = uri.replace(/(mongodb\+srv:\/\/)([^:@]+)(:[^@]+)?@/, (_, p, user) => `${p}${user}:***@`);
     log(`Connecting (attempt ${connectionAttempt}) to cluster...`);
 
     const options = {
-      serverSelectionTimeoutMS: 15000, 
+      serverSelectionTimeoutMS: 30000, 
       socketTimeoutMS: 45000,
-      connectTimeoutMS: 15000,
+      connectTimeoutMS: 30000,
       heartbeatFrequencyMS: 10000,
       maxPoolSize: 10,
       minPoolSize: 1,
@@ -66,8 +65,11 @@ const dbConnect = async () => {
       retryReads: true,
       w: 'majority' as const,
       bufferCommands: true,
-      authSource: 'admin',
+      autoIndex: true,
     } as const;
+
+    // Set global mongoose options to avoid the 10s buffering timeout
+    mongoose.set('bufferTimeoutMS', 30000);
 
     if (process.env.NODE_ENV === 'development') {
       if (!(global as any)._mongooseConnectionPromise) {
@@ -77,38 +79,44 @@ const dbConnect = async () => {
         log('Reusing existing Mongoose connection promise...');
       }
       await (global as any)._mongooseConnectionPromise;
-      connection.isConnected = mongoose.connection.readyState;
     } else {
       await mongoose.connect(uri, options);
-      connection.isConnected = mongoose.connection.readyState;
     }
+
+    connection.isConnected = mongoose.connection.readyState;
     log(`Connected! (state=${mongoose.connection.readyState})`);
-    mongoose.connection.on('connected', () => {
-      connection.isConnected = 1;
-      log('MongoDB connected (event)');
-    });
-    mongoose.connection.on('error', (err) => {
-      connection.isConnected = 0;
-      console.error('MongoDB connection error:', err);
-    });
-    mongoose.connection.on('disconnected', () => {
-      connection.isConnected = 0;
-      log('MongoDB disconnected');
-    });
+
+    // Add listeners only once to avoid memory leaks and duplicate logs
+    if (mongoose.connection.listeners('connected').length === 0) {
+      mongoose.connection.on('connected', () => {
+        connection.isConnected = 1;
+        log('MongoDB connected (event)');
+      });
+      mongoose.connection.on('error', (err) => {
+        connection.isConnected = 0;
+        console.error('MongoDB connection error:', err);
+      });
+      mongoose.connection.on('disconnected', () => {
+        connection.isConnected = 0;
+        log('MongoDB disconnected');
+      });
+    }
   } catch (error: any) {
     connection.isConnected = 0;
+    // Clear the promise in development so the next request can try again
+    if (process.env.NODE_ENV === 'development') {
+      (global as any)._mongooseConnectionPromise = null;
+    }
+    
     console.error('MongoDB connection failed:', error);
     if (error.message?.includes('IP')) {
       console.error('❌ IP Whitelist Issue: Add your current IP to MongoDB Atlas Network Access');
     }
     if (error.message?.includes('authentication')) {
-      console.error('❌ Authentication Issue: Check your MongoDB credentials in .env file');
+      console.error('❌ Authentication Issue: Check your credentials');
     }
     if (error.message?.includes('ENOTFOUND') || error.message?.includes('getaddrinfo')) {
-      console.error('❌ DNS Issue: Check your internet connectivity or DNS resolution for the cluster host');
-    }
-    if (error.message?.includes('server selection timeout')) {
-      console.error('❌ Server Selection Timeout: Cluster may be paused, IP not whitelisted, or network blocked.');
+      console.error('❌ DNS Issue: Check your internet connectivity');
     }
     throw new Error(`Database connection failed: ${error.message}`);
   }

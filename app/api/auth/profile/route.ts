@@ -8,6 +8,7 @@ const toObjectIdString = (val: any) => {
   if (!val) return undefined;
   if (typeof val === 'string') return val;
   if (typeof val?.toHexString === 'function') return val.toHexString();
+  if (typeof val?.toString === 'function') return val.toString();
   return undefined;
 };
 const isValidObjectIdString = (s?: string) => !!s && /^[a-fA-F0-9]{24}$/.test(s);
@@ -25,14 +26,17 @@ export const GET = auth(async (req) => {
       console.log('[DEV] GET /api/auth/profile derived userId:', userId);
     }
     if (!isValidObjectIdString(userId)) {
+      console.log('[API] Invalid User ID:', userId);
       return Response.json({ message: 'Invalid user id in session' }, { status: 400 });
     }
     const dbUser = await UserModel.findById(userId).select(
-      '_id name email isAdmin avatar createdAt updatedAt',
+      '_id name email isAdmin avatar createdAt updatedAt loyaltyTier loyaltyPoints personalization',
     );
     if (!dbUser) {
+      console.log('[API] User not found in DB:', userId);
       return Response.json({ message: 'User not found' }, { status: 404 });
     }
+    console.log('[API] Successfully fetched user:', dbUser.email);
     return Response.json(dbUser);
   } catch (err: any) {
     console.error('GET /api/auth/profile error:', err);

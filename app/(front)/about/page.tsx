@@ -75,9 +75,6 @@ export default function AboutPage() {
               alt="A weathered traditional mortar and pestle being used to grind botanical herbs, high-end editorial photography" 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFfLmBkzA6y3ExVnvxkyFC6s_cs8n_sy-gyM-njsJD5Mnik5EijWvXlvwRPSASAlbuibtk_kAmhHkuiCImMnfaEF8qdLTBYz-Qt5PbPGu0J2L_7rUrIaYjI2Im06xB7QpMNUMpOjd3i7GosEfcbX26QqpaSMjp8Cuwpd6vW4uwigLZT0_w8lWALKPCtjA2PANKwS22fIFzXSTZJ_pvWvLAgmvJcXiyKCvyV7zdUgs-iZQITYxJcaK9VsyOYmdQHyr9te2NJF8-usuf"
             />
-            <p className="mt-4 font-headline italic text-on-surface-variant text-sm ml-4 -translate-y-8">
-              Captured at our founding atelier in Rishikesh
-            </p>
           </div>
           <div className="w-full md:w-1/2">
             <span className="text-xs uppercase tracking-[0.4em] text-primary font-bold mb-4 block">The Genesis</span>

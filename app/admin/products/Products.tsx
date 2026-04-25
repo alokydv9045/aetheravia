@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useMemo, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
@@ -22,8 +22,11 @@ interface ShowColumnsState {
 
 export default function Products() {
   const { data: products, error } = useSWR(`/api/admin/products`);
-  const [rawSearch, setRawSearch] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
+  
+  const [rawSearch, setRawSearch] = useState(initialSearch);
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
@@ -36,6 +39,15 @@ export default function Products() {
     rating: true,
     status: true,
   });
+
+  // Sync search from URL params
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q !== null) {
+      setRawSearch(q);
+      setSearchTerm(q);
+    }
+  }, [searchParams]);
 
   // Debounce search input for performance
   useEffect(() => {

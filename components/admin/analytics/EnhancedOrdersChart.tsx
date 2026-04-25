@@ -38,8 +38,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
         <p className="font-semibold text-gray-900 mb-2">{label}</p>
-        {payload.map((entry: any, index: number) => (
-          <p key={index} style={{ color: entry.color }} className="text-sm">
+        {payload.map((entry: any) => (
+          <p key={`${entry.name}-${entry.value}`} style={{ color: entry.color }} className="text-sm">
             {entry.name}: {entry.name.includes('Revenue') ? `₹${entry.value.toLocaleString()}` : entry.value}
           </p>
         ))}
@@ -118,13 +118,14 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
       case 'line':
         return (
           <LineChart {...commonProps} key={animationKey}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-            <XAxis {...xAxisProps} />
-            <YAxis {...yAxisProps} />
-            <YAxis {...revenueYAxisProps} />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#e0e0e0" />
+            <XAxis key="xaxis" {...xAxisProps} />
+            <YAxis key="yaxis-left" {...yAxisProps} />
+            <YAxis key="yaxis-right" {...revenueYAxisProps} />
+            <Tooltip key="tooltip" content={<CustomTooltip />} />
+            <Legend key="legend" />
             <Line
+              key="line-orders"
               yAxisId="left"
               type="monotone"
               dataKey="orders"
@@ -136,6 +137,7 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
               animationDuration={1000}
             />
             <Line
+              key="line-revenue"
               yAxisId="right"
               type="monotone"
               dataKey="revenue"
@@ -152,13 +154,14 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
       case 'bar':
         return (
           <BarChart {...commonProps} key={animationKey}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-            <XAxis {...xAxisProps} />
-            <YAxis {...yAxisProps} />
-            <YAxis {...revenueYAxisProps} />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#e0e0e0" />
+            <XAxis key="xaxis" {...xAxisProps} />
+            <YAxis key="yaxis-left" {...yAxisProps} />
+            <YAxis key="yaxis-right" {...revenueYAxisProps} />
+            <Tooltip key="tooltip" content={<CustomTooltip />} />
+            <Legend key="legend" />
             <Bar
+              key="bar-orders"
               yAxisId="left"
               dataKey="orders"
               fill="#3b82f6"
@@ -167,6 +170,7 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
               animationDuration={1000}
             />
             <Bar
+              key="bar-revenue"
               yAxisId="right"
               dataKey="revenue"
               fill="#10b981"
@@ -180,7 +184,7 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
       case 'area':
         return (
           <AreaChart {...commonProps} key={animationKey}>
-            <defs>
+            <defs key="defs">
               <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
@@ -190,13 +194,14 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-            <XAxis {...xAxisProps} />
-            <YAxis {...yAxisProps} />
-            <YAxis {...revenueYAxisProps} />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#e0e0e0" />
+            <XAxis key="xaxis" {...xAxisProps} />
+            <YAxis key="yaxis-left" {...yAxisProps} />
+            <YAxis key="yaxis-right" {...revenueYAxisProps} />
+            <Tooltip key="tooltip" content={<CustomTooltip />} />
+            <Legend key="legend" />
             <Area
+              key="area-orders"
               yAxisId="left"
               type="monotone"
               dataKey="orders"
@@ -207,6 +212,7 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
               animationDuration={1000}
             />
             <Area
+              key="area-revenue"
               yAxisId="right"
               type="monotone"
               dataKey="revenue"
@@ -222,19 +228,20 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
       case 'composed':
         return (
           <ComposedChart {...commonProps} key={animationKey}>
-            <defs>
+            <defs key="defs">
               <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-            <XAxis {...xAxisProps} />
-            <YAxis {...yAxisProps} />
-            <YAxis {...revenueYAxisProps} />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            <CartesianGrid key="grid" strokeDasharray="3 3" stroke="#e0e0e0" />
+            <XAxis key="xaxis" {...xAxisProps} />
+            <YAxis key="yaxis-left" {...yAxisProps} />
+            <YAxis key="yaxis-right" {...revenueYAxisProps} />
+            <Tooltip key="tooltip" content={<CustomTooltip />} />
+            <Legend key="legend" />
             <Area
+              key="area-orders"
               yAxisId="left"
               type="monotone"
               dataKey="orders"
@@ -244,6 +251,7 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
               animationDuration={1000}
             />
             <Line
+              key="line-revenue"
               yAxisId="right"
               type="monotone"
               dataKey="revenue"
@@ -255,6 +263,8 @@ export default function EnhancedOrdersChart({ dailyTrends, monthlyTrends, isLoad
             />
           </ComposedChart>
         );
+      default:
+        return null;
     }
   };
 
