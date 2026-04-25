@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -35,6 +36,7 @@ const fetcher = async (url: string) => {
 };
 
 export default function ProfileTabs() {
+  const { data: session, update: updateSession } = useSession();
   const { data: user, error: userError } = useSWR<UserSummary>(
     '/api/auth/profile',
     fetcher,
@@ -54,13 +56,22 @@ export default function ProfileTabs() {
   );
 
   const TABS = [
-    { id: 'overview', label: 'Overview', icon: 'dashboard' },
-    { id: 'identity', label: 'Identity', icon: 'person' },
+    { id: 'overview', label: 'Sanctuary', icon: 'dashboard' },
+    { id: 'identity', label: 'Cipher', icon: 'person' },
     { id: 'addresses', label: 'Logistics', icon: 'location_on' },
     { id: 'loyalty', label: 'Heritage', icon: 'auto_fix_high' },
-    { id: 'coupons', label: 'Rewards', icon: 'sell' },
+    { id: 'coupons', label: 'Vault', icon: 'sell' },
     { id: 'help', label: 'Guidance', icon: 'help_center' },
   ];
+
+  if (!user && !userError) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-6">
+        <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+        <p className="font-headline text-2xl text-primary italic animate-pulse">Sourcing your heritage records...</p>
+      </div>
+    );
+  }
 
   if (userError && (userError as any).status === 401) {
     return (
@@ -75,6 +86,24 @@ export default function ProfileTabs() {
         >
           Sign In
         </Link>
+      </div>
+    );
+  }
+
+  if (userError) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center p-12 text-center">
+        <span className="material-symbols-outlined text-error text-6xl mb-6">warning</span>
+        <h2 className="font-headline text-3xl text-primary italic mb-4">Archive Synchronization Failed</h2>
+        <p className="text-secondary font-body mb-8 opacity-70 max-w-sm">
+          We encountered an anomaly while sourcing your identity records. Please ensure your connection to the heritage network is stable.
+        </p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="bg-primary/5 text-primary border border-primary/20 px-8 py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-primary hover:text-white transition-all"
+        >
+          Retry Connection
+        </button>
       </div>
     );
   }
@@ -106,43 +135,28 @@ export default function ProfileTabs() {
           transition={{ duration: 0.3 }}
         >
           {tab === 'overview' && (
-            <div className="grid gap-12 lg:grid-cols-12">
-              <div className="lg:col-span-8 space-y-12">
-                <Overview
-                  user={user as any}
-                  onUpdateAvatar={async (url) => {
-                    await fetch('/api/auth/profile', { method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ avatar: url }) });
-                    const { mutate } = await import('swr'); 
-                    mutate('/api/auth/profile');
-                  }}
-                  onSaveAbout={async (payload) => {
-                    const res = await fetch('/api/auth/profile', { method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    if (!res.ok) throw new Error('Failed to update');
-                    const { mutate } = await import('swr'); 
-                    mutate('/api/auth/profile');
-                  }}
-                />
-              </div>
-              <div className="lg:col-span-4 space-y-8">
-                <div className="p-8 bg-surface-container-high rounded-lg border border-outline-variant/10 shadow-lg">
-                  <h3 className="font-headline text-2xl text-secondary italic mb-4">Guidance</h3>
-                  <p className="text-xs text-secondary font-body opacity-70 leading-relaxed mb-8">
-                    Seek resolution for identity anomalies or logistical disruptions.
-                  </p>
-                  <button 
-                    onClick={() => setTab('help')}
-                    className="w-full bg-outline-variant/10 text-on-surface py-4 rounded font-bold tracking-widest uppercase text-[9px] border border-outline-variant/20 hover:bg-primary hover:text-white transition-all"
-                  >
-                    Enter Support Hub
-                  </button>
-                </div>
+            <div className="w-full">
+              <Overview
+                user={user as any}
+                onUpdateAvatar={async (url) => {
+                  await fetch('/api/auth/profile', { method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ avatar: url }) });
+                  const { mutate } = await import('swr'); 
+                  mutate('/api/auth/profile');
+                }}
+                onSaveAbout={async (payload) => {
+                  const res = await fetch('/api/auth/profile', { method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                  if (!res.ok) throw new Error('Failed to update');
+                  
+                  // Update session to reflect changes in UI
+                  await updateSession({
+                    ...session,
+                    user: { ...session?.user, ...payload }
+                  });
 
-                <div className="p-8 bg-primary/[0.03] rounded-lg border border-primary/10 text-center">
-                  <span className="material-symbols-outlined text-primary text-4xl mb-4">verified_user</span>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Protocol 7.2 Active</p>
-                  <p className="text-[10px] text-secondary opacity-50 mt-2 italic">Your data is archived in encrypted heritage vaults.</p>
-                </div>
-              </div>
+                  const { mutate } = await import('swr'); 
+                  mutate('/api/auth/profile');
+                }}
+              />
             </div>
           )}
 

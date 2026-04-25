@@ -58,7 +58,7 @@ const Form = () => {
 
   const handleRazorpayPayment = async (orderId: string) => {
     if (typeof window === 'undefined' || !window.Razorpay) {
-      toast.error('Ritual conduit not initialized. Please refresh.');
+      toast.error('Payment system not initialized. Please refresh.');
       return;
     }
 
@@ -85,7 +85,7 @@ const Form = () => {
         currency: razorpayOrder.currency,
         order_id: razorpayOrder.id,
         name: 'AETHERAVIA',
-        description: `Ritual Manifest #${orderId.slice(-6)}`,
+        description: `Order #${orderId.slice(-6)}`,
         handler: async (response: any) => {
           try {
             const verifyResponse = await fetch('/api/orders/razorpay/verify', {
@@ -101,7 +101,7 @@ const Form = () => {
 
             if (verifyResponse.ok) {
               clear();
-              toast.success('Ritual Acquisition Complete');
+              toast.success('Order Placed Successfully');
               router.push(`/order/${orderId}`);
             } else {
               toast.error('Signature validation failed');
@@ -128,7 +128,7 @@ const Form = () => {
     } catch (error: any) {
       setIsProcessingPayment(false);
       setPaymentError(error);
-      toast.error(error.message || 'Ritual conduit error');
+      toast.error(error.message || 'Payment processing error');
     }
   };
 

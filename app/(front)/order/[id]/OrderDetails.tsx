@@ -44,7 +44,7 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
         method: 'PUT',
       });
       const data = await res.json();
-      res.ok ? toast.success('Ritual delivered successfully') : toast.error(data.message);
+      res.ok ? toast.success('Order delivered successfully') : toast.error(data.message);
     },
   );
 
@@ -80,7 +80,7 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
           });
           const data = await verifyRes.json();
           if (data.isPaid) {
-            toast.success('Ritual payment complete');
+            toast.success('Payment complete');
             mutate();
           } else {
             toast.error('Verification failure');
@@ -175,7 +175,7 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
               <ReorderButton
                 orderId={orderId}
                 orderStatus={status}
-                onSuccess={() => toast.success('Rituals added to your bag')}
+                onSuccess={() => toast.success('Products added to your bag')}
               />
               <OrderCancelButton
                 orderId={orderId}
@@ -213,8 +213,8 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
             {/* Tabs */}
             <div className="flex gap-8 border-b border-outline-variant/20 pb-4">
               {[
-                { id: 'tracking', label: 'Manifest Status', icon: 'location_on' },
-                { id: 'details', label: 'Ritual Items', icon: 'inventory_2' },
+                { id: 'tracking', label: 'Order Status', icon: 'location_on' },
+                { id: 'details', label: 'Order Items', icon: 'inventory_2' },
                 { id: 'timeline', label: 'Historical Log', icon: 'history' }
               ].map((tab) => (
                 <button
@@ -291,7 +291,7 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
                         <div className="flex-1 min-w-0">
                           <h4 className="font-headline text-2xl text-on-surface italic truncate">{item.name}</h4>
                           <p className="text-[11px] text-secondary font-bold uppercase tracking-widest mt-1">
-                            {item.qty} Ritual Unit{item.qty > 1 ? 's' : ''} • {item.color && `${item.color} • `}{item.size}
+                            {item.qty} Product{item.qty > 1 ? 's' : ''} • {item.color && `${item.color} • `}{item.size}
                           </p>
                         </div>
                         <div className="text-right">
@@ -329,7 +329,7 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
               <h3 className="font-headline text-2xl text-secondary border-b border-outline-variant/20 pb-4 mb-6 italic">Record Summary</h3>
               <ul className="space-y-4 font-body text-sm">
                 <li className="flex justify-between text-secondary">
-                  <span>Ritual Value</span>
+                  <span>Items Price</span>
                   <span>{formatPrice(itemsPrice)}</span>
                 </li>
                 <li className="flex justify-between text-secondary">

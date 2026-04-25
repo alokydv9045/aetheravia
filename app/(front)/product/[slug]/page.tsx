@@ -10,6 +10,7 @@ import productService from '@/lib/services/productService';
 import { convertDocToObj, formatPrice } from '@/lib/utils';
 import FAQSection from '@/components/footer/FAQ';
 import ProductTabs from '@/components/products/ProductTabs';
+import ProductModel from '@/lib/models/ProductModel';
 
 export const generateMetadata = async ({
   params,
@@ -51,6 +52,12 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
   const seed = slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const compImage1 = complementaryImages[seed % complementaryImages.length];
   const compImage2 = complementaryImages[(seed + 1) % complementaryImages.length];
+
+  // Fetch related products (same category, excluding current)
+  const relatedProducts = await ProductModel.find({ 
+    category: product.category,
+    slug: { $ne: slug } 
+  }).limit(3).lean();
 
   return (
     <div className="pt-8 md:pt-12 pb-12 overflow-x-hidden">
@@ -129,7 +136,7 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
         <div className="flex justify-between items-end mb-12">
           <div className="space-y-2">
             <h3 className="font-label uppercase text-[10px] tracking-widest text-on-surface-variant">Complete the Set</h3>
-            <h2 className="font-headline text-4xl text-primary italic">Complementary Rituals</h2>
+            <h2 className="font-headline text-4xl text-primary italic">Complementary Products</h2>
           </div>
           <div className="hidden md:flex gap-2">
             <button className="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant/20 hover:border-primary transition-all">
@@ -141,52 +148,45 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Card 1 */}
-          <Link href="/shop" className="group cursor-pointer">
-            <div className="bg-surface-container-low aspect-[3/4] rounded-lg overflow-hidden mb-6 relative">
-              <Image 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvfZ1HRdQkI-sVHntwLxpzLEcYC1r9WGAxunHcir3JCrd3SkPGGpb6_fL5UpXpWqKGvMnrxJmBLdv6StBXOot3bfM-25YSqBfeDul3NJRrrKn4WBA3L5NHYeKQ9p-91EPj0GabLT48hIais8eEVZd5yTqlyFX-QgzxdAJRL2dh5isAxhFi0TChkZA_sL4cbE6SkdyIGXZAGR-8mzeF3iKCG3k9OO83hd6Uf1Otoq0ayh4skK4lrd9PtO6yCAVZ6YRaLMIVbV0_SwI5"
-                alt="Body Scrub"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-on-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          {relatedProducts.length > 0 ? (
+            relatedProducts.map((relProduct: any) => (
+              <Link key={relProduct._id} href={`/product/${relProduct.slug}`} className="group cursor-pointer">
+                <div className="bg-surface-container-low aspect-[3/4] rounded-lg overflow-hidden mb-6 relative border border-outline-variant/10">
+                  <Image 
+                    src={relProduct.image}
+                    alt={relProduct.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-on-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <h4 className="font-headline text-2xl text-primary italic">{relProduct.name}</h4>
+                <p className="text-on-surface-variant font-body text-sm mt-1">{relProduct.category}</p>
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="font-medium">{formatPrice(relProduct.price)}</span>
+                  <span className="text-[10px] font-label uppercase tracking-widest text-primary border-b border-primary/20 pb-1">Explore Details</span>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <div className="lg:col-span-3 text-center py-12 bg-surface-container-low rounded-lg border border-dashed border-outline-variant/30">
+              <span className="material-symbols-outlined text-4xl text-outline-variant/50 mb-3">inventory_2</span>
+              <p className="text-on-surface-variant font-body">Exploring more treasures soon...</p>
             </div>
-            <h4 className="font-headline text-2xl text-primary italic">Mitti Polish Body Scrub</h4>
-            <p className="text-on-surface-variant font-body text-sm mt-1">Refining Clay & Walnut</p>
-            <div className="mt-4 flex items-center justify-between">
-              <span className="font-medium">₹1,450.00</span>
-              <span className="text-[10px] font-label uppercase tracking-widest text-primary border-b border-primary/20 pb-1">Quick View</span>
+          )}
+
+          {/* Visual Placeholder/Info Card if fewer than 3 products */}
+          {relatedProducts.length < 3 && (
+            <div className="hidden lg:flex bg-secondary-container/20 rounded-lg p-12 flex-col justify-center space-y-6">
+              <span className="material-symbols-outlined text-4xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
+              <h4 className="font-headline text-3xl text-primary italic leading-tight">The Sustainable Standard</h4>
+              <p className="text-on-surface-variant text-sm leading-relaxed">
+                Every bottle is infinitely recyclable glass, and every purchase contributes to sandalwood reforestation programs in the Western Ghats.
+              </p>
+              <Link href="/about" className="text-[10px] font-label uppercase tracking-widest text-primary underline underline-offset-8">Our Journey</Link>
             </div>
-          </Link>
-          {/* Card 2 */}
-          <Link href="/shop" className="group cursor-pointer">
-            <div className="bg-surface-container-low aspect-[3/4] rounded-lg overflow-hidden mb-6 relative">
-              <Image 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8sgx9kGEcknuqTJQdZ2BJNzl8qxNV8YlktQzPmzphSqdjvrg8LC88pGNxXvsahm1HpgPSEujoykTjvfRO5nMHnlE7crED6NEkzpmOLl1m-yCFZ6w95R6oH43kGU9Tu4B-S2UghiVEXZOkBl_yhO3KHsKo4ctU3_fIj1aoL1dp58795RKSn_eYTKmceZSGM8mjMiXlyoYOsfDMKTcXt0sERoEz4YZLgSMoHzS3SdDQHPaMI_Nz76CqBfLHwt7pNFeP0_ukbVjoCtdx"
-                alt="Face Wash"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            </div>
-            <h4 className="font-headline text-2xl text-primary italic">Pure Reetha Face Wash</h4>
-            <p className="text-on-surface-variant font-body text-sm mt-1">Soapnut & Vetiver</p>
-            <div className="mt-4 flex items-center justify-between">
-              <span className="font-medium">₹1,250.00</span>
-              <span className="text-[10px] font-label uppercase tracking-widest text-primary border-b border-primary/20 pb-1">Quick View</span>
-            </div>
-          </Link>
-          {/* Card 3 (Visual Placeholder for Asymmetry) */}
-          <div className="hidden lg:flex bg-secondary-container/20 rounded-lg p-12 flex-col justify-center space-y-6">
-            <span className="material-symbols-outlined text-4xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
-            <h4 className="font-headline text-3xl text-primary italic leading-tight">The Sustainable Standard</h4>
-            <p className="text-on-surface-variant text-sm leading-relaxed">
-              Every bottle is infinitely recyclable glass, and every purchase contributes to sandalwood reforestation programs in the Western Ghats.
-            </p>
-            <Link href="/about" className="text-[10px] font-label uppercase tracking-widest text-primary underline underline-offset-8">Our Journey</Link>
-          </div>
+          )}
         </div>
       </section>
 

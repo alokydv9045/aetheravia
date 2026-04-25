@@ -18,7 +18,14 @@ interface LoyaltyData {
   }>;
 }
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.error || 'Failed to load loyalty data');
+  }
+  return res.json();
+};
 
 export default function LoyaltyDashboard() {
   const { data: session } = useSession();
@@ -52,16 +59,17 @@ export default function LoyaltyDashboard() {
     );
   }
 
-  if (error || !data) {
+  if (error || !data || (data as any).error) {
     return (
       <div className="p-8 bg-error/5 text-error rounded border border-error/10 font-body text-sm text-center">
-        An anomaly occurred while sourcing your heritage records.
+        {error?.message || (data as any)?.error || 'An anomaly occurred while sourcing your heritage records.'}
       </div>
     );
   }
 
   const getTierInfo = (tier: string) => {
-    switch (tier.toLowerCase()) {
+    const safeTier = (tier || 'Bronze').toLowerCase();
+    switch (safeTier) {
       case 'bronze': return { label: 'Bronze', icon: '🥉', color: 'text-orange-700 bg-orange-50' };
       case 'silver': return { label: 'Silver', icon: '🥈', color: 'text-stone-600 bg-stone-100' };
       case 'gold': return { label: 'Gold', icon: '🥇', color: 'text-amber-700 bg-amber-50' };

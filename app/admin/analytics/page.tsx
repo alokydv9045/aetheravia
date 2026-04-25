@@ -66,9 +66,15 @@ export default function AnalyticsDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showMonthlyTrends, setShowMonthlyTrends] = useState(false);
-  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    setLastUpdate(new Date());
+  }, []);
 
   const fetchAnalytics = useCallback(async (silent = false) => {
     try {
@@ -102,12 +108,12 @@ export default function AnalyticsDashboard() {
 
   // Initial fetch
   useEffect(() => {
-    fetchAnalytics();
-  }, [fetchAnalytics]);
+    if (mounted) fetchAnalytics();
+  }, [fetchAnalytics, mounted]);
 
   // Auto-refresh every 30 seconds if enabled
   useEffect(() => {
-    if (autoRefresh) {
+    if (autoRefresh && mounted) {
       intervalRef.current = setInterval(() => {
         fetchAnalytics(true); // Silent refresh
       }, 30000); // 30 seconds
@@ -118,7 +124,7 @@ export default function AnalyticsDashboard() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [autoRefresh, fetchAnalytics]);
+  }, [autoRefresh, fetchAnalytics, mounted]);
 
   const handleFiltersChange = useCallback((filters: {
     period?: string;
@@ -142,6 +148,7 @@ export default function AnalyticsDashboard() {
   };
 
   const getTimeSinceUpdate = () => {
+    if (!lastUpdate) return 'Just now';
     const seconds = Math.floor((new Date().getTime() - lastUpdate.getTime()) / 1000);
     if (seconds < 60) return `${seconds}s ago`;
     const minutes = Math.floor(seconds / 60);
@@ -359,7 +366,7 @@ export default function AnalyticsDashboard() {
 
       {/* Footer */}
       <div className="text-center text-sm text-gray-500 py-4 border-t">
-        Analytics data is updated in real-time. Last refreshed: {new Date().toLocaleString()}
+        Analytics data is updated in real-time. Last refreshed: {mounted && lastUpdate ? lastUpdate.toLocaleString() : '---'}
       </div>
     </div>
   );

@@ -66,7 +66,7 @@ export default function WishlistPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               <AnimatePresence mode="popLayout">
                 {items.map((item) => (
                   <motion.div
@@ -75,9 +75,9 @@ export default function WishlistPage() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    className="group bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-lg hover:shadow-2xl transition-all duration-500"
+                    className="group bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/10 shadow-md hover:shadow-xl transition-all duration-500"
                   >
-                    <div className="relative aspect-[4/5] overflow-hidden">
+                    <div className="relative aspect-square overflow-hidden">
                       <Image 
                         src={item.image} 
                         alt={item.name} 
@@ -93,24 +93,24 @@ export default function WishlistPage() {
                       </button>
                     </div>
                     
-                    <div className="p-6">
-                      <h3 className="font-headline text-2xl text-on-surface mb-1">{item.name}</h3>
-                      <p className="text-primary font-bold text-lg mb-6">{formatPrice(item.price)}</p>
+                    <div className="p-4">
+                      <h3 className="font-headline text-lg lg:text-xl text-on-surface mb-0.5 truncate">{item.name}</h3>
+                      <p className="text-primary font-bold text-sm mb-4">{formatPrice(item.price)}</p>
                       
-                      <div className="flex gap-4">
+                      <div className="flex gap-2">
                         <button 
                           onClick={() => addToCartHandler(item)}
                           disabled={item.countInStock === 0}
-                          className="flex-1 bg-primary text-on-primary py-4 rounded-lg font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:bg-primary-container transition-all shadow-md disabled:opacity-50"
+                          className="flex-1 bg-primary text-on-primary py-3 rounded-lg font-bold uppercase tracking-widest text-[8px] flex items-center justify-center gap-2 hover:bg-primary-container transition-all shadow-md disabled:opacity-50"
                         >
-                          <ShoppingBag size={14} />
-                          {item.countInStock > 0 ? 'Bring to Bag' : 'Out of Stock'}
+                          <ShoppingBag size={12} />
+                          {item.countInStock > 0 ? 'To Bag' : 'Sold'}
                         </button>
                         <Link 
                           href={`/product/${item.slug}`}
-                          className="w-12 h-12 border border-outline-variant/30 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all"
+                          className="w-10 h-10 border border-outline-variant/30 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all flex-shrink-0"
                         >
-                          <ArrowRight size={18} />
+                          <ArrowRight size={16} />
                         </Link>
                       </div>
                     </div>

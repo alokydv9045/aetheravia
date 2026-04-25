@@ -2,27 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { brandName } from '@/lib/brand';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useSession } from 'next-auth/react';
+import { useSelectedLayoutSegment, useRouter } from 'next/navigation';
 import AdminRealtimeListener from './AdminRealtimeListener';
 import Menu from '@/components/header/Menu';
-
-import { 
-  LayoutDashboard, 
-  BarChart3, 
-  BellRing, 
-  ClipboardList, 
-  ShoppingCart, 
-  Package, 
-  Zap, 
-  Ticket, 
-  Image as ImageIcon, 
-  Users, 
-  Award, 
-  Share2, 
-  Palette, 
-  MessageSquare 
-} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminLayout = ({
   activeItem = 'dashboard',
@@ -31,344 +16,211 @@ const AdminLayout = ({
   activeItem: string;
   children: React.ReactNode;
 }) => {
+  const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sidebarRef = useRef<HTMLDivElement | null>(null);
-  const mobileToggleButtonRef = useRef<HTMLButtonElement | null>(null);
-  const desktopToggleButtonRef = useRef<HTMLButtonElement | null>(null);
-  const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
-  // Load admin sidebar preference from localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedState = localStorage.getItem('admin-sidebar-open');
-      if (savedState !== null) {
-        setSidebarOpen(JSON.parse(savedState));
-      }
-    }
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Save admin sidebar preference to localStorage
-  const toggleSidebar = useCallback((newState?: boolean) => {
-    const nextState = newState !== undefined ? newState : !sidebarOpen;
-    setSidebarOpen(nextState);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('admin-sidebar-open', JSON.stringify(nextState));
-    }
-  }, [sidebarOpen]);
-
-  // Track viewport to know when to apply mobile-specific behaviors
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mq = window.matchMedia('(max-width: 767px)');
-    const apply = (e: MediaQueryList | MediaQueryListEvent) => {
-      const mobile = 'matches' in e ? e.matches : (e as MediaQueryList).matches;
-      setIsMobile(mobile);
-      
-      // Improved mobile/desktop sidebar logic
-      if (mobile) {
-        // On mobile, always start with sidebar closed for better UX
-        // Don't auto-close if user manually opened it
-        const savedState = localStorage.getItem('admin-sidebar-open');
-        if (savedState === null || savedState === 'true') {
-          // Only close if it's the initial load or was open
-          setSidebarOpen(false);
-          localStorage.setItem('admin-sidebar-open', 'false');
-        }
-      } else {
-        // On desktop, restore from localStorage or default to open
-        const savedState = localStorage.getItem('admin-sidebar-open');
-        const shouldBeOpen = savedState !== null ? JSON.parse(savedState) : true;
-        setSidebarOpen(shouldBeOpen);
-      }
-    };
-    apply(mq);
-    mq.addEventListener('change', apply);
-    return () => mq.removeEventListener('change', apply);
-  }, []); // Remove dependencies to prevent infinite loops
-
-  const menuItems = useMemo(() => [
+  const navSections = [
     {
-      category: 'Main Portal',
+      title: 'Main Portal',
       items: [
-        { key: 'dashboard', label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-        { key: 'analytics', label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-        { key: 'test-notifications', label: 'Test Notifications', href: '/admin/test-notifications', icon: BellRing }
+        { key: 'dashboard', label: 'Dashboard', href: '/admin/dashboard', icon: 'dashboard' },
+        { key: 'analytics', label: 'Analytics', href: '/admin/analytics', icon: 'insights' },
+        { key: 'test-notifications', label: 'Notifications', href: '/admin/test-notifications', icon: 'notifications' },
       ]
     },
     {
-      category: 'Commerce Hub',
+      title: 'Commerce Hub',
       items: [
-        { key: 'orders-advanced', label: 'Advanced Orders', href: '/admin/orders/advanced', icon: ClipboardList },
-        { key: 'orders-unified', label: 'Unified Orders', href: '/admin/orders/unified', icon: ShoppingCart },
-        { key: 'products', label: 'Products', href: '/admin/products', icon: Package }
+        { key: 'orders-advanced', label: 'Advanced Orders', href: '/admin/orders/advanced', icon: 'assignment' },
+        { key: 'orders-unified', label: 'Unified Orders', href: '/admin/orders/unified', icon: 'shopping_cart' },
+        { key: 'products', label: 'Products', href: '/admin/products', icon: 'spa' },
       ]
     },
     {
-      category: 'Marketing Center',
+      title: 'Marketing Center',
       items: [
-        { key: 'offers', label: 'Offers', href: '/admin/offers', icon: Zap },
-        { key: 'coupons', label: 'Coupons', href: '/admin/coupons', icon: Ticket },
-        { key: 'carousel', label: 'Banners', href: '/admin/carousel', icon: ImageIcon }
+        { key: 'offers', label: 'Offers', href: '/admin/offers', icon: 'local_offer' },
+        { key: 'coupons', label: 'Coupons', href: '/admin/coupons', icon: 'confirmation_number' },
+        { key: 'carousel', label: 'Banners', href: '/admin/carousel', icon: 'image' },
       ]
     },
     {
-      category: 'Customer Vault',
+      title: 'Customer Vault',
       items: [
-        { key: 'users', label: 'Users', href: '/admin/users', icon: Users },
-        { key: 'loyalty', label: 'Loyalty', href: '/admin/loyalty', icon: Award },
-        { key: 'referral', label: 'Referral', href: '/admin/referral', icon: Share2 },
-        { key: 'personalization', label: 'Personalization', href: '/admin/personalization', icon: Palette }
+        { key: 'users', label: 'Users', href: '/admin/users', icon: 'group' },
+        { key: 'loyalty', label: 'Loyalty', href: '/admin/loyalty', icon: 'workspace_premium' },
+        { key: 'referral', label: 'Referral', href: '/admin/referral', icon: 'share' },
+        { key: 'personalization', label: 'Personalization', href: '/admin/personalization', icon: 'palette' },
       ]
     },
     {
-      category: 'Editorial',
+      title: 'Editorial',
       items: [
-        { key: 'testimonials', label: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare }
+        { key: 'testimonials', label: 'Testimonials', href: '/admin/testimonials', icon: 'chat' },
       ]
     }
-  ], []);
+  ];
 
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Initialize collapsed state (collapsed by default on mobile except first section)
-  useEffect(() => {
-    if (menuItems.length && isMobile) {
-      setCollapsed(menuItems.reduce<Record<string, boolean>>((acc, cat, idx) => {
-        acc[cat.category] = idx !== 0; // collapse all but first
-        return acc;
-      }, {}));
-    } else if (!isMobile) {
-      // expand all on desktop
-      setCollapsed({});
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      router.push(`/admin/products?search=${encodeURIComponent(searchQuery.trim())}`);
     }
-  }, [isMobile, menuItems]);
-
-  const toggleCategory = useCallback((category: string) => {
-    setCollapsed(c => ({ ...c, [category]: !c[category] }));
-  }, []);
-
-  // Focus trap & accessibility when sidebar open + mobile touch handling
-  useEffect(() => {
-    if (sidebarOpen) {
-      const previouslyFocused = document.activeElement as HTMLElement | null;
-      const sidebarElement = sidebarRef.current; // Capture ref value
-      
-      // Focus first link when sidebar opens
-      setTimeout(() => {
-        firstLinkRef.current?.focus();
-      }, 100);
-
-      const handleKey = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          toggleSidebar(false);
-          // Focus appropriate toggle button based on screen size
-          if (isMobile) {
-            mobileToggleButtonRef.current?.focus();
-          } else {
-            desktopToggleButtonRef.current?.focus();
-          }
-        } else if (e.key === 'Tab' && sidebarElement) {
-          const focusable = sidebarElement.querySelectorAll<HTMLElement>(
-            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-          );
-            if (!focusable.length) return;
-            const first = focusable[0];
-            const last = focusable[focusable.length - 1];
-            if (e.shiftKey && document.activeElement === first) {
-              e.preventDefault();
-              last.focus();
-            } else if (!e.shiftKey && document.activeElement === last) {
-              e.preventDefault();
-              first.focus();
-            }
-        }
-      };
-
-      // Mobile swipe gesture to close sidebar
-      let startX = 0;
-      let startY = 0;
-      const handleTouchStart = (e: TouchEvent) => {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-      };
-
-      const handleTouchMove = (e: TouchEvent) => {
-        if (!isMobile || !sidebarElement) return;
-        
-        const currentX = e.touches[0].clientX;
-        const currentY = e.touches[0].clientY;
-        const diffX = startX - currentX;
-        const diffY = Math.abs(startY - currentY);
-        
-        // If swipe left is significant and more horizontal than vertical
-        if (diffX > 50 && diffY < 100) {
-          e.preventDefault(); // Only prevent default when we're actually handling the swipe
-          toggleSidebar(false);
-        }
-      };
-
-      document.addEventListener('keydown', handleKey);
-      if (isMobile && sidebarElement) {
-        sidebarElement.addEventListener('touchstart', handleTouchStart, { passive: true });
-        sidebarElement.addEventListener('touchmove', handleTouchMove, { passive: false }); // Allow preventDefault
-      }
-      
-      return () => {
-        document.removeEventListener('keydown', handleKey);
-        if (sidebarElement) {
-          sidebarElement.removeEventListener('touchstart', handleTouchStart);
-          sidebarElement.removeEventListener('touchmove', handleTouchMove);
-        }
-      };
-    }
-  }, [sidebarOpen, isMobile, toggleSidebar]);
+  };
 
   return (
-    <div className='relative flex min-h-screen bg-stone-50 text-gray-900 font-body'>
-      {/* Sidebar - Unified Glass Branding */}
-      <div
-        id="admin-mobile-sidebar"
-        ref={sidebarRef}
-        aria-hidden={!sidebarOpen}
-        className={`
-        fixed inset-y-0 left-0 z-40 w-80 max-w-[85%] bg-white/95 backdrop-blur-xl border-r border-gray-100 shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col outline-none
-        md:relative md:block md:shadow-none md:max-w-none md:w-72
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
-        style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
-        role={isMobile ? 'dialog' : 'navigation'}
-        aria-label="Admin navigation"
-        aria-modal={isMobile ? true : undefined}
-      >
-        {/* Sidebar Header: Official Brand Logo & Type */}
-        <div className="p-6 border-b border-gray-50 flex-shrink-0">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 transition-transform group-hover:scale-110">
-              <Image src="/images/logo_mark.png" alt="Aetheravia" fill sizes="40px" className="object-contain" priority />
+    <div className="bg-background text-on-background min-h-screen relative font-body selection:bg-primary/10 selection:text-primary">
+      {/* Tactile Depth Overlay */}
+      <div className="fixed inset-0 pointer-events-none bg-noise z-50 opacity-[0.03]"></div>
+
+      {/* SideNavBar */}
+      <aside className={`h-screen w-72 flex-col fixed left-0 top-0 bg-surface border-r border-outline-variant/20 z-40 transition-transform duration-500 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+        <div className="p-8 h-full flex flex-col overflow-y-auto scrollbar-hide">
+          <div className="flex items-center gap-3 mb-12 flex-shrink-0">
+            <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-lg shadow-lg shadow-primary/20">
+              <span className="material-symbols-outlined text-on-primary text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
             </div>
             <div>
-              <h1 className="font-headline font-black text-sm tracking-tighter text-primary uppercase leading-tight">AETHRAVIA</h1>
-              <p className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-[0.3em]">Guardian Hub</p>
+              <h1 className="text-[13px] font-black font-headline text-primary uppercase leading-tight tracking-tighter">AETHRAVIA</h1>
+              <p className="text-[9px] uppercase font-bold tracking-[0.3em] text-on-surface-variant/40 mt-0.5">GUARDIAN HUB</p>
             </div>
-          </Link>
-        </div>
+          </div>
 
-        {/* Navigation Menu: Brand Interactions */}
-        <div className="p-4 space-y-6 flex-1 flex flex-col overflow-y-auto">
-          {menuItems.map((category, categoryIndex) => {
-            const isCollapsed = collapsed[category.category];
-            return (
-              <div key={categoryIndex} className="flex-shrink-0">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between px-3 py-1 rounded-md md:cursor-default group mb-1"
-                  aria-expanded={isCollapsed ? 'false' : 'true'}
-                  onClick={() => isMobile && toggleCategory(category.category)}
-                >
-                  <span className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-[0.2em]">{category.category}</span>
-                  {isMobile && (
-                    <span className={`transition-all text-gray-300 group-hover:text-primary ${isCollapsed ? '' : 'rotate-90'}`}>▶</span>
-                  )}
-                </button>
-                <ul className={`space-y-1 mt-1 transition-[max-height,opacity] duration-300 ease-out ${isCollapsed ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-96 opacity-100'}`}>
-                  {category.items.map((item, itemIdx) => (
-                    <li key={item.key}>
-                      <Link
+          <nav className="space-y-8 flex-1">
+            {navSections.map((section) => (
+              <div key={section.title}>
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/30 mb-4 px-5">{section.title}</p>
+                <div className="space-y-1">
+                  {section.items.map((item) => {
+                    const isActive = activeItem === item.key;
+                    return (
+                      <Link 
+                        key={item.key} 
                         href={item.href}
-                        ref={categoryIndex === 0 && itemIdx === 0 ? firstLinkRef : undefined}
-                        className={`
-                          flex items-center px-4 py-2.5 rounded-xl transition-all duration-300 group
-                          ${activeItem === item.key 
-                            ? 'bg-primary text-white shadow-lg shadow-primary/20 font-bold' 
-                            : 'text-gray-600 hover:text-primary hover:bg-primary/5'
-                          }
-                        `}
-                        onClick={() => isMobile && toggleSidebar(false)}
+                        className={`flex items-center gap-4 py-2.5 px-5 rounded-xl transition-all duration-300 group ${
+                          isActive 
+                            ? 'text-primary font-bold bg-primary/5 border-l-4 border-primary' 
+                            : 'text-secondary hover:text-primary hover:bg-surface-container-low border-l-4 border-transparent'
+                        }`}
                       >
-                        <item.icon 
-                          size={20} 
-                          className={`mr-3 transition-transform group-hover:scale-125 ${activeItem === item.key ? 'scale-110' : 'opacity-70'}`} 
-                        />
-                        <span className="text-sm tracking-tight">{item.label}</span>
-                        {activeItem === item.key && (
-                          <span className="ml-auto w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                        )}
+                        <span className={`material-symbols-outlined text-lg ${isActive ? 'text-primary' : 'text-secondary/60 group-hover:text-primary'}`} style={{ fontVariationSettings: isActive ? "'FILL' 1" : "" }}>
+                          {item.icon}
+                        </span>
+                        <span className="font-label text-[12px] tracking-tight uppercase font-bold">{item.label}</span>
                       </Link>
-                    </li>
-                  ))}
-                </ul>
+                    );
+                  })}
+                </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </nav>
 
-        {/* Sidebar Footer */}
-        <div className="p-6 border-t border-gray-50 flex-shrink-0">
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 rounded-full">
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-[10px] font-label font-bold text-green-700 uppercase tracking-tight">System Secure</span>
+          <div className="mt-12 pt-8 border-t border-outline-variant/10 flex-shrink-0">
+            <div className="p-5 bg-surface-container rounded-2xl border border-outline-variant/10 mb-6">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/40 mb-2">System Status</p>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                <p className="text-xs font-bold text-on-surface">Connected</p>
+              </div>
             </div>
-            <p className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-widest text-center">
-              v2.8 Artisan Edition
-            </p>
+            <Link href="/admin/products/new">
+              <button className="w-full bg-primary text-on-primary py-4 px-6 rounded-xl font-label font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:bg-primary-container transition-all active:scale-95 flex items-center justify-center gap-2">
+                <span className="material-symbols-outlined text-sm">add</span>
+                Add New Product
+              </button>
+            </Link>
           </div>
         </div>
-      </div>
-
-      {/* Overlay for mobile when sidebar is open */}
-      {sidebarOpen && isMobile && (
-        <div
-          className="fixed inset-0 z-30 bg-primary/10 backdrop-blur-sm transition-opacity duration-300"
-          onClick={() => toggleSidebar(false)}
-          aria-hidden="true"
-        />
-      )}
+      </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen min-w-0 transition-all duration-300">
-        {/* Top Header Row (The Vault Header) */}
-        <header className="sticky top-0 z-30 h-16 bg-white/70 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-4 sm:px-8 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            {/* The 3-line Toggle (Hamburger) integrated into Navbar */}
-            <button
-              onClick={() => toggleSidebar()}
-              className="p-2.5 rounded-xl transition-all hover:bg-primary/5 active:scale-90 text-primary group"
-              aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-            >
-              <div className="relative w-6 h-5 overflow-hidden">
-                <span className={`absolute h-0.5 w-6 bg-current rounded-full transition-all duration-300 ${sidebarOpen ? 'top-2.5 -rotate-45' : 'top-0'}`} />
-                <span className={`absolute h-0.5 w-4 bg-current rounded-full transition-all duration-300 top-2 ${sidebarOpen ? 'opacity-0 translate-x-10' : 'opacity-100'}`} />
-                <span className={`absolute h-0.5 w-6 bg-current rounded-full transition-all duration-300 ${sidebarOpen ? 'top-2.5 rotate-45' : 'top-4'}`} />
-              </div>
-            </button>
-            <div className="h-6 w-[1px] bg-gray-100 mx-1"></div>
-            <div className="hidden sm:block">
-               <span className="text-[10px] font-label font-bold text-gray-300 uppercase tracking-[0.25em]">Aetheravia Console</span>
+      <main className={`transition-all duration-500 ease-in-out ${sidebarOpen ? 'lg:ml-72' : 'ml-0'}`}>
+        {/* TopNavBar */}
+        <header className="sticky top-0 z-30 bg-surface/80 backdrop-blur-xl flex justify-between items-center w-full px-8 lg:px-12 py-5 border-b border-outline-variant/10">
+          <div className="flex items-center gap-10">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 hover:bg-surface-container rounded-lg transition-colors lg:hidden"
+              >
+                <span className="material-symbols-outlined">menu</span>
+              </button>
+              <h2 className="text-xl font-headline italic text-on-surface font-bold capitalize">{activeItem.replace('-', ' ')}</h2>
             </div>
+            <nav className="hidden md:flex gap-10 items-center">
+              <a className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary border-b-2 border-primary pb-1" href="#">Overview</a>
+              <Link href="/" className="text-[10px] font-bold uppercase tracking-[0.25em] text-secondary hover:text-primary transition-all opacity-40 hover:opacity-100">Exit to Store</Link>
+            </nav>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-6">
-            <Link href="/" className="hidden lg:flex items-center gap-2 text-[10px] font-label font-bold text-primary/60 uppercase tracking-widest hover:text-primary transition-colors hover:underline whitespace-nowrap">
-              <span>Exit to Boutique</span>
-              <span className="text-xs">↗</span>
-            </Link>
-            <div className="hidden lg:block h-6 w-[1px] bg-gray-100"></div>
-            {/* The Actual Profile Dropdown (Themed Primary) */}
-            <Menu showSearch={false} />
+          <div className="flex items-center gap-5 lg:gap-8">
+            <div className="relative group hidden sm:block">
+              <span className="material-symbols-outlined text-on-surface-variant absolute left-4 top-1/2 -translate-y-1/2 text-lg opacity-40 group-focus-within:text-primary group-focus-within:opacity-100 transition-all">search</span>
+              <input 
+                className="bg-surface-container-low border border-outline-variant/10 focus:border-primary/30 focus:ring-4 focus:ring-primary/5 rounded-full py-2.5 pl-12 pr-6 text-xs w-56 lg:w-80 placeholder:text-on-surface-variant/30 transition-all outline-none font-body" 
+                placeholder="Search products..." 
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearch}
+              />
+            </div>
+            
+            <div className="h-8 w-[1px] bg-outline-variant/20 mx-2 hidden lg:block"></div>
+            
+            <button className="flex items-center gap-3 group pl-2 py-1 pr-1 hover:bg-surface-container rounded-full transition-all">
+              <div className="w-9 h-9 rounded-full bg-secondary-container p-0.5 border border-primary/10 shadow-sm ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
+                {session?.user?.avatar ? (
+                  <img src={session.user.avatar} className="w-full h-full object-cover rounded-full" alt="Admin" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-primary text-on-primary rounded-full font-headline italic text-xs font-bold">
+                    {session?.user?.name?.[0] || 'A'}
+                  </div>
+                )}
+              </div>
+              <div className="text-left hidden lg:block pr-3">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface leading-none">{session?.user?.name || 'Admin Profile'}</span>
+                <span className="text-[9px] text-primary/60 font-bold uppercase tracking-widest leading-none mt-1 block">Sentinel</span>
+              </div>
+            </button>
           </div>
         </header>
 
-        <main className="flex-1 relative overflow-y-auto overflow-x-hidden p-4 sm:p-8 lg:p-10 scroll-smooth">
-          {/* Subtle branding background element */}
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/3 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-          
-          <div className="relative max-w-[1600px] mx-auto w-full pb-20">
+        {/* Content Canvas */}
+        <section className="p-8 lg:p-12 relative">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/3 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          <div className="max-w-7xl mx-auto relative z-10">
             {children}
           </div>
-        </main>
-      </div>
+        </section>
+
+        {/* Footer Info */}
+        <footer className="px-12 py-12 text-center border-t border-outline-variant/10 bg-surface-container-low/30">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-2 opacity-30 grayscale">
+              <Image src="/images/logo_mark.png" alt="Aetheravia" width={24} height={24} />
+              <span className="font-headline font-bold text-xs uppercase tracking-widest">AETHERAVIA</span>
+            </div>
+            <p className="text-[10px] uppercase font-bold tracking-[0.3em] text-on-surface-variant/40">
+              © 2024 Aetheravia Heritage Archive. Operational Integrity Secured.
+            </p>
+            <div className="flex gap-6">
+              <a href="#" className="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/60 hover:text-primary transition-colors">Documentation</a>
+              <a href="#" className="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/60 hover:text-primary transition-colors">Support</a>
+            </div>
+          </div>
+        </footer>
+      </main>
       <AdminRealtimeListener />
     </div>
   );
