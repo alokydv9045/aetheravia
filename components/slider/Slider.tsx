@@ -1,6 +1,4 @@
 import ProductItem from '@/components/products/ProductItem';
-import CardSlider from '@/components/slider/CardSlider';
-import { CarouselItem } from '@/components/ui/carousel';
 import productService from '@/lib/services/productService';
 import { convertDocToObj } from '@/lib/utils';
 
@@ -21,7 +19,9 @@ const Slider = async () => {
           }}
         >
           {topRated.map((product) => (
-            <ProductItem key={product.slug} product={convertDocToObj(product)} />
+            <div key={product.slug} className="shrink-0 w-[260px] sm:w-[280px]">
+              <ProductItem product={convertDocToObj(product)} />
+            </div>
           ))}
         </div>
       )}

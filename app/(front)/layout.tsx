@@ -3,6 +3,7 @@ import Footer from '@/components/footer/Footer';
 import Header from '@/components/header/Header';
 import Sidebar from '@/components/Sidebar';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import FloatingContactWidget from '@/components/FloatingContactWidget';
 import ResponsiveDrawerInit from '@/components/ResponsiveDrawerInit';
 
 export default function FrontLayout({
@@ -20,6 +21,7 @@ export default function FrontLayout({
           <main className='flex-grow'>{children}</main>
           <Footer />
           <ScrollToTopButton />
+          <FloatingContactWidget />
         </div>
       </div>
       <div className='drawer-side z-[70]'>

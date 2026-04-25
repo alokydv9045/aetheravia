@@ -10,11 +10,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      path: '/search',
-      changeFreq: 'weekly' as const,
-      priority: 0.8,
-    },
-    {
       path: '/cart',
       changeFreq: 'weekly' as const,
       priority: 0.8,

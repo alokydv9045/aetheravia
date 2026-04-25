@@ -17,9 +17,9 @@ const config: Config = {
     // Keep only the light theme to avoid dark-mode variants
     themes: [
       {
-        light: {
-          ...daisyuiThemes['light'],
-          primary: '#B78C69',
+        "light": {
+          ...daisyuiThemes["light"],
+          primary: '#904917',
           '.toaster-con': {
             'background-color': 'white',
             color: 'black',
@@ -130,6 +130,6 @@ const config: Config = {
     },
   },
   plugins: [tailwindAnimate, daisyui],
-} satisfies Config;
+};
 
 export default config;

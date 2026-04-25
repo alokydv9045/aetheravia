@@ -35,6 +35,7 @@ export default function PrivacyPage() {
                 className="object-cover transition-transform duration-1000 group-hover:scale-105" 
                 alt="Sandalwood on a textured ceramic plate" 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuB33JJk-Lq7iiifgJSy8u86K8jLk_n4rywvtJUdQqHRZ_-EavcIGbAoY8Li6XvWchA9yBR8hHBamgj0YH3uZA1N1j4GlJSMVlUacgkufpmd4XelHDkhxRmQbyiLCLb0WgbrFsSGzp1gftWv4cJp362nuHQwnp9ZKcIC5Im1tB3B4o-CjajQIXwcca9PO_Q8eycjpjEyNUiTKvJIKh0CkIsIUXAyQNPOL39957jlHbNgK3Ygw9BEw9hH2wKZEInnpIo9kN2fBTwcnwKS"
+                sizes="(max-width: 768px) 100vw, 30vw"
               />
               <div className="absolute bottom-6 -left-6 bg-surface-container-lowest/90 backdrop-blur-xl p-8 shadow-xl border border-outline-variant/20 max-w-[220px] rounded-sm">
                 <p className="font-headline text-primary text-base italic leading-relaxed">"The purity of our ingredients is matched only by the integrity of our promises."</p>
@@ -158,9 +159,10 @@ export default function PrivacyPage() {
                     <div className="relative w-full h-full rounded-2xl overflow-hidden group">
                       <Image 
                         fill
-                        className="object-cover transition-transform duration-[2s] group-hover:scale-110" 
+                        className="object-cover transition-transform duration-[2000ms] group-hover:scale-110" 
                         alt="Artisanal soap texture" 
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZhiPqmTESY6YM2vp3_LHN5tdM4UDseXlGav6dnAyDJ97WSiBiFFPYOYpqFPYMOcU2J3yRcCLKLJA1O5Ph1XIlbGQAMnzuZ8P8YK9m9RofZbTAM1ldbDyBiRBTYivgAEuY9UPtBdBuyWMtTJ7jjB15AHbC0cahSmgXVft7eVnCm7UXf6sPwOat9Mod_oFYRX6hWEwDw8-uHm3LVFKdUDw6GH80OoQvbMGGvwo1cAh4hv1D3FDAUp_HjtWhB9Zc3wMf1p00wvp1ZHpe"
+                        sizes="(max-width: 1280px) 100vw, 400px"
                       />
                     </div>
                   </div>

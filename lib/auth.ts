@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import { cookies } from 'next/headers';
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -118,13 +119,19 @@ export const config = {
           const existingUser = await UserModel.findOne({ email: user.email });
           
           if (!existingUser) {
+            // Get referral code from cookie if present
+            const cookieStore = await cookies();
+            const referralCode = cookieStore.get('referral_code')?.value;
+
             // Create new social user
             const newUser = await UserModel.create({
               name: user.name || profile?.name || 'Archive Member',
               email: user.email,
               avatar: user.image || profile?.picture,
               isAdmin: false,
+              referredBy: referralCode || undefined, // Link referral if exists
             });
+            
             // Update the user object with the DB ID for the JWT callback
             user.id = newUser._id.toString();
             user._id = newUser._id.toString();
@@ -135,9 +142,18 @@ export const config = {
             user._id = existingUser._id.toString();
             user.isAdmin = existingUser.isAdmin;
             
-            // Sync avatar if it's missing or from a different source
+            // Sync avatar/name if it's missing or updated
+            let hasChanges = false;
             if (!existingUser.avatar && (user.image || profile?.picture)) {
               existingUser.avatar = user.image || profile?.picture;
+              hasChanges = true;
+            }
+            if (existingUser.name === 'Archive Member' && (user.name || profile?.name)) {
+              existingUser.name = user.name || profile?.name;
+              hasChanges = true;
+            }
+            
+            if (hasChanges) {
               await existingUser.save();
             }
           }

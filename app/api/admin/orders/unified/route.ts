@@ -7,8 +7,17 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify admin session
-    const session = await requireAdminSession();
+    // 1. Authenticate and verify admin status
+    let session;
+    try {
+      session = await requireAdminSession();
+    } catch (authError) {
+      if (authError instanceof Response) {
+        return authError;
+      }
+      throw authError;
+    }
+    
     if (!session || !(session as any).user?.isAdmin) {
       return NextResponse.json(
         { message: 'Unauthorized access' },
@@ -128,12 +137,7 @@ export async function GET(request: NextRequest) {
           pendingOrders: {
             $sum: {
               $cond: [
-                {
-                  $or: [
-                    { $eq: ['$status', 'pending'] },
-                    { $eq: ['$orderStatus', 'pending'] }
-                  ]
-                },
+                { $eq: ['$status', 'pending'] },
                 1,
                 0
               ]
@@ -142,12 +146,7 @@ export async function GET(request: NextRequest) {
           deliveredOrders: {
             $sum: {
               $cond: [
-                {
-                  $or: [
-                    { $eq: ['$status', 'delivered'] },
-                    { $eq: ['$orderStatus', 'delivered'] }
-                  ]
-                },
+                { $eq: ['$status', 'delivered'] },
                 1,
                 0
               ]
