@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import * as dotenv from 'dotenv';
 import path from 'path';
+import dns from 'dns';
+
+// Fix for Node.js SRV DNS resolution issues on some systems
+dns.setServers(['1.1.1.1', '8.8.8.8']);
 
 // Load environment variables from .env
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });

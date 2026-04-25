@@ -63,7 +63,7 @@ export default async function CategoriesBar() {
           {categories.map((cat) => (
             <li key={cat} className="flex-shrink-0">
               <Link
-                href={`/search?category=${encodeURIComponent(cat)}`}
+                href={`/shop?category=${encodeURIComponent(cat)}`}
                 className="flex flex-col items-center space-y-3 text-center group"
               >
                 <div className="relative w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden border-2 border-transparent hover:border-primary-400 transition-all duration-300 group-hover:scale-105 bg-gray-50">

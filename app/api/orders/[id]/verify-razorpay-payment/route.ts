@@ -2,10 +2,10 @@ import { auth } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import OrderModel from '@/lib/models/OrderModel';
 import { razorpay } from '@/lib/razorpay';
+import { awardPointsForOrder } from '@/lib/services/loyaltyService';
 
-export const POST = auth(async (...request: any) => {
-  const [req, { params: paramsPromise }] = request;
-  const params = await paramsPromise;
+export const POST = auth(async (req: any, { params }: any) => {
+  const { id } = await params;
   if (!req.auth) {
     return Response.json(
       { message: 'unauthorized' },
@@ -15,7 +15,7 @@ export const POST = auth(async (...request: any) => {
     );
   }
   await dbConnect();
-  const order = await OrderModel.findById(params.id);
+  const order = await OrderModel.findById(id);
   if (order) {
     try {
       const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = await req.json();
@@ -27,6 +27,10 @@ export const POST = auth(async (...request: any) => {
       );
       
       if (isValidSignature) {
+        if (order.isPaid) {
+          return Response.json(order);
+        }
+
         order.isPaid = true;
         order.paidAt = Date.now();
         order.paymentResult = {
@@ -35,6 +39,15 @@ export const POST = auth(async (...request: any) => {
           email_address: req.auth.user?.email || '',
         };
         const updatedOrder = await order.save();
+        
+        // Award Loyalty Points & Handle Referrals
+        try {
+          await awardPointsForOrder(order._id.toString(), req.auth.user._id || req.auth.user.id);
+        } catch (loyaltyError) {
+          console.error('[LOYALTY_ERROR]:', loyaltyError);
+          // Don't fail the payment response if loyalty awarding fails
+        }
+
         return Response.json(updatedOrder);
       } else {
         return Response.json(
@@ -60,4 +73,4 @@ export const POST = auth(async (...request: any) => {
       },
     );
   }
-});
+}) as any;

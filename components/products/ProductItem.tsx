@@ -7,12 +7,17 @@ import { useSession } from 'next-auth/react';
 import { Product } from '@/lib/models/ProductModel';
 import { formatPrice } from '@/lib/utils';
 import useCartService from '@/lib/hooks/useCartStore';
+import useWishlistService from '@/lib/hooks/useWishlistStore';
 import toast from 'react-hot-toast';
+import { Heart } from 'lucide-react';
 
 const ProductItem = ({ product }: { product: Product }) => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { items, increase } = useCartService();
+  const { toggle, exists } = useWishlistService();
+  
+  const isWishlisted = exists(product.slug);
 
   const addItemHandler = () => {
     increase({
@@ -78,6 +83,23 @@ const ProductItem = ({ product }: { product: Product }) => {
             {product.category}
           </span>
         </div>
+
+        {/* Wishlist Button */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            const added = toggle(product);
+            if (added) toast.success('Added to Archive');
+          }}
+          className={`absolute top-4 right-4 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
+            isWishlisted 
+              ? 'bg-primary text-white scale-110' 
+              : 'bg-white/90 text-primary hover:scale-110'
+          }`}
+          aria-label={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+        >
+          <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} strokeWidth={2.5} />
+        </button>
 
         {/* Quick Add Overlay */}
         <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 translate-y-0 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/60 to-transparent z-20">

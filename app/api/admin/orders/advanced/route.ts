@@ -7,8 +7,17 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify admin session
-    const session = await requireAdminSession();
+    // 1. Authenticate and verify admin status
+    let session;
+    try {
+      session = await requireAdminSession();
+    } catch (authError) {
+      if (authError instanceof Response) {
+        return authError;
+      }
+      throw authError;
+    }
+    
     if (!session || !(session as any).user?.isAdmin) {
       return NextResponse.json(
         { message: 'Unauthorized access' },
@@ -50,7 +59,10 @@ export async function GET(request: NextRequest) {
 
     // Status filter
     if (status) {
-      query.orderStatus = status;
+      query.$or = [
+        { status: status },
+        { orderStatus: status }
+      ];
     }
 
     // Date range filter
@@ -174,8 +186,11 @@ export async function PUT(request: NextRequest) {
         const updateResult = await OrderModel.updateMany(
           { _id: { $in: orderIds } },
           { 
-            orderStatus: status,
-            updatedAt: new Date()
+            $set: {
+              status: status,
+              orderStatus: status,
+              updatedAt: new Date()
+            }
           }
         );
 
