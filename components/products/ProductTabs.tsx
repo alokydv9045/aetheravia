@@ -14,6 +14,13 @@ interface Tab {
 export default function ProductTabs({ description }: { description: string }) {
   const tabs: Tab[] = [
     {
+      id: 'description',
+      label: 'Description',
+      title: 'About this Treasure',
+      content: description || 'No detailed description available for this artisanal creation.',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBhPBEXj1G62rDU0iDGJDSjpIb0NiNkklq4GEpJoEHx_UzKUrzipedCBalLdbz0JYquLRrDpwgUC7G63jV_tpxr7GWk_uOLqnSH0L_ldJcqfLF0NsPMEnpHjmuasHcOJ_-GBPychyFziPFqaPL59eEVjpmcUYq5njW-3f6P42W6Qyt8AEGpNWNMEb1rKmYn2ilJ5xqCRiHdOS3N4g6LY03oe2876d043IktkMYEJsvIhmBdoqcHHbP_TFDxUG-2d_VqwJE-XNyw4noz'
+    },
+    {
       id: 'ritual',
       label: 'The Ritual',
       title: 'Cleansing as Meditation',

@@ -2,11 +2,9 @@ import { cache } from 'react';
 import dbConnect from '@/lib/dbConnect';
 import ProductModel, { Product } from '@/lib/models/ProductModel';
 
-export const revalidate = 3600;
-
 const getLatest = cache(async (): Promise<Product[]> => {
   await dbConnect();
-  const products = await ProductModel.find({}).sort({ createdAt: -1 }).limit(4).lean();
+  const products = await ProductModel.find({}).sort({ createdAt: -1 }).limit(8).lean();
   return products as unknown as Product[];
 });
 
@@ -18,13 +16,14 @@ const getFeatured = cache(async (): Promise<Product[]> => {
 
 const getBySlug = cache(async (slug: string): Promise<Product | null> => {
   await dbConnect();
-  const product = await ProductModel.findOne({ slug }).lean();
+  const decodedSlug = decodeURIComponent(slug);
+  const product = await ProductModel.findOne({ slug: decodedSlug }).lean();
   return product as unknown as Product | null;
 });
 
 const getTopRated = cache(async (): Promise<Product[]> => {
   await dbConnect();
-  const products = await ProductModel.find({}).sort({ rating: -1 }).limit(4).lean();
+  const products = await ProductModel.find({}).sort({ rating: -1 }).limit(8).lean();
   return products as unknown as Product[];
 });
 
@@ -82,7 +81,7 @@ const getByQuery = cache(
         ? { rating: -1 }
         : { createdAt: -1 };
 
-    const pageSize = 6;
+    const pageSize = 12;
     const products = await ProductModel.find({
       ...queryFilter,
       ...categoryFilter,

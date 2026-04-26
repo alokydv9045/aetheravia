@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import ProductModel from '@/lib/models/ProductModel';
+import { revalidatePath } from 'next/cache';
 
 export const GET = auth(async (...args: any) => {
   const [req, { params: paramsPromise }] = args;
@@ -68,6 +69,10 @@ export const PUT = auth(async (...args: any) => {
       product.sizes = sizes;
 
       const updatedProduct = await product.save();
+      revalidatePath('/');
+      revalidatePath('/shop');
+      revalidatePath(`/product/${product.slug}`);
+      revalidatePath('/admin/products');
       return Response.json(updatedProduct);
     } else {
       return Response.json(
@@ -105,6 +110,9 @@ export const DELETE = auth(async (...args: any) => {
     const product = await ProductModel.findById(params.id);
     if (product) {
       await product.deleteOne();
+      revalidatePath('/');
+      revalidatePath('/shop');
+      revalidatePath('/admin/products');
       return Response.json({ message: 'Product deleted successfully' });
     } else {
       return Response.json(

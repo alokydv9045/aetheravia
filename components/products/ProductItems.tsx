@@ -20,7 +20,7 @@ const ProductItems = async ({
 }) => {
   let products = [];
   
-  if ((category && category !== 'all') || (q && q !== 'all')) {
+  if (layout === 'grid' || (category && category !== 'all') || (q && q !== 'all')) {
     const res = await productService.getByQuery({
       q: q,
       category: category,

@@ -10,7 +10,7 @@ import useSWRMutation from 'swr/mutation';
 
 import { Product } from '@/lib/models/ProductModel';
 import { uploadToCloudinary } from '@/lib/cloudinaryUpload';
-import { formatId } from '@/lib/utils';
+import { formatId, slugify } from '@/lib/utils';
 
 // Extend product form data with new fields (sizes, images)
 interface ProductFormData {
@@ -65,14 +65,14 @@ export default function ProductEditForm({ productId }: { productId: string }) {
   // Populate form when product loads
   useEffect(() => {
     if (!product) return;
-    setValue('name', product.name || '');
-    setValue('slug', product.slug || '');
-    setValue('price', product.price as any);
+    setValue('name', product.name === 'sample name' ? '' : (product.name || ''));
+    setValue('slug', product.slug.startsWith('sample-name-') ? '' : (product.slug || ''));
+    setValue('price', product.price === 0 ? '' : product.price);
     setValue('image', product.image || '');
-    setValue('category', product.category || '');
-    setValue('brand', product.brand || '');
-    setValue('countInStock', product.countInStock as any);
-    setValue('description', product.description || '');
+    setValue('category', product.category === 'sample category' ? '' : (product.category || ''));
+    setValue('brand', product.brand === 'sample brand' ? '' : (product.brand || ''));
+    setValue('countInStock', product.countInStock === 0 ? '' : product.countInStock);
+    setValue('description', product.description === 'sample description' ? '' : (product.description || ''));
     setValue('images', product.images || (product.image ? [product.image] : []));
     setValue('sizes', product.sizes || []);
   }, [product, setValue]);
@@ -147,6 +147,7 @@ export default function ProductEditForm({ productId }: { productId: string }) {
     // Ensure numeric coercion
     const payload = {
       ...formData,
+      slug: slugify(formData.slug),
       price: Number(formData.price),
       countInStock: Number(formData.countInStock),
     };
@@ -156,12 +157,13 @@ export default function ProductEditForm({ productId }: { productId: string }) {
   if (error) return <div className='alert alert-error'>{(error as any).message || 'Failed to load product'}</div>;
   if (!product) return <div className='flex flex-col items-center justify-center p-10 gap-3'><span className='loading loading-spinner loading-lg' /><p className='text-sm opacity-70'>Loading product…</p></div>;
 
-  const Field = ({ id, label, type = 'text', required = false }: { id: keyof ProductFormData; label: string; type?: string; required?: boolean }) => (
+  const Field = ({ id, label, type = 'text', required = false, placeholder = '' }: { id: keyof ProductFormData; label: string; type?: string; required?: boolean; placeholder?: string }) => (
     <div className='space-y-1'>
       <label className='text-xs font-semibold uppercase tracking-wide opacity-70' htmlFor={id}>{label}</label>
       <input
         id={id}
         type={type}
+        placeholder={placeholder}
         {...register(id as any, { required: required && `${label} is required` })}
         className='input input-bordered input-sm w-full'
       />
@@ -182,16 +184,16 @@ export default function ProductEditForm({ productId }: { productId: string }) {
           <div className='card-body p-5 space-y-6'>
             <h2 className='font-semibold tracking-wide text-sm uppercase opacity-70'>Basic Information</h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-              <Field id='name' label='Name' required />
-              <Field id='slug' label='Slug' required />
-              <Field id='brand' label='Brand' required />
-              <Field id='category' label='Category' required />
-              <Field id='price' label='Price' type='number' required />
-              <Field id='countInStock' label='Count In Stock' type='number' required />
+               <Field id='name' label='Name' placeholder='e.g. Vitamin C Serum' required />
+              <Field id='slug' label='Slug' placeholder='e.g. vitamin-c-serum' required />
+              <Field id='brand' label='Brand' placeholder='e.g. Aetheravia' required />
+              <Field id='category' label='Category' placeholder='e.g. Serums' required />
+              <Field id='price' label='Price' type='number' placeholder='0.00' required />
+              <Field id='countInStock' label='Count In Stock' type='number' placeholder='0' required />
             </div>
             <div className='space-y-1'>
               <label className='text-xs font-semibold uppercase tracking-wide opacity-70' htmlFor='description'>Description</label>
-              <textarea id='description' rows={4} {...register('description', { required: 'Description is required' })} className='textarea textarea-bordered w-full text-sm' />
+              <textarea id='description' rows={4} placeholder='Describe the product benefits, ingredients, and usage instructions...' {...register('description', { required: 'Description is required' })} className='textarea textarea-bordered w-full text-sm' />
               {errors.description?.message && <p className='text-error text-xs'>{errors.description.message}</p>}
             </div>
           </div>

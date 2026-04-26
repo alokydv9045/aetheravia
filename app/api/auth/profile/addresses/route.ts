@@ -9,6 +9,7 @@ const addressSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
   address: z.string().min(1, 'Address is required'),
   city: z.string().min(1, 'City is required'),
+  state: z.string().min(1, 'State is required'),
   postalCode: z.string().min(1, 'Postal code is required'),
   country: z.string().optional(),
   phone: z.string().optional(),
@@ -48,12 +49,12 @@ export const POST = auth(async (req: any) => {
     if (!parseResult.success) {
       return Response.json({ message: 'Invalid address input', errors: parseResult.error.flatten() }, { status: 400 });
     }
-    const { fullName, address, city, postalCode, country, phone } = parseResult.data;
+    const { fullName, address, city, state, postalCode, country, phone } = parseResult.data;
     await dbConnect();
     const user = await UserModel.findById(uid);
     if (!user) return Response.json({ message: 'User not found' }, { status: 404 });
     if (!Array.isArray(user.savedAddresses)) user.savedAddresses = [];
-    (user as any).savedAddresses.push({ fullName, address, city, postalCode, country, phone });
+    (user as any).savedAddresses.push({ fullName, address, city, state, postalCode, country, phone });
     await user.save();
     return Response.json(user.savedAddresses);
   } catch (err: any) {
@@ -105,7 +106,7 @@ export const PATCH = auth(async (req: any) => {
     if (!user) return Response.json({ message: 'User not found' }, { status: 404 });
     const addr: any = (user as any).savedAddresses.id(addrId);
     if (!addr) return Response.json({ message: 'Address not found' }, { status: 404 });
-    ['fullName','address','city','postalCode','country','phone'].forEach((k) => {
+    ['fullName','address','city','state','postalCode','country','phone'].forEach((k) => {
       if (typeof patch[k] === 'string') addr[k] = patch[k];
     });
     await user.save();
