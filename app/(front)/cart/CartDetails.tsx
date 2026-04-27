@@ -145,7 +145,7 @@ const CartDetails = () => {
               <div key={product.slug} className="group flex gap-6 items-center">
                 <div className="w-24 aspect-square relative bg-surface-container-low rounded overflow-hidden">
                   <Image 
-                    src={/^(\/|https?:)/.test(product.image) ? product.image : '/images/banner/banner0.jpg'} 
+                    src={product.image || '/images/banner/banner0.jpg'} 
                     alt={product.name} 
                     fill 
                     className="object-cover grayscale"
@@ -193,7 +193,7 @@ const CartDetails = () => {
                 >
               <div className="w-full md:w-48 aspect-[4/5] bg-surface-container-low overflow-hidden rounded relative">
                 <Image
-                  src={/^(\/|https?:)/.test(item.image) ? item.image : '/images/banner/banner0.jpg'}
+                  src={item.image || '/images/banner/banner0.jpg'}
                   alt={item.name}
                   fill
                   className="object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700"
@@ -423,7 +423,7 @@ const CartDetails = () => {
               <div key={product.slug} className="group">
                 <div className="relative aspect-[4/5] bg-surface-container-low overflow-hidden rounded mb-6">
                   <Image
-                    src={/^(\/|https?:)/.test(product.image) ? product.image : '/images/banner/banner0.jpg'}
+                    src={product.image || '/images/banner/banner0.jpg'}
                     alt={product.name}
                     fill
                     className="object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-1000"

@@ -125,8 +125,11 @@ export default function ProductEditForm({ productId }: { productId: string }) {
         
         // If current image is empty or the default placeholder, set the first uploaded one as primary
         const currentImage = watch('image');
-        const isPlaceholder = currentImage && currentImage.includes('No_Image_Available');
-        if (!currentImage || isPlaceholder) {
+        const isPlaceholder = !currentImage || 
+                             currentImage.includes('No_Image_Available') || 
+                             currentImage.includes('cosmetics-composition-with-serum-bottles.jpg');
+                             
+        if (isPlaceholder) {
           setValue('image', newImages[0]);
         }
         

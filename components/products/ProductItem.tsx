@@ -69,7 +69,7 @@ const ProductItem = ({ product }: { product: Product }) => {
       <div className="relative bg-[#f6f3ee] rounded-xl overflow-hidden shadow-[0_8px_32px_0_rgba(28,28,25,0.05)] mb-6 aspect-[4/5] z-0">
         <Link href={`/product/${product.slug}`} className="block relative h-full w-full">
           <Image
-            src={/^(\/|https?:)/.test(product.image) ? product.image : '/images/placeholder.jpg'}
+            src={product.image || '/images/placeholder.jpg'}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"

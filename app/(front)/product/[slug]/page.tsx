@@ -70,25 +70,26 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
     }).limit(8).lean();
   }
 
+  // Ensure we have a valid array of images, starting with the primary one
+  const isPlaceholder = !product.image || product.image.includes('cosmetics-composition-with-serum-bottles.jpg');
+  const galleryImages = [
+    ...(isPlaceholder ? [] : [product.image]),
+    ...(product.images || [])
+  ].filter((img, index, self) => 
+    img && self.indexOf(img) === index // Filter out empty or duplicate images
+  );
+
   return (
     <div className="pt-8 md:pt-12 pb-12 overflow-x-hidden">
       {/* Product Section */}
       <section className="max-w-screen-2xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
         {/* Product Gallery (Interactive) */}
         <ProductGallery 
-          images={product.images && product.images.length > 0 
-            ? product.images 
-            : [
-                /^(\/|https?:)/.test(product.image) ? product.image : '/images/banner/banner0.jpg',
-                compImage1,
-                compImage2
-              ]
-          } 
+          images={galleryImages.length > 0 ? galleryImages : ['/images/banner/banner0.jpg']} 
         />
 
         {/* Product Info */}
         <div className="lg:col-span-7 flex flex-col space-y-8 mt-8 lg:mt-0">
-          <div className="space-y-4">
             <div className="flex items-center gap-3">
               {product.countInStock > 0 ? (
                 <span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">In Stock</span>
@@ -106,37 +107,36 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
               {product.name}
             </h1>
             <p className="text-2xl font-body font-light text-on-surface">{formatPrice(product.price)}</p>
-          </div>
 
-          <div className="space-y-4">
-            <h3 className="font-label uppercase text-[10px] tracking-widest text-on-surface-variant">Ancient Wisdom</h3>
-            <p className="text-on-surface-variant leading-relaxed text-lg">
-              {product.description}
-            </p>
-          </div>
+            <div className="space-y-4">
+              <h3 className="font-label uppercase text-[10px] tracking-widest text-on-surface-variant">Ancient Wisdom</h3>
+              <p className="text-on-surface-variant leading-relaxed text-lg">
+                {product.description}
+              </p>
+            </div>
 
-          {/* Selectors */}
-          <div className="flex flex-col sm:flex-row gap-4 pt-4 items-stretch sm:items-center">
-            {product.countInStock > 0 && (
-               <div className="flex-1">
-                 <AddToCart
-                   item={{
-                     ...convertDocToObj(product),
-                     qty: 0,
-                     color: '',
-                     size: '',
-                   }}
-                 />
-               </div>
-            )}
-            <WishlistButton product={convertDocToObj(product)} />
-          </div>
+            {/* Selectors */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4 items-stretch sm:items-center">
+              {product.countInStock > 0 && (
+                 <div className="flex-1">
+                   <AddToCart
+                     item={{
+                       ...convertDocToObj(product),
+                       qty: 0,
+                       color: '',
+                       size: '',
+                     }}
+                   />
+                 </div>
+              )}
+              <WishlistButton product={convertDocToObj(product)} />
+            </div>
 
-          {/* Meta Chips */}
-          <div className="flex flex-wrap gap-2 pt-4">
-            <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase">{product.brand}</span>
-            <span className="bg-surface-container-high text-on-surface px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase">{product.category}</span>
-          </div>
+            {/* Meta Chips */}
+            <div className="flex flex-wrap gap-2 pt-4">
+              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase">{product.brand}</span>
+              <span className="bg-surface-container-high text-on-surface px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase">{product.category}</span>
+            </div>
         </div>
       </section>
 
