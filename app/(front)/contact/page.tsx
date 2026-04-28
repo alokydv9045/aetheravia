@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import React from 'react';
 import ContactFAQ from './ContactFAQ';
 import ContactForm from './ContactForm';
+import { shopAddress } from '@/lib/brand';
 
 export const metadata: Metadata = {
   title: 'Contact Us | Aethravia',
@@ -55,7 +56,7 @@ export default function ContactPage() {
             </div>
             <h3 className="text-xl font-headline text-primary mb-2">Visit Us</h3>
             <p className="text-secondary font-body text-sm mb-4">Our Flagship Heritage Store.</p>
-            <span className="text-on-surface font-semibold font-body block">12/A, Janpath Road, New Delhi</span>
+            <span className="text-on-surface font-semibold font-body block">{shopAddress}</span>
           </div>
           {/* Card 4 */}
           <div className="bg-surface-container-low p-8 transition-all hover:bg-surface-container-high group rounded-lg shadow-sm">
@@ -87,16 +88,15 @@ export default function ContactPage() {
             />
             <div className="absolute inset-0 bg-primary/5"></div>
             <div className="absolute bottom-6 left-6 bg-surface p-4 shadow-xl rounded">
-              <p className="font-headline text-primary text-lg">Aethravia Flagship</p>
-              <p className="text-sm font-body text-secondary">Janpath Road, New Delhi</p>
+              <p className="font-headline text-primary text-lg">Aethravia Heritage</p>
+              <p className="text-sm font-body text-secondary">Pilibhit, Uttar Pradesh</p>
             </div>
           </div>
           <div className="space-y-8 pl-4 border-l-2 border-primary/20">
             <div>
               <h4 className="font-headline text-xl text-primary mb-2">Physical Address</h4>
               <p className="text-secondary font-body leading-relaxed">
-                The Heritage Archive Building, Suite 402<br/>
-                12/A Janpath Road, New Delhi, 110001
+                {shopAddress}
               </p>
             </div>
             <div>

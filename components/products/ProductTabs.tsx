@@ -11,14 +11,18 @@ interface Tab {
   image: string;
 }
 
-export default function ProductTabs({ description }: { description: string }) {
+export default function ProductTabs({ 
+  description,
+}: { 
+  description: string,
+}) {
   const tabs: Tab[] = [
     {
       id: 'description',
       label: 'Description',
       title: 'About this Treasure',
       content: description || 'No detailed description available for this artisanal creation.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBhPBEXj1G62rDU0iDGJDSjpIb0NiNkklq4GEpJoEHx_UzKUrzipedCBalLdbz0JYquLRrDpwgUC7G63jV_tpxr7GWk_uOLqnSH0L_ldJcqfLF0NsPMEnpHjmuasHcOJ_-GBPychyFziPFqaPL59eEVjpmcUYq5njW-3f6P42W6Qyt8AEGpNWNMEb1rKmYn2ilJ5xqCRiHdOS3N4g6LY03oe2876d043IktkMYEJsvIhmBdoqcHHbP_TFDxUG-2d_VqwJE-XNyw4noz'
+      image: '/images/Gemini_Generated_Image_4vprxw4vprxw4vpr.png'
     },
     {
       id: 'ritual',
@@ -65,20 +69,20 @@ export default function ProductTabs({ description }: { description: string }) {
           ))}
         </div>
         <div className="space-y-12 transition-all duration-500">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-700">
+          <div className="grid md:grid-cols-12 gap-12 lg:gap-20 items-center">
+            <div className="md:col-span-5 space-y-6 animate-in fade-in slide-in-from-left-4 duration-700">
               <h2 className="font-headline text-3xl text-primary italic leading-tight">{activeTab.title}</h2>
               <p className="text-on-surface-variant leading-relaxed">
                 {activeTab.content}
               </p>
             </div>
-            <div className="rounded-lg overflow-hidden aspect-square shadow-xl animate-in fade-in slide-in-from-right-4 duration-700">
+            <div className="md:col-span-7 rounded-lg overflow-hidden aspect-[4/5] md:aspect-[3/4] shadow-2xl animate-in fade-in slide-in-from-right-4 duration-700 bg-white/50 backdrop-blur-sm p-4">
               <Image 
                 src={activeTab.image}
                 alt={activeTab.label}
-                width={600}
-                height={600}
-                className="w-full h-full object-cover"
+                width={800}
+                height={1000}
+                className="w-full h-full object-contain"
               />
             </div>
           </div>

@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import useCartService from '@/lib/hooks/useCartStore';
 import { formatPrice } from '@/lib/utils';
 import { OrderItem } from '@/lib/models/OrderModel';
@@ -60,6 +61,12 @@ const CartDetails = () => {
   };
 
   const handleApplyCoupon = async () => {
+    if (status === 'unauthenticated') {
+      toast.error('Please sign in to apply ritual codes');
+      router.push(`/signin?callbackUrl=/cart`);
+      return;
+    }
+
     if (!couponCode.trim()) {
       toast.error('Please enter a coupon code');
       return;
@@ -76,8 +83,40 @@ const CartDetails = () => {
         }),
       });
       const data = await res.json();
+      console.log('[COUPON_DEBUG] Validation Response:', data);
       if (data.valid) {
         applyCoupon(data);
+        
+        // Spectacular "Pop Up Party" Multi-Burst Confetti
+        const duration = 1.5 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+        const interval: any = setInterval(function() {
+          const timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval);
+          }
+
+          const particleCount = 50 * (timeLeft / duration);
+          // start from two different sides
+          confetti({ 
+            ...defaults, 
+            particleCount, 
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            colors: ['#904917', '#725a39', '#ae602d', '#d4c3b9']
+          });
+          confetti({ 
+            ...defaults, 
+            particleCount, 
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            colors: ['#904917', '#725a39', '#ae602d', '#d4c3b9']
+          });
+        }, 250);
+
         toast.success('Coupon applied to your ritual');
         setCouponCode('');
       } else {
@@ -211,10 +250,10 @@ const CartDetails = () => {
                     </h3>
                     <p className="text-secondary font-label text-sm mt-1">
                       {item.category} • {item.brand}
-                      {(item.color || item.size) && (
+                      {(item.color || item.mlQuantity) && (
                         <span className="ml-2 border-l border-outline-variant/30 pl-2">
                           {item.color && <span className="mr-2">Color: {item.color}</span>}
-                          {item.size && <span>Size: {item.size}</span>}
+                          {item.mlQuantity && <span>Quantity: {item.mlQuantity}</span>}
                         </span>
                       )}
                     </p>
@@ -345,7 +384,7 @@ const CartDetails = () => {
                   />
                   <button 
                     onClick={handleApplyCoupon}
-                    disabled={isApplyingCoupon || !couponCode.trim()}
+                    disabled={isApplyingCoupon || !couponCode.trim() || status === 'loading'}
                     className="bg-secondary text-on-secondary px-4 py-2 rounded text-[10px] font-bold tracking-widest uppercase hover:bg-secondary/90 transition-colors disabled:opacity-50"
                   >
                     {isApplyingCoupon ? '...' : 'Apply'}

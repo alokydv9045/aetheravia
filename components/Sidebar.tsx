@@ -97,7 +97,6 @@ const Sidebar = () => {
         <div className="space-y-1">
           <NavLink href="/" icon={Home} isPrimary>Home</NavLink>
           <NavLink href="/shop" icon={ShoppingBag}>Shop</NavLink>
-          <NavLink href="/ritual" icon={Sparkles}>Our Rituals</NavLink>
           <NavLink href="/ingredients" icon={Leaf}>Earthly Elements</NavLink>
         </div>
 

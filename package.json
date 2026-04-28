@@ -29,6 +29,7 @@
     "autoprefixer": "10.4.16",
     "axios": "^1.12.2",
     "bcryptjs": "^2.4.3",
+    "canvas-confetti": "^1.9.4",
     "chart.js": "^4.5.0",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.7.0",
@@ -53,6 +54,7 @@
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
+    "react-easy-crop": "^5.5.7",
     "react-hook-form": "^7.62.0",
     "react-hot-toast": "^2.4.1",
     "react-is": "^19.2.0",
@@ -70,6 +72,7 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/chart.js": "^2.9.41",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.14",

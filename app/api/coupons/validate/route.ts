@@ -31,6 +31,7 @@ export const POST = auth(async (...request: any) => {
     });
     
     if (!coupon) {
+      console.log(`[COUPON_VALIDATE]: Coupon not found: ${couponCode}`);
       return Response.json(
         { 
           valid: false, 
@@ -46,19 +47,25 @@ export const POST = auth(async (...request: any) => {
       isPaid: true 
     });
 
+    console.log(`[COUPON_VALIDATE]: Validating coupon ${coupon.code} for user ${req.auth.user.id}. OrderValue: ${orderValue}, UserOrders: ${userOrders.length}`);
+
     // Validate coupon for user
     const validation = coupon.isValidForUser(
       req.auth.user.id, 
       orderValue, 
-      userOrders
+      userOrders,
+      shippingCost
     );
     
     if (!validation.valid) {
+      console.log(`[COUPON_VALIDATE]: Validation failed for ${coupon.code}: ${validation.reason}`);
       return Response.json({
         valid: false,
         message: validation.reason
       });
     }
+
+    console.log(`[COUPON_VALIDATE]: Validation successful for ${coupon.code}`);
 
     // Calculate discount
     const discountAmount = coupon.calculateDiscount(orderValue, shippingCost);

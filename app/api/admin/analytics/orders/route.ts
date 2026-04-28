@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import OrderModel from '@/lib/models/OrderModel';
+import UserModel from '@/lib/models/UserModel'; // Required for populate
 import { NextRequest } from 'next/server';
 
 export const GET = auth(async (...args: any) => {
@@ -76,17 +77,17 @@ export const GET = auth(async (...args: any) => {
         { $sort: { count: -1 } }
       ]),
 
-      // Top selling products
+      // Top selling products - Corrected field names (items instead of orderItems)
       OrderModel.aggregate([
         { $match: { ...dateFilter, status: { $ne: 'cancelled' } } },
-        { $unwind: '$orderItems' },
+        { $unwind: '$items' },
         {
           $group: {
-            _id: '$orderItems.productId',
-            name: { $first: '$orderItems.name' },
-            totalQuantity: { $sum: '$orderItems.quantity' },
-            totalRevenue: { $sum: { $multiply: ['$orderItems.price', '$orderItems.quantity'] } },
-            avgPrice: { $avg: '$orderItems.price' }
+            _id: '$items.product',
+            name: { $first: '$items.name' },
+            totalQuantity: { $sum: '$items.qty' },
+            totalRevenue: { $sum: { $multiply: ['$items.price', '$items.qty'] } },
+            avgPrice: { $avg: '$items.price' }
           }
         },
         { $sort: { totalQuantity: -1 } },
@@ -252,8 +253,12 @@ export const GET = auth(async (...args: any) => {
         shippedOrders: statusCounts.shipped || 0,
         deliveredOrders: statusCounts.delivered || 0,
         totalRevenue,
+        averageOrderValue: averageOrderValueResult[0]?.avgOrderValue || 0,
+        totalCustomers: customerMetricsResult[0]?.uniqueCustomers || 0,
         todayOrders: todayStatsResult[0]?.orders || 0,
         todayRevenue: todayStatsResult[0]?.revenue || 0,
+        ordersChange: ordersChange,
+        revenueChange: revenueChange,
       },
 
       // Enhanced analytics

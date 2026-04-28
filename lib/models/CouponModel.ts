@@ -165,28 +165,47 @@ couponSchema.virtual('remainingUsage').get(function() {
 });
 
 // Method to check if coupon is valid for a user
-couponSchema.methods.isValidForUser = function(userId: string, orderValue: number, userOrderHistory: any[]) {
+couponSchema.methods.isValidForUser = function(userId: string, orderValue: number, userOrderHistory: any[], shippingCost: number = 0) {
   try {
-    // Check if coupon is active
-    if (!this.isActive) {
-      return { valid: false, reason: 'Coupon is not active or has expired' };
+    // Detailed status checks instead of just using isActive virtual
+    if (this.status !== COUPON_STATUS.ACTIVE) {
+      return { valid: false, reason: 'This coupon is currently inactive' };
+    }
+    
+    const now = new Date();
+    const start = new Date(this.startDate);
+    const expiry = new Date(this.expiryDate);
+
+    if (now < start) {
+      return { valid: false, reason: `This coupon starts on ${start.toLocaleDateString()}` };
+    }
+    
+    if (now > expiry) {
+      return { valid: false, reason: 'This coupon has expired' };
+    }
+    
+    if (this.usageLimit !== null && (this.usageCount ?? 0) >= this.usageLimit) {
+      return { valid: false, reason: 'This coupon has reached its total usage limit' };
     }
 
     // Check minimum order amount
     if (orderValue < this.minimumOrderAmount) {
+      console.log(`[COUPON_MODEL]: Order value ${orderValue} is less than minimum ${this.minimumOrderAmount}`);
       return { 
         valid: false, 
-        reason: `Minimum order amount is $${this.minimumOrderAmount}` 
+        reason: `Minimum order amount is ₹${this.minimumOrderAmount}` 
       };
     }
 
     // Check if user is allowed (if allowedUsers is specified)
-    if (this.allowedUsers && this.allowedUsers.length > 0 && !this.allowedUsers.includes(userId)) {
+    if (this.allowedUsers && this.allowedUsers.length > 0 && 
+        !this.allowedUsers.some((id: any) => id.toString() === userId.toString())) {
       return { valid: false, reason: 'Coupon not available for this user' };
     }
 
     // Check if user is excluded
-    if (this.excludedUsers && this.excludedUsers.includes(userId)) {
+    if (this.excludedUsers && this.excludedUsers.length > 0 && 
+        this.excludedUsers.some((id: any) => id.toString() === userId.toString())) {
       return { valid: false, reason: 'Coupon not available for this user' };
     }
 
@@ -205,6 +224,11 @@ couponSchema.methods.isValidForUser = function(userId: string, orderValue: numbe
         valid: false, 
         reason: `You have already used this coupon ${this.usagePerUser} time(s)` 
       };
+    }
+
+    // Check free shipping redundancy
+    if (this.type === COUPON_TYPE.FREE_SHIPPING && shippingCost === 0) {
+      return { valid: false, reason: 'This order already qualifies for free shipping' };
     }
 
     return { valid: true, reason: null };

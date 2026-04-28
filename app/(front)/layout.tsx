@@ -16,7 +16,7 @@ export default function FrontLayout({
       <DrawerButton />
       <ResponsiveDrawerInit />
       <div className='drawer-content'>
-        <div className='flex min-h-screen flex-col overflow-x-hidden'>
+        <div className='flex min-h-screen flex-col overflow-x-hidden pt-14 md:pt-16'>
           <Header />
           <main className='flex-grow'>{children}</main>
           <Footer />

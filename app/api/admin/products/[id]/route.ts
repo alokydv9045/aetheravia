@@ -49,7 +49,7 @@ export const PUT = auth(async (...args: any) => {
     brand,
     countInStock,
     description,
-    sizes,
+    mlQuantity,
   } = await req.json();
 
   try {
@@ -66,7 +66,7 @@ export const PUT = auth(async (...args: any) => {
       product.brand = brand;
       product.countInStock = countInStock;
       product.description = description;
-      product.sizes = sizes;
+      product.mlQuantity = mlQuantity;
 
       const updatedProduct = await product.save();
       revalidatePath('/');

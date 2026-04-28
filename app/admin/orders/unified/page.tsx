@@ -298,7 +298,7 @@ export default function UnifiedOrderManagement() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Unified Order Management</h1>
+          <h1 className="text-3xl font-bold mb-2">Order Management</h1>
           <p className="text-gray-600">
             Complete order management with advanced filtering and bulk operations.
           </p>

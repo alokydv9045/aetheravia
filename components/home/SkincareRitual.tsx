@@ -6,18 +6,18 @@ import { motion } from 'framer-motion';
 const steps = [
   {
     number: '01.',
-    title: 'Purify with Clay',
-    description: 'Apply the Multani Mitti mask to damp skin, allowing the minerals to bind with deep-seated impurities for 10 minutes.'
+    title: 'Cleanse',
+    description: 'Start with Aethravia Face Wash or Body Wash to remove dirt and excess oil while maintaining hydration.'
   },
   {
     number: '02.',
-    title: 'Cleanse with Reetha',
-    description: 'Rinse with warm water, massaging our Reetha bars to create a light, natural foam that clears the pores.'
+    title: 'Purify',
+    description: 'Use Aethravia Body Scrub 2–3 times a week to exfoliate dead skin, unclog pores, and restore natural glow.'
   },
   {
     number: '03.',
-    title: 'Seal with Sandalwood',
-    description: 'Finish with the Chandan body oil to soothe the senses and lock in deep, earthy hydration.'
+    title: 'Nourish',
+    description: 'Let your skin breathe and absorb moisture naturally. Consistency is key to visible transformation.'
   }
 ];
 
@@ -61,7 +61,7 @@ export default function SkincareRitual() {
             viewport={{ once: true }}
             className="font-headline text-4xl md:text-5xl text-primary leading-tight"
           >
-            The Artisanal <br /> Body Ritual
+            Your Bodycare is not a routine. <br /> It’s a ritual.
           </motion.h2>
 
           <div className="space-y-10">
@@ -84,6 +84,16 @@ export default function SkincareRitual() {
               </motion.div>
             ))}
           </div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.8 }}
+            className="font-headline italic text-primary text-lg border-t border-primary/10 pt-8"
+          >
+            Aethravia is rooted in simplicity, powered by nature, and designed for real skin.
+          </motion.p>
         </div>
       </div>
     </section>

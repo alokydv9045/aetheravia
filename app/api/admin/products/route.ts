@@ -36,6 +36,7 @@ export const POST = auth(async (req: any) => {
     brand: 'sample brand',
     countInStock: 0,
     description: 'sample description',
+    mlQuantity: '50ml',
     rating: 0,
     numReviews: 0,
   });

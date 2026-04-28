@@ -70,13 +70,13 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
     }).limit(8).lean();
   }
 
-  // Ensure we have a valid array of images, starting with the primary one
+  // Ensure we have a valid array of images
   const isPlaceholder = !product.image || product.image.includes('cosmetics-composition-with-serum-bottles.jpg');
   const galleryImages = [
     ...(isPlaceholder ? [] : [product.image]),
     ...(product.images || [])
   ].filter((img, index, self) => 
-    img && self.indexOf(img) === index // Filter out empty or duplicate images
+    img && self.indexOf(img) === index
   );
 
   return (
@@ -124,7 +124,7 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
                        ...convertDocToObj(product),
                        qty: 0,
                        color: '',
-                       size: '',
+                       mlQuantity: '',
                      }}
                    />
                  </div>
@@ -141,7 +141,9 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
       </section>
 
       {/* Detailed Content Tabs */}
-      <ProductTabs description={product.description} />
+      <ProductTabs 
+        description={product.description} 
+      />
 
       {/* Related Products (Bento/Card Style) */}
       <section className="mt-24 max-w-screen-2xl mx-auto px-6 md:px-12">

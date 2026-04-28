@@ -18,7 +18,7 @@ export default function WishlistPage() {
         ...item,
         qty: 0,
         color: '',
-        size: ''
+        mlQuantity: ''
     });
     toast.success(`${item.name} added to cart`);
   };

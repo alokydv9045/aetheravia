@@ -27,7 +27,7 @@ const Footer = () => {
                   className="object-contain"
                 />
               </div>
-              <span className="text-2xl font-serif italic text-primary">Aethravia</span>
+              <span className="text-2xl font-black tracking-tighter uppercase text-primary">AETHRAVIA</span>
             </Link>
 
             <div className="space-y-4">
@@ -91,7 +91,6 @@ const Footer = () => {
             <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-primary">The House</h3>
             <nav className="flex flex-col space-y-4">
               <Link href="/about" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Our Story</Link>
-              <Link href="/ritual" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Rituals</Link>
               <Link href="/loyalty" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Loyalty Program</Link>
               <Link href="/referral" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Invite a Friend</Link>
             </nav>

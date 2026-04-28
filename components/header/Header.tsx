@@ -22,11 +22,11 @@ const Header = () => {
   }, []);
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-300 ${
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-white/90 backdrop-blur-md shadow-sm' 
-        : 'bg-white'
-    } border-b border-gray-100 text-gray-900`}>
+        ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-gray-100/50' 
+        : 'bg-white border-b border-gray-100'
+    } text-gray-900`}>
       <nav aria-label="Main navigation" className="w-full">
         <div className='container mx-auto px-4 flex items-center justify-between min-h-[3.5rem] md:min-h-[4rem]'>
           {/* Left Area: Hamburger (mobile) + Logo */}
@@ -61,7 +61,7 @@ const Header = () => {
           </div>
           
           {/* Center: Navigation Links (desktop only) */}
-          <div className='hidden lg:flex items-center space-x-2'>
+          <div className='hidden lg:flex items-center space-x-3'>
             <Link href='/' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
               Home
             </Link>
@@ -70,9 +70,6 @@ const Header = () => {
             </Link>
             <Link href='/about' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
               About
-            </Link>
-            <Link href='/ritual' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
-              Rituals
             </Link>
             <Link href='/ingredients' className='text-sm font-bold text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'>
               Ingredients

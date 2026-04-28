@@ -278,7 +278,7 @@ const Form = () => {
                     <div className="flex-1 min-w-0">
                       <h4 className="font-headline text-xl text-on-surface truncate">{item.name}</h4>
                       <p className="text-[11px] text-secondary font-bold uppercase tracking-widest mt-1">
-                        {item.qty} Unit{item.qty > 1 ? 's' : ''} • {item.color && `${item.color} • `}{item.size}
+                        {item.qty} Unit{item.qty > 1 ? 's' : ''} • {item.color && `${item.color} • `}{item.mlQuantity}
                       </p>
                     </div>
                     <div className="text-right">

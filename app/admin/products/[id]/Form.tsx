@@ -11,6 +11,7 @@ import useSWRMutation from 'swr/mutation';
 import { Product } from '@/lib/models/ProductModel';
 import { uploadToCloudinary } from '@/lib/cloudinaryUpload';
 import { formatId, slugify } from '@/lib/utils';
+import ImageEditorModal from '@/components/admin/ImageEditorModal';
 
 // Extend product form data with new fields (sizes, images)
 interface ProductFormData {
@@ -23,20 +24,20 @@ interface ProductFormData {
   brand: string;
   countInStock: number | string;
   description: string;
-  sizes: string[];
+  mlQuantity: string;
 }
 
-// Common size options (adjust as needed)
-const COMMON_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
 
 export default function ProductEditForm({ productId }: { productId: string }) {
-  const { data: product, error } = useSWR<Product & { images?: string[]; sizes?: string[] }>(`/api/admin/products/${productId}`);
+  const { data: product, error } = useSWR<Product & { images?: string[]; mlQuantity?: string }>(`/api/admin/products/${productId}`);
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
-  const [customSize, setCustomSize] = useState('');
+  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [reviewImages, setReviewImages] = useState<string[]>([]);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+  const [fileQueue, setFileQueue] = useState<File[]>([]);
+  const [currentEditingFile, setCurrentEditingFile] = useState<{ file: File; url: string } | null>(null);
 
   const { trigger: updateProduct, isMutating: isUpdating } = useSWRMutation(
     `/api/admin/products/${productId}`,
@@ -55,12 +56,11 @@ export default function ProductEditForm({ productId }: { productId: string }) {
 
   const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<ProductFormData>({
     defaultValues: {
-      name: '', slug: '', price: '', image: '', images: [], category: '', brand: '', countInStock: '', description: '', sizes: [],
+      name: '', slug: '', price: '', image: '', images: [], category: '', brand: '', countInStock: '', description: '', mlQuantity: '',
     },
   });
 
   const images = watch('images');
-  const sizes = watch('sizes');
 
   // Populate form when product loads
   useEffect(() => {
@@ -74,24 +74,10 @@ export default function ProductEditForm({ productId }: { productId: string }) {
     setValue('countInStock', product.countInStock === 0 ? '' : product.countInStock);
     setValue('description', product.description === 'sample description' ? '' : (product.description || ''));
     setValue('images', product.images || (product.image ? [product.image] : []));
-    setValue('sizes', product.sizes || []);
+    setValue('mlQuantity', product.mlQuantity || '');
   }, [product, setValue]);
 
-  const addOrRemoveSize = (size: string) => {
-    const current = sizes || [];
-    if (current.includes(size)) {
-      setValue('sizes', current.filter(s => s !== size));
-    } else {
-      setValue('sizes', [...current, size]);
-    }
-  };
 
-  const addCustomSize = () => {
-    const value = customSize.trim().toUpperCase();
-    if (!value) return;
-    if (!sizes.includes(value)) setValue('sizes', [...sizes, value]);
-    setCustomSize('');
-  };
 
   const removeImage = (url: string) => {
     const updated = images.filter(i => i !== url);
@@ -108,41 +94,72 @@ export default function ProductEditForm({ productId }: { productId: string }) {
     setValue('image', url);
   };
 
-  const uploadHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+    
+    const newFiles = Array.from(files);
+    setFileQueue(prev => [...prev, ...newFiles]);
+    e.target.value = ''; // Reset input
+  };
+
+  // Effect to handle the queue
+  useEffect(() => {
+    if (!currentEditingFile && fileQueue.length > 0) {
+      const nextFile = fileQueue[0];
+      const url = URL.createObjectURL(nextFile);
+      setCurrentEditingFile({ file: nextFile, url });
+    }
+  }, [fileQueue, currentEditingFile]);
+
+  const handleEditorSave = async (croppedBlob: Blob) => {
+    if (!currentEditingFile) return;
+    
     setIsUploading(true);
-    const toastId = toast.loading('Uploading image(s)...');
+    const toastId = toast.loading('Uploading edited image...');
+    
     try {
-      const uploaded: string[] = [];
-      for (const file of Array.from(files)) {
-        const url = await uploadToCloudinary(file, 'products');
-        if (url) uploaded.push(url);
-      }
-      if (uploaded.length) {
-        const newImages = [...images, ...uploaded];
+      // Convert blob to file for uploadToCloudinary
+      const editedFile = new File([croppedBlob], currentEditingFile.file.name, {
+        type: 'image/jpeg',
+      });
+      
+      const url = await uploadToCloudinary(editedFile, 'products');
+      
+      if (url) {
+        const newImages = [...images, url];
         setValue('images', newImages);
         
-        // If current image is empty or the default placeholder, set the first uploaded one as primary
+        // Handle primary image logic
         const currentImage = watch('image');
         const isPlaceholder = !currentImage || 
                              currentImage.includes('No_Image_Available') || 
                              currentImage.includes('cosmetics-composition-with-serum-bottles.jpg');
                              
         if (isPlaceholder) {
-          setValue('image', newImages[0]);
+          setValue('image', url);
         }
         
-        setReviewImages(uploaded);
-        setCurrentReviewIndex(0);
-        setIsReviewOpen(true);
+        setReviewImages(prev => [...prev, url]);
+        if (!isReviewOpen) setIsReviewOpen(true);
       }
-      toast.success(`Uploaded ${uploaded.length} image(s)`, { id: toastId });
+      
+      toast.success('Image uploaded successfully', { id: toastId });
     } catch (err: any) {
       toast.error(err.message || 'Upload failed', { id: toastId });
     } finally {
       setIsUploading(false);
-      e.target.value = '';
+      URL.revokeObjectURL(currentEditingFile.url);
+      setCurrentEditingFile(null);
+      setFileQueue(prev => prev.slice(1));
+    }
+  };
+
+  const handleEditorCancel = () => {
+    if (currentEditingFile) {
+      URL.revokeObjectURL(currentEditingFile.url);
+      setCurrentEditingFile(null);
+      setFileQueue(prev => prev.slice(1));
     }
   };
 
@@ -202,47 +219,14 @@ export default function ProductEditForm({ productId }: { productId: string }) {
           </div>
         </div>
 
-        {/* Sizes */}
+        {/* ML Quantity */}
         <div className='card bg-base-100 shadow-sm'>
           <div className='card-body p-5 space-y-4'>
-            <div className='flex items-center justify-between'>
-              <h2 className='font-semibold tracking-wide text-sm uppercase opacity-70'>Sizes</h2>
-              <div className='flex gap-2'>
-                <input
-                  type='text'
-                  placeholder='Custom size'
-                  value={customSize}
-                  onChange={e => setCustomSize(e.target.value)}
-                  className='input input-bordered input-xs'
-                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCustomSize(); } }}
-                />
-                <button type='button' className='btn btn-xs' onClick={addCustomSize}>Add</button>
-              </div>
+            <h2 className='font-semibold tracking-wide text-sm uppercase opacity-70'>ML Quantity</h2>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+              <Field id='mlQuantity' label='Quantity (e.g. 50ml)' placeholder='e.g. 50ml' />
             </div>
-            <div className='flex flex-wrap gap-2'>
-              {COMMON_SIZES.map(sz => {
-                const active = sizes.includes(sz);
-                return (
-                  <button
-                    key={sz}
-                    type='button'
-                    onClick={() => addOrRemoveSize(sz)}
-                    className={`badge badge-lg cursor-pointer select-none transition ${active ? 'badge-primary' : 'badge-outline'}`}
-                  >{sz}</button>
-                );
-              })}
-              {sizes.filter(s => !COMMON_SIZES.includes(s)).map(sz => (
-                <button
-                  key={sz}
-                  type='button'
-                  onClick={() => addOrRemoveSize(sz)}
-                  className='badge badge-lg badge-accent cursor-pointer'
-                  title='Custom size'
-                >{sz}</button>
-              ))}
-            </div>
-            <input type='hidden' {...register('sizes')} />
-            {sizes.length === 0 && <p className='text-[11px] opacity-70'>Select at least one size (optional but recommended).</p>}
+            <p className='text-[11px] opacity-70'>Specify the product volume in ml or other appropriate units.</p>
           </div>
         </div>
 
@@ -398,6 +382,14 @@ export default function ProductEditForm({ productId }: { productId: string }) {
             </div>
           </div>
         </div>
+      )}
+
+      {currentEditingFile && (
+        <ImageEditorModal
+          image={currentEditingFile.url}
+          onSave={handleEditorSave}
+          onCancel={handleEditorCancel}
+        />
       )}
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import confetti from 'canvas-confetti';
 
 import { formatPrice } from '@/lib/utils';
 
@@ -51,6 +52,36 @@ const CouponSection = ({
 
       if (data.valid) {
         onCouponApplied(data);
+        
+        // Spectacular "Pop Up Party" Multi-Burst Confetti
+        const duration = 1.5 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+        const interval: any = setInterval(function() {
+          const timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval);
+          }
+
+          const particleCount = 50 * (timeLeft / duration);
+          confetti({ 
+            ...defaults, 
+            particleCount, 
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            colors: ['#904917', '#725a39', '#ae602d', '#d4c3b9']
+          });
+          confetti({ 
+            ...defaults, 
+            particleCount, 
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            colors: ['#904917', '#725a39', '#ae602d', '#d4c3b9']
+          });
+        }, 250);
+
         setCouponCode('');
         setShowInput(false);
         toast.success(data.message);
@@ -80,11 +111,15 @@ const CouponSection = ({
   const getDiscountText = (coupon: any) => {
     if (!coupon) return '';
     
-    switch (coupon.type) {
+    // Check both flat and nested structure to be safe
+    const type = coupon.type;
+    const value = coupon.value;
+    
+    switch (type) {
       case 'percentage':
-        return `${coupon.value}% OFF`;
+        return `${value}% OFF`;
       case 'fixed_amount':
-        return `${formatPrice(coupon.value)} OFF`;
+        return `${formatPrice(value)} OFF`;
       case 'free_shipping':
         return 'FREE SHIPPING';
       default:
@@ -116,17 +151,17 @@ const CouponSection = ({
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="badge badge-success badge-sm sm:badge-md">
-                    {appliedCoupon.coupon.code}
+                    {appliedCoupon.code}
                   </span>
                   <span className="text-sm sm:text-base font-medium">
-                    {getDiscountText(appliedCoupon.coupon)}
+                    {getDiscountText(appliedCoupon)}
                   </span>
                 </div>
                 <div className="text-xs sm:text-sm text-success">
                   <span className="font-semibold">
                     You saved {formatPrice(appliedCoupon.discountAmount)}!
                   </span>
-                  <div className="opacity-80">{appliedCoupon.coupon.name}</div>
+                  <div className="opacity-80">{appliedCoupon.name}</div>
                 </div>
               </div>
               <button
@@ -207,10 +242,10 @@ const CouponSection = ({
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>Original Total:</span>
-                <span>{formatPrice(appliedCoupon.coupon.originalOrderValue || orderValue)}</span>
+                <span>{formatPrice(appliedCoupon.originalOrderValue || orderValue)}</span>
               </div>
               <div className="flex justify-between text-success">
-                <span>Discount ({appliedCoupon.coupon.code}):</span>
+                <span>Discount ({appliedCoupon.code}):</span>
                 <span>-{formatPrice(appliedCoupon.discountAmount)}</span>
               </div>
               <div className="flex justify-between font-bold text-base border-t pt-2">

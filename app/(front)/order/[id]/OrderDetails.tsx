@@ -291,7 +291,7 @@ const OrderDetails = ({ orderId, razorpayKeyId }: IOrderDetails) => {
                         <div className="flex-1 min-w-0">
                           <h4 className="font-headline text-2xl text-on-surface italic truncate">{item.name}</h4>
                           <p className="text-[11px] text-secondary font-bold uppercase tracking-widest mt-1">
-                            {item.qty} Product{item.qty > 1 ? 's' : ''} • {item.color && `${item.color} • `}{item.size}
+                            {item.qty} Product{item.qty > 1 ? 's' : ''} • {item.color && `${item.color} • `}{item.mlQuantity}
                           </p>
                         </div>
                         <div className="text-right">

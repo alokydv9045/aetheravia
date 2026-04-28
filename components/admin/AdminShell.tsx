@@ -11,21 +11,12 @@ function mapSegmentToActive(seg: string | null): string {
   
   // Handle nested segments like orders/advanced/unified
   if (normalized === 'orders') {
-    // Check if we're on specific orders pages
-    if (typeof window !== 'undefined') {
-      const pathname = window.location.pathname;
-      if (pathname.includes('/orders/unified')) {
-        return 'orders-unified';
-      } else if (pathname.includes('/orders/advanced')) {
-        return 'orders-advanced';
-      }
-    }
-    return 'orders-advanced'; // Default to advanced orders
+    return 'orders';
   }
   
   const allowed = new Set([
-    'dashboard', 'analytics', 'orders-advanced', 'orders-unified', 'products', 'coupons', 'users',
-    'carousel', 'testimonials', 'loyalty', 'referral', 'personalization',
+    'dashboard', 'analytics', 'orders', 'products', 'coupons', 'users',
+    'testimonials', 'loyalty', 'referral', 'personalization',
     'offers', 'test-notifications'
   ]);
   return allowed.has(normalized) ? normalized : 'dashboard';

@@ -105,10 +105,10 @@ export function getOrganizationSchema() {
     image: siteConfig.ogImage,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Near Pal Petrol pump, Bisalpur',
+      streetAddress: '46, Mohalla Mohammad Wasil Near Hadri Masjib',
       addressLocality: 'Pilibhit',
       addressRegion: 'Uttar Pradesh',
-      postalCode: '262201',
+      postalCode: '262001',
       addressCountry: 'IN',
     },
     contactPoint: {

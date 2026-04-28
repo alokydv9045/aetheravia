@@ -91,11 +91,8 @@ const orderSchema = new mongoose.Schema(
     
     // Coupon Information
     coupon: {
-      code: String,
-      name: String,
-      type: String,
-      discountAmount: { type: Number, default: 0 },
-      originalOrderValue: Number, // Order value before discount
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
     },
     
     isPaid: { type: Boolean, required: true, default: false },
@@ -246,6 +243,11 @@ orderSchema.methods.getNextStatus = function() {
 // Create model with better error handling
 let OrderModel: mongoose.Model<any>;
 
+// Force re-registration in development to ensure schema changes are picked up
+if (process.env.NODE_ENV === 'development' && mongoose.models && mongoose.models.Order) {
+  delete (mongoose.models as any).Order;
+}
+
 if (mongoose.models && mongoose.models.Order) {
   OrderModel = mongoose.models.Order;
 } else {
@@ -336,7 +338,7 @@ export type OrderItem = {
   image: string;
   price: number;
   color: string;
-  size: string;
+  mlQuantity: string;
 };
 
 export type ShippingAddress = {

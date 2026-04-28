@@ -39,8 +39,7 @@ const AdminLayout = ({
     {
       title: 'Commerce Hub',
       items: [
-        { key: 'orders-advanced', label: 'Advanced Orders', href: '/admin/orders/advanced', icon: 'assignment' },
-        { key: 'orders-unified', label: 'Unified Orders', href: '/admin/orders/unified', icon: 'shopping_cart' },
+        { key: 'orders', label: 'Orders', href: '/admin/orders/unified', icon: 'shopping_cart' },
         { key: 'products', label: 'Products', href: '/admin/products', icon: 'spa' },
       ]
     },
@@ -49,7 +48,6 @@ const AdminLayout = ({
       items: [
         { key: 'offers', label: 'Offers', href: '/admin/offers', icon: 'local_offer' },
         { key: 'coupons', label: 'Coupons', href: '/admin/coupons', icon: 'confirmation_number' },
-        { key: 'carousel', label: 'Banners', href: '/admin/carousel', icon: 'image' },
       ]
     },
     {
