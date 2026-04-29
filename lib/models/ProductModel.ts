@@ -16,6 +16,11 @@ export type Product = {
   countInStock: number;
   colors?: string[];
   mlQuantity?: string;
+  activeOffer?: {
+    title: string;
+    discountPercentage: number;
+    promoCode?: string;
+  };
 };
 
 const productSchema = new mongoose.Schema(

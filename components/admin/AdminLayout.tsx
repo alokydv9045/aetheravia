@@ -54,7 +54,6 @@ const AdminLayout = ({
       title: 'Customer Vault',
       items: [
         { key: 'users', label: 'Users', href: '/admin/users', icon: 'group' },
-        { key: 'loyalty', label: 'Loyalty', href: '/admin/loyalty', icon: 'workspace_premium' },
         { key: 'referral', label: 'Referral', href: '/admin/referral', icon: 'share' },
         { key: 'personalization', label: 'Personalization', href: '/admin/personalization', icon: 'palette' },
       ]

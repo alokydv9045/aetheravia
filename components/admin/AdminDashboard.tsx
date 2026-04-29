@@ -53,9 +53,8 @@ export default function AdminDashboard() {
   
   const keyPerformance = useMemo(() => ([
     { key: 'aov', title: 'Average Order Value', icon: TrendingUp, color: 'text-primary', value: avgOrderValueTemp ? `₹${avgOrderValueTemp.toLocaleString('en-IN')}` : '—', desc: 'Efficiency measure' },
-    { key: 'engagement', title: 'Loyalty Engagement', icon: Target, color: 'text-[#C5A059]', value: safeStats.totalUsers ? `${Math.round((safeStats.loyaltyUsers / safeStats.totalUsers) * 100)}%` : '0%', desc: 'Brand affinity' },
     { key: 'referrals', title: 'Referral Pipeline', icon: Share2, color: 'text-[#2D4B3C]', value: safeStats.totalUsers ? `${Math.round((safeStats.referralCount / safeStats.totalUsers) * 100)}%` : '0%', desc: 'Organic growth' }
-  ]), [avgOrderValueTemp, safeStats.loyaltyUsers, safeStats.totalUsers, safeStats.referralCount]);
+  ]), [avgOrderValueTemp, safeStats.totalUsers, safeStats.referralCount]);
 
 
   /* ================= Skeleton / Error States ================= */

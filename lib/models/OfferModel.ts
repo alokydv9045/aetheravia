@@ -7,8 +7,14 @@ export interface IOffer extends Document {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
-  products?: mongoose.Types.ObjectId[]; // For flash sales
+  products?: mongoose.Types.ObjectId[]; // Selected products for this offer
+  discountPercentage?: number; // E.g. 30
   imageUrl?: string;
+  linkUrl?: string;
+  priority: number;
+  content?: string;
+  promoCode?: string;
+  targetAudience?: 'all' | 'new' | 'vip';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,7 +28,13 @@ const OfferSchema = new Schema<IOffer>(
     endDate: { type: Date, required: true },
     isActive: { type: Boolean, default: true },
     products: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    discountPercentage: { type: Number, default: 0 },
     imageUrl: { type: String },
+    linkUrl: { type: String },
+    priority: { type: Number, default: 1 },
+    content: { type: String },
+    promoCode: { type: String },
+    targetAudience: { type: String, enum: ['all', 'new', 'vip'], default: 'all' },
   },
   { timestamps: true }
 );

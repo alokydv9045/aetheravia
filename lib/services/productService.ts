@@ -1,30 +1,63 @@
 import { cache } from 'react';
 import dbConnect from '@/lib/dbConnect';
 import ProductModel, { Product } from '@/lib/models/ProductModel';
+import OfferModel from '@/lib/models/OfferModel';
+
+export const enhanceWithOffers = async (products: any[]): Promise<Product[]> => {
+  const now = new Date();
+  const activeOffers = await OfferModel.find({
+    isActive: true,
+    startDate: { $lte: now },
+    endDate: { $gte: now }
+  }).lean();
+
+  return products.map(product => {
+    const p = { ...product };
+    // Find the offer with highest discount that applies to this product
+    const applicableOffers = activeOffers.filter(offer => 
+      offer.products?.some((id: any) => id.toString() === product._id.toString())
+    );
+
+    if (applicableOffers.length > 0) {
+      const bestOffer = applicableOffers.reduce((prev, current) => 
+        (prev.discountPercentage || 0) > (current.discountPercentage || 0) ? prev : current
+      );
+      
+      p.activeOffer = {
+        title: bestOffer.title,
+        discountPercentage: bestOffer.discountPercentage || 0,
+        promoCode: bestOffer.promoCode,
+      };
+    }
+    return p as Product;
+  });
+};
 
 const getLatest = cache(async (): Promise<Product[]> => {
   await dbConnect();
   const products = await ProductModel.find({}).sort({ createdAt: -1 }).limit(8).lean();
-  return products as unknown as Product[];
+  return enhanceWithOffers(products);
 });
 
 const getFeatured = cache(async (): Promise<Product[]> => {
   await dbConnect();
   const products = await ProductModel.find({ isFeatured: true }).limit(3).lean();
-  return products as unknown as Product[];
+  return enhanceWithOffers(products);
 });
 
 const getBySlug = cache(async (slug: string): Promise<Product | null> => {
   await dbConnect();
   const decodedSlug = decodeURIComponent(slug);
   const product = await ProductModel.findOne({ slug: decodedSlug }).lean();
-  return product as unknown as Product | null;
+  if (!product) return null;
+  const enhanced = await enhanceWithOffers([product]);
+  return enhanced[0];
 });
 
 const getTopRated = cache(async (): Promise<Product[]> => {
   await dbConnect();
   const products = await ProductModel.find({}).sort({ rating: -1 }).limit(8).lean();
-  return products as unknown as Product[];
+  return enhanceWithOffers(products);
 });
 
 const getByQuery = cache(
@@ -93,6 +126,8 @@ const getByQuery = cache(
       .limit(pageSize)
       .lean();
 
+    const enhancedProducts = await enhanceWithOffers(products);
+
     const countProducts = await ProductModel.countDocuments({
       ...queryFilter,
       ...categoryFilter,
@@ -103,7 +138,7 @@ const getByQuery = cache(
     const categories = await ProductModel.find().distinct('category');
 
     return {
-      products: products as unknown as Product[],
+      products: enhancedProducts,
       countProducts,
       page,
       pages: Math.ceil(countProducts / pageSize),
