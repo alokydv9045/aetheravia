@@ -26,8 +26,8 @@ const faqList = [
   },
   {
     num: "05",
-    question: "International shipping and handling.",
-    answer: "Aethravia ships globally via carbon-neutral logistics. Due to the delicate nature of artisanal batches, please allow 7–12 days for international curation and delivery."
+    question: "Do you ship internationally?",
+    answer: "Currently, Aethravia only delivers within India to ensure the freshness and integrity of our artisanal formulations. We do not offer international shipping at this time."
   }
 ];
 
@@ -116,7 +116,7 @@ export default function FAQPage() {
             <p className="text-on-surface-variant mb-10 text-lg">
               Our curators are available to guide you through ingredient profiles, skin-typing, and traditional ritual application.
             </p>
-            <Link href="mailto:heukcare@gmail.com">
+            <Link href="mailto:aethravia@gmail.com">
               <button className="bg-primary text-on-primary px-10 py-5 rounded-lg font-label uppercase tracking-widest text-sm hover:bg-primary-container transition-all hover:scale-[1.02] active:scale-95">
                 Connect with a Curator
               </button>

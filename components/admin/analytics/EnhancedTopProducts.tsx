@@ -85,9 +85,9 @@ export default function EnhancedTopProducts({ topProducts, isLoading }: Props) {
       return (
         <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
           <p className="font-semibold text-gray-900 mb-2">{data.fullName}</p>
-          <p className="text-sm text-gray-600">Quantity: <span className="font-semibold">{data.totalQuantity}</span></p>
-          <p className="text-sm text-gray-600">Revenue: <span className="font-semibold">₹{data.totalRevenue.toLocaleString()}</span></p>
-          <p className="text-sm text-gray-600">Orders: <span className="font-semibold">{data.totalOrders}</span></p>
+          <p className="text-sm text-gray-600">Quantity: <span className="font-semibold">{data.totalQuantity || 0}</span></p>
+          <p className="text-sm text-gray-600">Revenue: <span className="font-semibold">₹{(data.totalRevenue || 0).toLocaleString()}</span></p>
+          <p className="text-sm text-gray-600">Orders: <span className="font-semibold">{data.totalOrders || 0}</span></p>
         </div>
       );
     }
@@ -155,7 +155,7 @@ export default function EnhancedTopProducts({ topProducts, isLoading }: Props) {
 
             return (
               <div
-                key={product._id}
+                key={product._id || `product-${index}`}
                 className={`flex items-center gap-4 p-3 rounded-lg transition-all cursor-pointer ${
                   isHovered ? 'shadow-lg scale-105' : 'shadow'
                 }`}
@@ -169,7 +169,7 @@ export default function EnhancedTopProducts({ topProducts, isLoading }: Props) {
                 {/* Product Image */}
                 <div className="flex-shrink-0">
                   {product.image ? (
-                    <div className="relative w-16 h-16 rounded-lg overflow-hidden">
+                    <div className="relative w-16 h-16 rounded-lg overflow-hidden" style={{ position: 'relative' }}>
                       <Image
                         src={product.image}
                         alt={product.name}
@@ -192,14 +192,14 @@ export default function EnhancedTopProducts({ topProducts, isLoading }: Props) {
                   <div className="flex gap-4 text-sm text-gray-600 mt-1">
                     <span>Qty: {product.totalQuantity}</span>
                     <span>Orders: {product.totalOrders}</span>
-                    <span>Avg: {product.averageOrderQuantity.toFixed(1)}</span>
+                    <span>Avg: {(product.averageOrderQuantity || 0).toFixed(1)}</span>
                   </div>
                 </div>
 
                 {/* Revenue */}
                 <div className="text-right flex-shrink-0">
                   <p className="text-xl font-bold" style={{ color: bgColor }}>
-                    ₹{product.totalRevenue.toLocaleString()}
+                    ₹{(product.totalRevenue || 0).toLocaleString()}
                   </p>
                   <p className="text-xs text-gray-600">Revenue</p>
                 </div>
@@ -223,19 +223,19 @@ export default function EnhancedTopProducts({ topProducts, isLoading }: Props) {
           <div className="stat p-3 bg-blue-50 rounded-lg">
             <div className="stat-title text-xs">Total Units</div>
             <div className="stat-value text-xl text-blue-600">
-              {sortedProducts.reduce((sum, p) => sum + p.totalQuantity, 0)}
+              {sortedProducts.reduce((sum, p) => sum + (p.totalQuantity || 0), 0)}
             </div>
           </div>
           <div className="stat p-3 bg-green-50 rounded-lg">
             <div className="stat-title text-xs">Total Revenue</div>
             <div className="stat-value text-xl text-green-600">
-              ₹{sortedProducts.reduce((sum, p) => sum + p.totalRevenue, 0).toLocaleString()}
+              ₹{sortedProducts.reduce((sum, p) => sum + (p.totalRevenue || 0), 0).toLocaleString()}
             </div>
           </div>
           <div className="stat p-3 bg-purple-50 rounded-lg">
             <div className="stat-title text-xs">Total Orders</div>
             <div className="stat-value text-xl text-purple-600">
-              {sortedProducts.reduce((sum, p) => sum + p.totalOrders, 0)}
+              {sortedProducts.reduce((sum, p) => sum + (p.totalOrders || 0), 0)}
             </div>
           </div>
         </div>

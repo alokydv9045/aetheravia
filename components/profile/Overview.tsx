@@ -32,7 +32,7 @@ type OrderLite = {
   totalPrice: number;
   isPaid: boolean;
   isDelivered: boolean;
-  orderItems: Array<{
+  items: Array<{
     name: string;
     image: string;
     slug: string;
@@ -207,18 +207,18 @@ export default function Overview({ user, onUpdateAvatar, onSaveAbout }: Props) {
               </div>
             </div>
 
-            {latestOrder && latestOrder.orderItems?.[0] && (
+            {latestOrder && latestOrder.items?.[0] && (
               <div className="mt-10 flex items-center gap-6 p-5 bg-white/50 backdrop-blur-sm rounded-2xl border border-primary/5 group">
                 <div className="relative w-20 h-20 overflow-hidden rounded-xl bg-surface-container-high">
                   <Image 
-                    src={latestOrder.orderItems[0].image} 
-                    alt={latestOrder.orderItems[0].name} 
+                    src={latestOrder.items[0].image} 
+                    alt={latestOrder.items[0].name} 
                     fill 
                     className="object-cover group-hover:scale-110 transition-transform duration-500" 
                   />
                 </div>
                 <div className="flex-1">
-                  <p className="font-headline font-bold text-on-surface text-lg">{latestOrder.orderItems[0].name}</p>
+                  <p className="font-headline font-bold text-on-surface text-lg">{latestOrder.items[0].name}</p>
                   <p className="text-xs text-secondary mt-1 flex items-center gap-2">
                     <Clock size={12} />
                     Expected arrival: {new Date(new Date(latestOrder.createdAt).getTime() + 5*24*60*60*1000).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}
@@ -250,14 +250,14 @@ export default function Overview({ user, onUpdateAvatar, onSaveAbout }: Props) {
                   <div className="flex gap-5 mb-6">
                     <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-surface-container-low shadow-inner">
                       <Image 
-                        src={order.orderItems[0].image} 
-                        alt={order.orderItems[0].name} 
+                        src={order.items[0].image} 
+                        alt={order.items[0].name} 
                         fill 
                         className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
                       />
                     </div>
                     <div className="flex-1 pt-1">
-                      <h4 className="font-headline font-bold text-on-surface leading-snug group-hover:text-primary transition-colors">{order.orderItems[0].name}</h4>
+                      <h4 className="font-headline font-bold text-on-surface leading-snug group-hover:text-primary transition-colors">{order.items[0].name}</h4>
                       <p className="text-[10px] text-secondary mt-1.5 italic font-medium uppercase tracking-widest opacity-60">Frequent Ritual</p>
                       <p className="text-xs font-bold text-primary mt-3 flex items-center gap-1.5">
                         <History size={12} />
@@ -266,7 +266,7 @@ export default function Overview({ user, onUpdateAvatar, onSaveAbout }: Props) {
                     </div>
                   </div>
                   <div className="flex gap-3">
-                    <Link href={`/product/${order.orderItems[0].slug}`} className="flex-1 text-[10px] font-bold uppercase tracking-[0.2em] py-3 text-center border border-primary/10 rounded-xl hover:bg-primary/5 transition-colors">
+                    <Link href={`/product/${order.items[0].slug}`} className="flex-1 text-[10px] font-bold uppercase tracking-[0.2em] py-3 text-center border border-primary/10 rounded-xl hover:bg-primary/5 transition-colors">
                       View Ritual
                     </Link>
                     <button className="flex-1 text-[10px] font-bold uppercase tracking-[0.2em] py-3 bg-primary/5 text-primary rounded-xl hover:bg-primary hover:text-on-primary transition-all">
@@ -400,7 +400,7 @@ export default function Overview({ user, onUpdateAvatar, onSaveAbout }: Props) {
             </div>
             <div className="space-y-3">
               {Array.isArray(orders) && (
-                orders.flatMap(o => o.orderItems || []).slice(0, 3).map((item, i) => (
+                orders.flatMap(o => o.items || []).slice(0, 3).map((item, i) => (
                   <div key={i} className="flex items-center gap-3 group p-2 hover:bg-primary/5 rounded-xl transition-all cursor-pointer">
                     <div className="relative w-12 h-12 bg-surface-container-high rounded-lg overflow-hidden shadow-inner">
                       <Image 

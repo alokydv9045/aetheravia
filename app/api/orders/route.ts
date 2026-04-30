@@ -5,21 +5,23 @@ import dbConnect from "@/lib/dbConnect";
 import CouponModel from "@/lib/models/CouponModel";
 import OrderModel, { OrderItem } from "@/lib/models/OrderModel";
 import ProductModel from "@/lib/models/ProductModel";
+import OfferModel from "@/lib/models/OfferModel";
+import SettingModel from "@/lib/models/SettingModel";
 import { emitAdminEvent } from "@/lib/eventBus";
 import {
   sanitizeRequestBody,
   validateRequiredFields,
   validateNumeric,
 } from "@/lib/security";
-import { round2 } from "@/lib/utils";
+import { round2 } from "@/lib/utils"; 
 
 // Utility: calculate prices
-const calcPrices = (orderItems: OrderItem[]) => {
+const calcPrices = (orderItems: OrderItem[], shippingCharge: number = 99) => {
   const itemsPrice = round2(
     orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
-  // Shipping Policy: Free above 2000, else 200
-  const shippingPrice = round2(itemsPrice > 2000 ? 0 : 200);
+  // Shipping Policy: Dynamic from settings
+  const shippingPrice = round2(orderItems.length > 0 ? shippingCharge : 0);
   // Tax Policy: 18%
   const taxPrice = round2(Number(0.18 * itemsPrice));
   const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
@@ -55,6 +57,10 @@ export const POST = auth(async (req: any) => {
   // Helper to perform the actual order creation logic
   const performOrderCreation = async (currentSession: mongoose.ClientSession | null) => {
     
+    // Fetch global shipping charge
+    const shippingSetting = await SettingModel.findOne({ key: 'shipping_charge' }).session(currentSession);
+    const dbShippingCharge = shippingSetting ? Number(shippingSetting.value) : 99;
+
     // Validate required fields
     const requiredFieldsCheck = validateRequiredFields(payload, [
       "items",
@@ -87,6 +93,14 @@ export const POST = auth(async (req: any) => {
     const dbOrderItems: any[] = [];
     const stockUpdates: any[] = [];
 
+    // Fetch active offers to apply discounts during order creation
+    const now = new Date();
+    const activeOffers = await OfferModel.find({
+      isActive: true,
+      startDate: { $lte: now },
+      endDate: { $gte: now }
+    }).session(currentSession).lean();
+
     for (const x of payload.items as any[]) {
       const p = productBySlug.get(x.slug);
       if (!p) {
@@ -102,13 +116,26 @@ export const POST = auth(async (req: any) => {
         );
       }
 
-      // Prepare order item with all metadata from client + verified price from DB
+      // Calculate the best applicable offer price
+      let actualPrice = p.price;
+      const applicableOffers = activeOffers.filter(offer => 
+        offer.products?.some((id: any) => id.toString() === p._id.toString())
+      );
+
+      if (applicableOffers.length > 0) {
+        const bestOffer = applicableOffers.reduce((prev, current) => 
+          (prev.discountPercentage || 0) > (current.discountPercentage || 0) ? prev : current
+        );
+        actualPrice = p.price * (1 - (bestOffer.discountPercentage || 0) / 100);
+      }
+
+      // Prepare order item with promotional price if applicable
       dbOrderItems.push({
         name: x.name || p.name,
         slug: x.slug,
         qty: qty,
         image: x.image,
-        price: p.price, // Trust DB price
+        price: round2(actualPrice), // Use discounted price from offers
         color: x.color || 'Standard',
         size: x.size || 'Regular',
         product: p._id,
@@ -123,7 +150,7 @@ export const POST = auth(async (req: any) => {
       });
     }
 
-    const { itemsPrice, taxPrice, shippingPrice, totalPrice } = calcPrices(dbOrderItems);
+    const { itemsPrice, taxPrice, shippingPrice, totalPrice } = calcPrices(dbOrderItems, dbShippingCharge);
     
     let finalTotalPrice = totalPrice;
     let couponInfo = null;
@@ -156,12 +183,18 @@ export const POST = auth(async (req: any) => {
       }
     }
 
+    const isCOD = payload.paymentMethod === 'cod';
+    const advanceAmount = isCOD ? Math.round(finalTotalPrice * 0.2) : finalTotalPrice;
+    const dueAmount = isCOD ? finalTotalPrice - advanceAmount : 0;
+
     const newOrderData = {
       items: dbOrderItems,
       itemsPrice,
       taxPrice,
       shippingPrice,
       totalPrice: finalTotalPrice,
+      advanceAmount,
+      dueAmount,
       coupon: couponInfo,
       shippingAddress: payload.shippingAddress,
       paymentMethod: payload.paymentMethod,

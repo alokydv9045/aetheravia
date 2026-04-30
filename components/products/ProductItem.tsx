@@ -19,10 +19,11 @@ const ProductItem = ({ product }: { product: Product }) => {
   
   const isWishlisted = exists(product.slug);
   
-  // Offer Logic
-  const hasOffer = product.activeOffer && product.activeOffer.discountPercentage > 0;
+  // Offer Logic - Explicitly calculate to ensure it's never undefined
+  const activeOffer = product.activeOffer;
+  const hasOffer = !!(activeOffer && activeOffer.discountPercentage && activeOffer.discountPercentage > 0);
   const discountedPrice = hasOffer 
-    ? product.price * (1 - product.activeOffer!.discountPercentage / 100) 
+    ? Math.round(product.price * (1 - activeOffer!.discountPercentage / 100)) 
     : product.price;
 
   const addItemHandler = () => {
@@ -31,7 +32,7 @@ const ProductItem = ({ product }: { product: Product }) => {
       price: discountedPrice, // Ensure cart gets the discounted price
       qty: 0,
       color: '',
-      size: '',
+      mlQuantity: product.mlQuantity || '',
     });
     toast.success('Added to your bag', {
       style: {
@@ -54,7 +55,7 @@ const ProductItem = ({ product }: { product: Product }) => {
         price: discountedPrice,
         qty: 0,
         color: '',
-        size: '',
+        mlQuantity: product.mlQuantity || '',
       });
     }
     router.refresh();
@@ -68,7 +69,7 @@ const ProductItem = ({ product }: { product: Product }) => {
   return (
     <article className="group flex flex-col w-full snap-start relative">
       <div className="relative bg-[#f6f3ee] rounded-xl overflow-hidden shadow-[0_8px_32px_0_rgba(28,28,25,0.05)] mb-6 aspect-[4/5] z-0">
-        <Link href={`/product/${product.slug}`} className="block relative h-full w-full">
+        <Link href={`/product/${product.slug}`} className="block relative h-full w-full" style={{ position: 'relative' }}>
           <Image
             src={product.image || '/images/placeholder.jpg'}
             alt={product.name}
@@ -135,19 +136,21 @@ const ProductItem = ({ product }: { product: Product }) => {
             </div>
           </div>
           <div className="text-right shrink-0">
-            <span className="block font-body text-xl font-bold text-primary">
-              {formatPrice(discountedPrice)}
-            </span>
-            {hasOffer && (
-              <div className="flex flex-col items-end">
-                <span className="font-body text-[11px] text-secondary/40 line-through decoration-[1.5px]">
-                  {formatPrice(product.price)}
-                </span>
-                <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter mt-0.5">
-                  Save {product.activeOffer?.discountPercentage}%
-                </span>
-              </div>
-            )}
+            <div className="flex flex-col items-end gap-1">
+              <span className="block font-body text-2xl font-bold leading-none text-primary">
+                {formatPrice(discountedPrice)}
+              </span>
+              {hasOffer && (
+                <>
+                  <span className="font-body text-[13px] text-secondary/40 line-through decoration-secondary/30 decoration-[1.5px]">
+                    {formatPrice(product.price)}
+                  </span>
+                  <div className="bg-green-100 text-green-700 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest mt-1">
+                    {activeOffer?.discountPercentage}% OFF
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

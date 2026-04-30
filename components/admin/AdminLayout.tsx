@@ -8,6 +8,8 @@ import { useSelectedLayoutSegment, useRouter } from 'next/navigation';
 import AdminRealtimeListener from './AdminRealtimeListener';
 import Menu from '@/components/header/Menu';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
+import useSWRMutation from 'swr/mutation';
 
 const AdminLayout = ({
   activeItem = 'dashboard',
@@ -19,6 +21,22 @@ const AdminLayout = ({
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
+
+  const { trigger: createProduct, isMutating: isCreating } = useSWRMutation(
+    `/api/admin/products`,
+    async (url) => {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      if (!res.ok) return toast.error(data.message);
+      toast.success('Product created successfully');
+      router.push(`/admin/products/${data.product._id}`);
+      if (isMobile) setSidebarOpen(false);
+    },
+  );
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -41,6 +59,7 @@ const AdminLayout = ({
       items: [
         { key: 'orders', label: 'Orders', href: '/admin/orders/unified', icon: 'shopping_cart' },
         { key: 'products', label: 'Products', href: '/admin/products', icon: 'spa' },
+        { key: 'settings', label: 'Shipping Rates', href: '/admin/settings', icon: 'local_shipping' },
       ]
     },
     {
@@ -66,7 +85,7 @@ const AdminLayout = ({
     }
   ];
 
-  const router = useRouter();
+
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -130,12 +149,14 @@ const AdminLayout = ({
                 <p className="text-xs font-bold text-on-surface">Connected</p>
               </div>
             </div>
-            <Link href="/admin/products/new">
-              <button className="w-full bg-primary text-on-primary py-4 px-6 rounded-xl font-label font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:bg-primary-container transition-all active:scale-95 flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined text-sm">add</span>
-                Add New Product
-              </button>
-            </Link>
+            <button 
+              onClick={() => createProduct()} 
+              disabled={isCreating}
+              className="w-full bg-primary text-on-primary py-4 px-6 rounded-xl font-label font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:bg-primary-container transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isCreating ? <span className="loading loading-spinner loading-xs"></span> : <span className="material-symbols-outlined text-sm">add</span>}
+              Add New Product
+            </button>
           </div>
         </div>
       </aside>
@@ -177,8 +198,8 @@ const AdminLayout = ({
             
             <button className="flex items-center gap-3 group pl-2 py-1 pr-1 hover:bg-surface-container rounded-full transition-all">
               <div className="w-9 h-9 rounded-full bg-secondary-container p-0.5 border border-primary/10 shadow-sm ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
-                {session?.user?.avatar ? (
-                  <img src={session.user.avatar} className="w-full h-full object-cover rounded-full" alt="Admin" />
+                {session?.user?.image ? (
+                  <img src={session.user.image} className="w-full h-full object-cover rounded-full" alt="Admin" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-primary text-on-primary rounded-full font-headline italic text-xs font-bold">
                     {session?.user?.name?.[0] || 'A'}

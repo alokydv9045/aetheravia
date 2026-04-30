@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 export default function HeroModern() {
   return (
     <section className="relative h-[calc(100vh-4rem)] min-h-[600px] flex items-center overflow-hidden bg-surface">
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0" style={{ position: 'absolute' }}>
         <Image 
           src="/images/hero_hd.png"
           alt="Artisanal Heritage Skincare Textures"

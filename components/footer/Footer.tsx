@@ -18,7 +18,7 @@ const Footer = () => {
           {/* Column 1: Brand Story & Socials */}
           <div className="space-y-8">
             <Link href="/" className="flex items-center space-x-3 group">
-              <div className="relative w-12 h-12">
+              <div className="relative w-12 h-12" style={{ position: 'relative' }}>
                 <Image
                   src="/images/logo_mark.png"
                   alt="Aetheravia Logo"

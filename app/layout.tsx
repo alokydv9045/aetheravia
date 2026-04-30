@@ -11,12 +11,14 @@ const inter = Inter({
   subsets: ['latin'], 
   display: 'swap',
   variable: '--font-inter',
+  preload: false,
 });
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-jakarta',
+  preload: false,
 });
 
 const vietnam = Be_Vietnam_Pro({
@@ -24,6 +26,7 @@ const vietnam = Be_Vietnam_Pro({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-vietnam',
+  preload: false,
 });
 
 export const metadata: Metadata = constructMetadata();

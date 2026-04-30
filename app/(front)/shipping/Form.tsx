@@ -58,6 +58,7 @@ const Form = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<ShippingAddress>({
     defaultValues: {
@@ -80,6 +81,46 @@ const Form = () => {
       setValue('country', shippingAddress.country || 'India');
     }
   }, [setValue, shippingAddress]);
+
+  // PIN Code Auto-lookup logic
+  const watchedPostalCode = watch('postalCode');
+  const [isPincodeLoading, setIsPincodeLoading] = useState(false);
+
+  useEffect(() => {
+    const lookupPincode = async (pincode: string) => {
+      if (pincode && pincode.length === 6 && /^[1-9][0-9]{5}$/.test(pincode)) {
+        setIsPincodeLoading(true);
+        try {
+          const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+          const data = await res.json();
+          
+          if (data && data[0].Status === 'Success' && data[0].PostOffice) {
+            const details = data[0].PostOffice[0];
+            setValue('city', details.District, { shouldValidate: true });
+            setValue('state', details.State, { shouldValidate: true });
+            toast.success(`Location found: ${details.District}, ${details.State}`, {
+              id: 'pincode-lookup',
+              duration: 2000,
+            });
+          } else if (data && data[0].Status === 'Error') {
+            toast.error('Invalid PIN code. Please enter a correct PIN.', {
+              id: 'pincode-lookup',
+            });
+          }
+        } catch (error) {
+          console.error('Pincode lookup failed:', error);
+        } finally {
+          setIsPincodeLoading(false);
+        }
+      }
+    };
+
+    const timer = setTimeout(() => {
+      lookupPincode(watchedPostalCode);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [watchedPostalCode, setValue]);
 
   const selected = useMemo(() => {
     return (addresses || []).find((a) => a._id === selectedId);
@@ -122,9 +163,20 @@ const Form = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-surface-container-low p-8 md:p-12 rounded-lg border border-outline-variant/10 shadow-2xl shadow-primary/5"
         >
-          <div className="mb-12 text-center md:text-left">
-            <h1 className="font-headline text-4xl text-primary italic mb-4">Shipping Address</h1>
-            <p className="text-secondary font-body tracking-wide opacity-70">Where should we send your items?</p>
+          <div className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="max-w-xl">
+              <h1 className="font-headline text-4xl text-primary italic mb-4">Shipping Address</h1>
+              <p className="text-secondary font-body tracking-wide opacity-70">Where should we send your items?</p>
+            </div>
+            <div className="bg-primary/5 border border-primary/10 px-6 py-4 rounded-xl flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <span className="material-symbols-outlined text-lg">local_shipping</span>
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-primary">Domestic Delivery</p>
+                <p className="text-[11px] text-secondary/70 italic font-medium">Currently, we do not ship international.</p>
+              </div>
+            </div>
           </div>
 
           {addresses && addresses.length > 0 && (
@@ -212,20 +264,27 @@ const Form = () => {
                 {errors.state && <p className="text-error text-[10px] uppercase font-bold tracking-widest mt-1">{errors.state.message}</p>}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <label className="text-[10px] font-label text-secondary uppercase tracking-[0.2em] font-bold" htmlFor="postalCode">Postal Code</label>
-                <input 
-                  className="w-full bg-surface border-0 border-b border-outline-variant/30 focus:border-primary transition-all px-4 py-3 focus:ring-0 font-body text-on-surface"
-                  id="postalCode"
-                  {...register('postalCode', { 
-                    required: 'Postal code is required',
-                    pattern: {
-                      value: /^[1-9][0-9]{5}$/,
-                      message: 'Invalid Indian PIN code (6 digits)'
-                    }
-                  })}
-                  placeholder="6 Digit PIN"
-                />
+                <div className="relative">
+                  <input 
+                    className="w-full bg-surface border-0 border-b border-outline-variant/30 focus:border-primary transition-all px-4 py-3 focus:ring-0 font-body text-on-surface"
+                    id="postalCode"
+                    {...register('postalCode', { 
+                      required: 'Postal code is required',
+                      pattern: {
+                        value: /^[1-9][0-9]{5}$/,
+                        message: 'Please enter a valid 6-digit PIN code'
+                      }
+                    })}
+                    placeholder="6 Digit PIN"
+                  />
+                  {isPincodeLoading && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  )}
+                </div>
                 {errors.postalCode && <p className="text-error text-[10px] uppercase font-bold tracking-widest mt-1">{errors.postalCode.message}</p>}
               </div>
             </div>

@@ -5,18 +5,22 @@ import OfferModel from '@/lib/models/OfferModel';
 
 export const enhanceWithOffers = async (products: any[]): Promise<Product[]> => {
   const now = new Date();
+  const startOfDay = new Date(now);
+  startOfDay.setHours(0, 0, 0, 0);
+
   const activeOffers = await OfferModel.find({
     isActive: true,
     startDate: { $lte: now },
-    endDate: { $gte: now }
+    endDate: { $gte: startOfDay }
   }).lean();
 
   return products.map(product => {
     const p = { ...product };
     // Find the offer with highest discount that applies to this product
-    const applicableOffers = activeOffers.filter(offer => 
-      offer.products?.some((id: any) => id.toString() === product._id.toString())
-    );
+    const applicableOffers = activeOffers.filter(offer => {
+      if (!offer.products || !Array.isArray(offer.products)) return false;
+      return offer.products.some((id: any) => id.toString() === product._id.toString());
+    });
 
     if (applicableOffers.length > 0) {
       const bestOffer = applicableOffers.reduce((prev, current) => 
@@ -86,7 +90,7 @@ const getByQuery = cache(
             },
           }
         : {};
-    const categoryFilter = category && category !== 'all' ? { category } : {};
+    const categoryFilter = category && category !== 'all' ? { category: { $regex: new RegExp(`^${category}$`, 'i') } } : {};
     const ratingFilter =
       rating && rating !== 'all'
         ? {

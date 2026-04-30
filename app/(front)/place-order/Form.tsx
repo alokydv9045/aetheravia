@@ -65,11 +65,14 @@ const Form = () => {
     setIsProcessingPayment(true);
 
     try {
+      const total = getFinalTotal();
+      const amountToPayNow = isCashOnDelivery ? Math.round(total * 0.2) : total;
+
       const orderResponse = await fetch('/api/orders/razorpay/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          amount: getFinalTotal(),
+          amount: amountToPayNow,
           orderId,
           paymentMethod 
         }),
@@ -157,18 +160,20 @@ const Form = () => {
           } : undefined,
         }),
       });
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server response was not valid JSON. This might be due to a database connection timeout.");
+      }
+
       const data = await res.json();
       if (res.ok) {
         const orderId = data.order._id;
-        if (isCashOnDelivery) {
-          clear();
-          toast.success('Manifest Recorded. Payment due upon arrival.');
-          return router.push(`/order/${orderId}`);
-        } else if (isRazorpayPayment) {
+        if (isRazorpayPayment || isCashOnDelivery) {
+          // Both now use Razorpay (COD uses it for 20% booking)
           await handleRazorpayPayment(orderId);
         }
       } else {
-        toast.error(data.message);
+        toast.error(data.message || "Failed to place order");
       }
     },
   );
@@ -336,6 +341,26 @@ const Form = () => {
                       <span className="font-headline text-3xl text-primary">{formatPrice(getFinalTotal())}</span>
                     </div>
                   </li>
+
+                  {isCashOnDelivery && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="mt-6 pt-6 border-t border-dashed border-outline-variant/20 space-y-3"
+                    >
+                      <div className="flex justify-between items-center bg-primary/5 p-3 rounded text-primary">
+                        <span className="text-[11px] font-bold uppercase tracking-widest">Convenience Fee (Booking)</span>
+                        <span className="font-headline text-lg font-bold">{formatPrice(Math.round(getFinalTotal() * 0.2))}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-secondary/60 px-3">
+                        <span className="text-[10px] uppercase tracking-widest font-medium">Balance Due on Arrival</span>
+                        <span className="font-body text-sm font-bold">{formatPrice(getFinalTotal() - Math.round(getFinalTotal() * 0.2))}</span>
+                      </div>
+                      <p className="text-[9px] text-center text-primary/60 italic px-4">
+                        * Note: To confirm your COD order, a 20% convenience fee is required upfront.
+                      </p>
+                    </motion.div>
+                  )}
                 </ul>
 
                 <AnimatePresence>
@@ -359,7 +384,10 @@ const Form = () => {
                     <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
                   ) : (
                     <>
-                      {isCashOnDelivery ? 'Confirm Order' : 'Pay Now'}
+                      {isCashOnDelivery 
+                        ? `Pay Booking Amount (${formatPrice(Math.round(getFinalTotal() * 0.2))})` 
+                        : 'Confirm & Pay Now'
+                      }
                       <span className="material-symbols-outlined text-sm">check_circle</span>
                     </>
                   )}

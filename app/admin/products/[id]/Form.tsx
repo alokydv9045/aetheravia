@@ -30,7 +30,7 @@ interface ProductFormData {
 
 
 export default function ProductEditForm({ productId }: { productId: string }) {
-  const { data: product, error } = useSWR<Product & { images?: string[]; mlQuantity?: string }>(`/api/admin/products/${productId}`);
+  const { data: product, error } = useSWR<Product & { images?: string[]; mlQuantity?: string }>(productId === 'new' ? null : `/api/admin/products/${productId}`);
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);

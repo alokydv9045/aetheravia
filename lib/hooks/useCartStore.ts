@@ -41,6 +41,7 @@ const initialState: Cart = {
     fullName: '',
     address: '',
     city: '',
+    state: '',
     postalCode: '',
     country: '',
   },
@@ -264,7 +265,7 @@ export const calcPrice = (items: OrderItem[]) => {
   const itemsPrice = round2(
       items.reduce((acc, item) => acc + item.price * item.qty, 0),
     ),
-    shippingPrice = round2(itemsPrice > 2000 ? 0 : 200),
+    shippingPrice = round2(items.length > 0 ? 99 : 0),
     taxPrice = round2(Number(0.18 * itemsPrice)),
     totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
   return { itemsPrice, shippingPrice, taxPrice, totalPrice };

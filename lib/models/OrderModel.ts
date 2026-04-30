@@ -88,6 +88,8 @@ const orderSchema = new mongoose.Schema(
     shippingPrice: { type: Number, required: true },
     taxPrice: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
+    advanceAmount: { type: Number, required: true, default: 0 },
+    dueAmount: { type: Number, required: true, default: 0 },
     
     // Coupon Information
     coupon: {

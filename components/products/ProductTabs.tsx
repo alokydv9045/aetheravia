@@ -12,38 +12,38 @@ interface Tab {
 }
 
 export default function ProductTabs({ 
-  description,
+  product,
 }: { 
-  description: string,
+  product: any,
 }) {
   const tabs: Tab[] = [
     {
       id: 'description',
       label: 'Description',
       title: 'About this Treasure',
-      content: description || 'No detailed description available for this artisanal creation.',
-      image: '/images/Gemini_Generated_Image_4vprxw4vprxw4vpr.png'
+      content: product.description || 'No detailed description available for this artisanal creation.',
+      image: product.banner || product.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRSmWpCzGLgiS4xXmXgcabj9yx-1jx55OCHnwhDI3KqgH2AC44z2R07FpIInuLyJ7I4r6s6JSVjFP_LXmVVWBNjVTxxt5nA5rD4S21VwQUkW8jdtrSvyrLHXPYxV639zShq0Z99BvF5UqyfftFQJGSkv4TBKKzzLLgNxevvtTYnsjff9KUK0MtUGHeWc1Sh_yMDO05HjHhBZmd9BVWQtvR47azLXZo3mNeIPaTGYd2EVsEV_ByExW58R37rG_PJLipBo71W9uwSoEF'
     },
     {
       id: 'ritual',
       label: 'The Ritual',
       title: 'Cleansing as Meditation',
-      content: 'Dispense a small amount onto your palm or a natural loofah. Massage onto damp skin in gentle circular motions, focusing on areas that hold tension. Inhale the grounding scent of sandalwood. Rinse with lukewarm water to reveal skin that feels soft, detoxified, and deeply nourished.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRSmWpCzGLgiS4xXmXgcabj9yx-1jx55OCHnwhDI3KqgH2AC44z2R07FpIInuLyJ7I4r6s6JSVjFP_LXmVVWBNjVTxxt5nA5rD4S21VwQUkW8jdtrSvyrLHXPYxV639zShq0Z99BvF5UqyfftFQJGSkv4TBKKzzLLgNxevvtTYnsjff9KUK0MtUGHeWc1Sh_yMDO05HjHhBZmd9BVWQtvR47azLXZo3mNeIPaTGYd2EVsEV_ByExW58R37rG_PJLipBo71W9uwSoEF'
+      content: 'Dispense a small amount onto your palm or a natural loofah. Massage onto damp skin in gentle circular motions, focusing on areas that hold tension. Inhale the grounding scent of natural extracts. Rinse with lukewarm water to reveal skin that feels soft, detoxified, and deeply nourished.',
+      image: product.images && product.images.length > 0 ? product.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRSmWpCzGLgiS4xXmXgcabj9yx-1jx55OCHnwhDI3KqgH2AC44z2R07FpIInuLyJ7I4r6s6JSVjFP_LXmVVWBNjVTxxt5nA5rD4S21VwQUkW8jdtrSvyrLHXPYxV639zShq0Z99BvF5UqyfftFQJGSkv4TBKKzzLLgNxevvtTYnsjff9KUK0MtUGHeWc1Sh_yMDO05HjHhBZmd9BVWQtvR47azLXZo3mNeIPaTGYd2EVsEV_ByExW58R37rG_PJLipBo71W9uwSoEF'
     },
     {
       id: 'ingredients',
       label: 'Ingredients',
       title: 'Nature’s Raw Potency',
-      content: 'Our formula is anchored by pure Sandalwood oil, known for its anti-inflammatory properties. We combine this with Multani Mitti (Fuller’s Earth) to draw out impurities, Reetha (Soapnut) for a gentle natural lather, and Wild Honey to lock in moisture. No synthetic fragrances, sulfates, or parabens.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXQhijcmtPtMf8skYc0_3R0py0Ztzsu7U-7gYyYozfnJWbJ782GjNXZhuf8kU9DIiu91Zn1SjEg54kCjAcuTm5iQJQOKMsS5fhwjfObBmBviJOChb0YVH8VhABREKOpV26o-LUGQgaj-jnmdvwJxjXgTRSkphNeXEBhz4689nZtVO-EHZ7Fgcht1PQ1Xu5xYAqeyaYFNff7SFz7akIyoMmA1pGqhMwt9kavFSnvCLy9ZNhJ8VhMWLg4hNaJNJw5-60g0KRiLuA2Qfo'
+      content: 'Our formula is anchored by pure natural oils, known for their anti-inflammatory properties. We combine this with raw ingredients to draw out impurities, and organic botanicals for a gentle natural lather. No synthetic fragrances, sulfates, or parabens.',
+      image: product.images && product.images.length > 1 ? product.images[1] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXQhijcmtPtMf8skYc0_3R0py0Ztzsu7U-7gYyYozfnJWbJ782GjNXZhuf8kU9DIiu91Zn1SjEg54kCjAcuTm5iQJQOKMsS5fhwjfObBmBviJOChb0YVH8VhABREKOpV26o-LUGQgaj-jnmdvwJxjXgTRSkphNeXEBhz4689nZtVO-EHZ7Fgcht1PQ1Xu5xYAqeyaYFNff7SFz7akIyoMmA1pGqhMwt9kavFSnvCLy9ZNhJ8VhMWLg4hNaJNJw5-60g0KRiLuA2Qfo'
     },
     {
       id: 'ethics',
       label: 'Our Ethics',
       title: 'Conscious Craftsmanship',
       content: 'Aetheravia is built on the principle of Ahimsa (non-violence). Every ingredient is ethically sourced, supporting local cooperatives. Our packaging is 100% plastic-free, using infinitely recyclable glass and recycled paper. We never test on animals and ensure a fair wage for every hand in our supply chain.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuATexIdksonwhogQUZmLLaNwoiJWqTCd7laB9bTaVBksXb-6twX9SSMXO89NyPvr6eOg7eXa8_4X9ZVH_wjapZ5mQhFo6GqZutv4lNQFnRr47G4K2-1qrl3mnem5iTr1WZunwusuupDI1urhf_XbHAl_Nh84Ose103uk6NqgBfkB-UQczvkqG5GuqyVeqJvphQPQxGxo8ylSNZpgM1OsHKQu3Qlu7s93SnOm7E1DrzbT55T5bNcFc4YuYDWXBmbtRbvO5nIWy8-TBX3'
+      image: product.images && product.images.length > 2 ? product.images[2] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuATexIdksonwhogQUZmLLaNwoiJWqTCd7laB9bTaVBksXb-6twX9SSMXO89NyPvr6eOg7eXa8_4X9ZVH_wjapZ5mQhFo6GqZutv4lNQFnRr47G4K2-1qrl3mnem5iTr1WZunwusuupDI1urhf_XbHAl_Nh84Ose103uk6NqgBfkB-UQczvkqG5GuqyVeqJvphQPQxGxo8ylSNZpgM1OsHKQu3Qlu7s93SnOm7E1DrzbT55T5bNcFc4YuYDWXBmbtRbvO5nIWy8-TBX3'
     }
   ];
 

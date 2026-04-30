@@ -204,7 +204,7 @@ export default function OffersAdminTable() {
       .map((p: any) => p._id);
     
     setForm(f => {
-      const allSelected = categoryProducts.length > 0 && categoryProducts.every(id => f.products.includes(id));
+      const allSelected = categoryProducts.length > 0 && categoryProducts.every((id: string) => f.products.includes(id));
       if (allSelected) {
         return { ...f, products: f.products.filter(id => !categoryProducts.includes(id)) };
       } else {

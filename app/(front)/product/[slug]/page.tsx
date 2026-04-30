@@ -158,7 +158,7 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
         </div>
       </section>
 
-      <ProductTabs description={product.description} />
+      <ProductTabs product={product} />
 
       <section className="mt-24 max-w-screen-2xl mx-auto px-6 md:px-12">
         <div className="flex justify-between items-end mb-12">

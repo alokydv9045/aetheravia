@@ -44,7 +44,7 @@ const Header = () => {
               href='/'
               className='flex items-center gap-2 group'
             >
-              <div className="relative w-8 h-8 sm:w-10 sm:h-10">
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10" style={{ position: 'relative' }}>
                 <Image
                   src="/images/logo_mark.png"
                   alt="Aetheravia Logo"

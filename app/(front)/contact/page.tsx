@@ -81,13 +81,15 @@ export default function ContactPage() {
         {/* Map Column */}
         <div className="space-y-12">
           <div className="relative overflow-hidden aspect-[4/3] w-full bg-surface-container shadow-md rounded-lg">
-            <img 
-              alt="Map location" 
-              className="w-full h-full object-cover grayscale opacity-60" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkM-XH6eAU4fbtGisH8wyMM-CSLVWmXYq25f-5ia_BXHvuBguj7gVYTF3ZMmOGR1ftoaX481Qau0MttcJg_sDJcqkcYCbGzOJa187ZXeWiRICIXq1NpIpueYqEhxm9dNXZ3HwjBZvsUHYbegImWZjPXYWEa8y8rZul9fm5gbsWw-wfsYv6o_ryU0M3h8lm1ToioNmkIah9ngwUQJHqg0TfV4VElJUWUdacgidETMMc3Li3HVbcNGmgDKqYa6QGCI9SAnkq8_Jad1f-"
-            />
-            <div className="absolute inset-0 bg-primary/5"></div>
-            <div className="absolute bottom-6 left-6 bg-surface p-4 shadow-xl rounded">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113032.55325510684!2d79.72887649557458!3d28.629199321396866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a1b41f81d1152d%3A0x6b45a0b77b752df7!2sPilibhit%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+              className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700" 
+              allowFullScreen 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+            <div className="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+            <div className="absolute bottom-6 left-6 bg-surface p-4 shadow-xl rounded pointer-events-none">
               <p className="font-headline text-primary text-lg">Aethravia Heritage</p>
               <p className="text-sm font-body text-secondary">Pilibhit, Uttar Pradesh</p>
             </div>
@@ -120,15 +122,30 @@ export default function ContactPage() {
           <p className="text-secondary font-body leading-relaxed">Our concierge team of herbalists and skincare specialists aims to respond to every inquiry within a single business day.</p>
         </div>
         <div className="flex flex-col md:items-end gap-6">
-          <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold">Follow Our Story</span>
+          <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold">Follow us on Insta</span>
           <div className="flex gap-4">
-            <a className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" href="#">
+            <a 
+              className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" 
+              href="https://www.instagram.com/aeth.ravia/?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <span className="material-symbols-outlined">share</span>
             </a>
-            <a className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" href="#">
+            <a 
+              className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" 
+              href="https://www.instagram.com/aeth.ravia/?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <span className="material-symbols-outlined">photo_camera</span>
             </a>
-            <a className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" href="#">
+            <a 
+              className="w-12 h-12 flex items-center justify-center border border-outline-variant rounded hover:bg-primary hover:text-on-primary hover:border-primary transition-all text-on-surface" 
+              href="https://www.instagram.com/aeth.ravia/?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <span className="material-symbols-outlined">play_circle</span>
             </a>
           </div>

@@ -59,6 +59,22 @@ export const GET = auth(async (...request: any) => {
     { $sort: { _id: 1 } },
   ]);
 
+  const latestUsers = await UserModel.find({})
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .select('_id name email createdAt')
+    .lean();
+
+  const ordersData = await OrderModel.aggregate([
+    {
+      $group: {
+        _id: '$isPaid',
+        count: { $sum: 1 },
+        total: { $sum: '$totalPrice' }
+      }
+    }
+  ]);
+
   return Response.json({
     ordersCount,
     productsCount,
@@ -67,5 +83,7 @@ export const GET = auth(async (...request: any) => {
     salesData,
     productsData,
     usersData,
+    latestUsers,
+    ordersData
   });
 });

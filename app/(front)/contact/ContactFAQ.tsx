@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 const faqs = [
   {
     question: "How long does shipping typically take?",
-    answer: "Orders within India typically arrive within 3-5 business days. International shipping takes between 7-14 business days depending on customs processing."
+    answer: "Orders within India typically arrive within 3-5 business days. Currently, we only deliver within India and do not offer international shipping."
   },
   {
     question: "Are your ingredients ethically sourced?",

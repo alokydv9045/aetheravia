@@ -13,20 +13,20 @@ const PAYMENT_METHODS = [
   {
     id: 'razorpay_upi',
     name: 'Instant UPI',
-    description: 'Direct ritual acquisition via Google Pay, PhonePe, or Paytm',
+    description: 'Pay via Google Pay, PhonePe, Paytm or any UPI App',
     icon: 'account_balance',
     tag: 'Recommended'
   },
   {
     id: 'razorpay_card',
-    name: 'Heritage Card',
-    description: 'Secure transaction via Credit or Debit credentials',
+    name: 'Debit / Credit Card',
+    description: 'Secure payment via Visa, Mastercard, RuPay or Amex',
     icon: 'credit_card',
   },
   {
     id: 'razorpay_netbanking',
-    name: 'Bank Transfer',
-    description: 'Traditional acquisition through direct banking portals',
+    name: 'Net Banking',
+    description: 'Pay directly through your bank account',
     icon: 'account_balance_wallet',
   },
   {
@@ -154,10 +154,10 @@ const Form = () => {
             <div className="mt-12 p-6 bg-surface-container-high/30 rounded border border-outline-variant/10 flex items-start gap-4">
                <span className="material-symbols-outlined text-primary">verified_user</span>
                <div>
-                 <p className="text-[10px] font-bold uppercase tracking-widest text-secondary">Secured Transaction</p>
+                 <p className="text-[10px] font-bold uppercase tracking-widest text-secondary">100% Secured Transaction</p>
                  <p className="text-[11px] text-on-surface-variant mt-1 leading-relaxed">
-                   Your acquisition is protected by military-grade encryption via the Razorpay gateway. 
-                   Aethraiva does not archive your sensitive financial credentials.
+                   Your payment is protected by industry-standard encryption via Razorpay. 
+                   Aetheravia does not store your sensitive card or bank details.
                  </p>
                </div>
             </div>

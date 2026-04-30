@@ -1,5 +1,8 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import HeroModern from '@/components/home/HeroModern';
 import IngredientGallery from '@/components/home/IngredientGallery';
 import SkincareRitual from '@/components/home/SkincareRitual';

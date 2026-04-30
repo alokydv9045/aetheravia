@@ -196,7 +196,20 @@ const CartDetails = () => {
                   <h4 className="font-headline text-lg text-on-surface">
                     <Link href={`/product/${product.slug}`} className="hover:text-primary transition-colors">{product.name}</Link>
                   </h4>
-                  <p className="text-secondary text-[10px] uppercase font-bold tracking-widest mt-1">{formatPrice(product.price)}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-secondary text-[10px] uppercase font-bold tracking-widest">
+                      {formatPrice(
+                        product.activeOffer && product.activeOffer.discountPercentage > 0
+                          ? product.price * (1 - product.activeOffer.discountPercentage / 100)
+                          : product.price
+                      )}
+                    </p>
+                    {product.activeOffer && product.activeOffer.discountPercentage > 0 && (
+                      <p className="text-secondary/40 text-[9px] line-through decoration-1">
+                        {formatPrice(product.price)}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -402,6 +415,13 @@ const CartDetails = () => {
                 </div>
               )}
 
+              <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 flex items-center gap-4 mb-6">
+                <span className="material-symbols-outlined text-primary text-lg">info</span>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/60 leading-relaxed">
+                  Notice: We currently deliver in <span className="text-primary underline decoration-primary/20 underline-offset-4">India only</span>. International shipping is not available.
+                </p>
+              </div>
+
               <button 
                 className="w-full bg-primary text-on-primary py-5 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-primary-container transition-all shadow-lg shadow-primary/10 disabled:opacity-50 disabled:grayscale"
                 onClick={handleCheckout}
@@ -489,7 +509,15 @@ const CartDetails = () => {
                   <button 
                     className="material-symbols-outlined text-secondary hover:text-primary transition-colors text-2xl"
                     onClick={() => {
-                       increase(product);
+                       const hasOffer = product.activeOffer && product.activeOffer.discountPercentage > 0;
+                       const price = hasOffer 
+                         ? product.price * (1 - product.activeOffer.discountPercentage / 100) 
+                         : product.price;
+                       
+                       increase({
+                         ...product,
+                         price: price
+                       });
                        toast.success(`${product.name} added to ritual`);
                     }}
                   >

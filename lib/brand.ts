@@ -6,7 +6,7 @@ export const brandTagline = process.env.NEXT_PUBLIC_BRAND_TAGLINE || 'Embrace th
 export const shopAddress = process.env.NEXT_PUBLIC_SHOP_ADDRESS || '46, Mohalla Mohammad Wasil Near Hadri Masjib, Pilibhit, UP-262001';
 
 export const brandSlug = brandName.toLowerCase().replace(/[^a-z0-9]+/gi, '').trim();
-export const brandEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'heukcare@gmail.com';
+export const brandEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'aethravia@gmail.com';
 
 export const storeName = process.env.STORE_NAME || 'Heuk Care PVT. LTD.';
 export const supportPhone = process.env.NEXT_PUBLIC_SUPPORT_PHONE || '+91-XXXX-XXXXXX';
