@@ -91,7 +91,7 @@ export default function UnifiedOrderManagement() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('cards');
 
   // Get current filters from URL
   const getCurrentFiltersFromURL = useCallback((): OrderFilters => {

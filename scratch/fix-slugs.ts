@@ -1,5 +1,5 @@
-import dbConnect from './lib/dbConnect';
-import ProductModel from './lib/models/ProductModel';
+import dbConnect from '../lib/dbConnect';
+import ProductModel from '../lib/models/ProductModel';
 
 const slugify = (text: string) => {
   return text

@@ -1,9 +1,11 @@
-import dbConnect from './lib/dbConnect';
-import ProductModel from './lib/models/ProductModel';
+import dbConnect from '../lib/dbConnect';
+import ProductModel, { Product } from '../lib/models/ProductModel';
 
 async function checkLatestProduct() {
   await dbConnect();
-  const product = await ProductModel.findOne({}).sort({ updatedAt: -1 }).lean();
+  const product = (await ProductModel.findOne({})
+    .sort({ updatedAt: -1 })
+    .lean()) as unknown as Product | null;
   if (product) {
     console.log('--- LATEST PRODUCT ---');
     console.log(`Name: ${product.name}`);
