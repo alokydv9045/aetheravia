@@ -162,11 +162,9 @@ export default function NotificationTestPage() {
             </div>
             
             <div>
-              <h3 className="font-semibold">SMS Configuration (Twilio)</h3>
+              <h3 className="font-semibold">SMS Configuration (Fast2SMS)</h3>
               <div className="bg-gray-100 p-3 rounded text-sm font-mono">
-                TWILIO_ACCOUNT_SID=your-twilio-sid<br/>
-                TWILIO_AUTH_TOKEN=your-twilio-token<br/>
-                TWILIO_PHONE_NUMBER=+1234567890
+                FAST2SMS_API_KEY=your-fast2sms-api-key
               </div>
             </div>
           </div>
