@@ -160,7 +160,7 @@ export default function OrderNotificationPanel({
                     <div className="text-sm text-error">No phone number available</div>
                   )}
                   {!serviceConfig?.sms.configured && (
-                    <div className="text-sm text-warning">Twilio not configured</div>
+                    <div className="text-sm text-warning">Fast2SMS not configured</div>
                   )}
                 </div>
               </label>
