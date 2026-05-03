@@ -4,7 +4,6 @@ import * as dotenv from 'dotenv';
 import path from 'path';
 import dns from 'dns';
 
-// Fix for Node.js SRV DNS resolution issues on some systems
 dns.setServers(['1.1.1.1', '8.8.8.8']);
 
 // Load environment variables from .env

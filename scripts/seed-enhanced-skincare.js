@@ -2,6 +2,15 @@
 // Usage: node -r dotenv/config scripts/seed-enhanced-skincare.js
 
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+if (typeof dns.setServers === 'function') {
+  try {
+    dns.setServers(['1.1.1.1', '8.8.8.8']);
+  } catch (e) {
+    console.error('[db] Failed to set DNS servers:', e);
+  }
+}
 
 async function seed() {
   const uri = process.env.MONGODB_URI;
