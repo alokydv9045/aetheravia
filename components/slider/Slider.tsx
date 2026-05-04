@@ -3,7 +3,7 @@ import productService from '@/lib/services/productService';
 import { convertDocToObj } from '@/lib/utils';
 
 const Slider = async () => {
-  let topRated = [];
+  let topRated: any[] = [];
   try {
     topRated = await productService.getTopRated();
   } catch (error) {

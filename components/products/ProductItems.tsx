@@ -18,7 +18,7 @@ const ProductItems = async ({
   sort?: 'latest' | 'topRated',
   q?: string
 }) => {
-  let products = [];
+  let products: any[] = [];
 
   try {
     if ((category && category !== 'all') || (q && q !== 'all')) {
