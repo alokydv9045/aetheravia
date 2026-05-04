@@ -19,21 +19,26 @@ const ProductItems = async ({
   q?: string
 }) => {
   let products = [];
-  
-  if ((category && category !== 'all') || (q && q !== 'all')) {
-    const res = await productService.getByQuery({
-      q: q,
-      category: category,
-      price: 'all',
-      rating: 'all',
-      sort: 'newest',
-      page: '1'
-    });
-    products = res.products;
-  } else if (sort === 'topRated') {
-    products = await productService.getTopRated();
-  } else {
-    products = await productService.getLatest();
+
+  try {
+    if ((category && category !== 'all') || (q && q !== 'all')) {
+      const res = await productService.getByQuery({
+        q: q,
+        category: category,
+        price: 'all',
+        rating: 'all',
+        sort: 'newest',
+        page: '1',
+      });
+      products = res.products;
+    } else if (sort === 'topRated') {
+      products = await productService.getTopRated();
+    } else {
+      products = await productService.getLatest();
+    }
+  } catch (error) {
+    console.error('[ProductItems] Failed to load products:', error);
+    products = [];
   }
 
   if (products.length === 0) {

@@ -11,6 +11,7 @@ import { convertDocToObj, formatPrice } from '@/lib/utils';
 import FAQSection from '@/components/footer/FAQ';
 import ProductTabs from '@/components/products/ProductTabs';
 import ProductModel from '@/lib/models/ProductModel';
+import dbConnect from '@/lib/dbConnect';
 
 export const generateMetadata = async ({
   params,
@@ -18,7 +19,15 @@ export const generateMetadata = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const product = await productService.getBySlug(slug);
+  let product;
+  try {
+    product = await productService.getBySlug(slug);
+  } catch {
+    return {
+      title: 'Product',
+      description: '',
+    };
+  }
 
   if (!product) {
     return notFound();
@@ -32,7 +41,12 @@ export const generateMetadata = async ({
 
 const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  const product = await productService.getBySlug(slug);
+  let product;
+  try {
+    product = await productService.getBySlug(slug);
+  } catch {
+    return notFound();
+  }
 
   if (!product) {
     return notFound();
@@ -54,10 +68,19 @@ const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) =>
   const compImage2 = complementaryImages[(seed + 1) % complementaryImages.length];
 
   // Fetch related products (same category, excluding current)
-  const relatedProducts = await ProductModel.find({ 
-    category: product.category,
-    slug: { $ne: slug } 
-  }).limit(3).lean();
+  let relatedProducts: any[] = [];
+  try {
+    await dbConnect();
+    relatedProducts = await ProductModel.find({
+      category: product.category,
+      slug: { $ne: slug },
+    })
+      .limit(3)
+      .lean();
+  } catch (error) {
+    console.error('[ProductPage] Failed to load related products:', error);
+    relatedProducts = [];
+  }
 
   return (
     <div className="pt-8 md:pt-12 pb-12 overflow-x-hidden">
