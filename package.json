@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --webpack -p 3000",
     "build": "next build --webpack",
-    "start": "next start -p $PORT",
+    "start": "next start -p ${PORT:-3000}",
     "lint": "next lint",
     "render-build": "npm install --legacy-peer-deps && npm run build",
     "sync-seed": "npx tsx scripts/sync-seed.ts",
