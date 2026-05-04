@@ -1,4 +1,4 @@
-services:
+  services:
   - type: web
     name: bellamoda-store
     env: node
@@ -9,6 +9,8 @@ services:
       # Core Environment
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: "20"
       # Ensure devDependencies install for linting in CI
       - key: NPM_CONFIG_PRODUCTION
         value: "false"
