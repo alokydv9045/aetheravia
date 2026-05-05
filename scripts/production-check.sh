@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# BellaModa Production Readiness Checker
+# AetherAvia Production Readiness Checker
 # Run this script before deploying to production
 
-echo "🔍 BellaModa Production Readiness Check"
+echo "🔍 AetherAvia Production Readiness Check"
 echo "======================================"
 
 # Color codes for output

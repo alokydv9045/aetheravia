@@ -17,11 +17,11 @@ export async function POST() {
     await dbConnect();
     
     // Check if demo user exists, create if not
-    let demoUser = await UserModel.findOne({ email: 'demo@bellamoda.com' });
+    let demoUser = await UserModel.findOne({ email: 'demo@aetheravia.com' });
     if (!demoUser) {
       demoUser = new UserModel({
         name: 'Demo Customer',
-        email: 'demo@bellamoda.com',
+        email: 'demo@aetheravia.com',
         password: 'demo_password_hash',
         isAdmin: false,
       });
@@ -62,7 +62,7 @@ export async function POST() {
       paymentResult: {
         id: 'demo_payment_123',
         status: 'PAID',
-        email_address: 'demo@bellamoda.com',
+        email_address: 'demo@aetheravia.com',
       },
       itemsPrice: 2697,
       shippingPrice: 0,

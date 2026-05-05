@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: bellamoda-store
+    name: aetheravia-store
     env: node
     plan: free
     buildCommand: npm install --legacy-peer-deps && npm run build

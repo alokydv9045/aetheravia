@@ -51,7 +51,7 @@ export const POST = auth(async (req: any) => {
       new Promise<{ secure_url: string }>((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           {
-            folder: `bellamoda/avatars/${uid}`,
+            folder: `aetheravia/avatars/${uid}`,
             resource_type: 'image',
             overwrite: true,
             transformation: [{ width: 512, height: 512, crop: 'limit' }],
