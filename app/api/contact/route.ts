@@ -30,33 +30,6 @@ export async function POST(req: Request) {
     const sanitizedSubject = sanitizeInput(subject || 'No Subject');
     const sanitizedPhone = phone ? sanitizeInput(phone).substring(0, 20) : 'Not provided';
 
-    // Nodemailer transporter setup
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_PORT === '465',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-
-    // 1. Send confirmation email to the user (as requested)
-    const userMailOptions = {
-      from: process.env.EMAIL_FROM || process.env.SMTP_USER,
-      to: email,
-      subject: `Received: ${sanitizedSubject} | AetherAvia Artisanal Collective`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1c1c19;">
-          <h2 style="color: #904917;">AetherAvia Artisanal Collective</h2>
-          <p>Dear ${sanitizedName},</p>
-          <p>Thank you for reaching out to us. This is an automated confirmation that we have received your message regarding <strong>${sanitizedSubject}</strong>.</p>
-          <p>Haan, humari team aapko jaldi contact karegiii! (Yes, our team will get in touch with you shortly!)</p>
-          <hr style="border: 0; border-bottom: 1px solid #e5e2dd; margin: 20px 0;" />
-          <p style="font-size: 14px; color: #725a39;"><strong>Your Message:</strong><br/>${sanitizedMessage}</p>
-          <p style="font-size: 12px; color: #82746c; margin-top: 30px;">
-            This is an automated response. Please do not reply directly to this email unless requested.<br/>
-            © 2024 AetherAvia. All rights reserved.
           </p>
         </div>
       `,
@@ -100,3 +73,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+

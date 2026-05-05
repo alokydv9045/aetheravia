@@ -129,10 +129,10 @@ async function seed() {
     console.log('Created products:', products.length);
 
     // Create sample coupons
-  await CouponModel.deleteMany({ code: { $in: ['AETHERAVIA50', 'WELCOME10'] } });
+  await CouponModel.deleteMany({ code: { $in: ['AETHRAVIA50', 'WELCOME10'] } });
     const coupons = await CouponModel.create([
       {
-        code: 'AETHERAVIA50',
+        code: 'AETHRAVIA50',
         name: '50% Off Exclusive',
         type: 'percentage',
         value: 50,

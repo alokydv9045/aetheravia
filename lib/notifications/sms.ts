@@ -40,6 +40,7 @@ class SMSService {
 
 
 
+
       if (result.data && (result.data.return === true || result.data.status_code === 200)) {
         return {
           messageId: result.data.request_id || 'fast2sms-ok',

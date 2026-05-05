@@ -80,3 +80,4 @@ export default function ProductTabs({ description }: { description: string }) {
     </section>
   );
 }
+

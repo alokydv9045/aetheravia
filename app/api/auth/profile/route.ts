@@ -35,6 +35,7 @@ export const GET = auth(async (req) => {
 
       return Response.json({ message: 'User not found' }, { status: 404 });
     }
+    console.log('[API] Successfully fetched user:', dbUser.email);
     return Response.json(dbUser);
   } catch (err: any) {
     console.error('GET /api/auth/profile error:', err);
@@ -104,3 +105,4 @@ export const PUT = auth(async (req) => {
     return Response.json({ message: err?.message || 'Internal Server Error' }, { status: 500 });
   }
 });
+

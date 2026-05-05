@@ -74,3 +74,4 @@ export const CarouselSkeleton = () => {
   // Lightweight skeleton used as a Suspense fallback while server data is loading.
   return <div className='skeleton h-[304px] w-full rounded-lg lg:h-[536px]' />;
 };
+

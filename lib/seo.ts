@@ -7,9 +7,9 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
   ogImage: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/images/og-image.jpg`,
   links: {
-    twitter: 'https://twitter.com/aetheravia',
-    instagram: 'https://instagram.com/aetheravia',
-    facebook: 'https://facebook.com/aetheravia',
+    twitter: 'https://twitter.com/aethravia',
+    instagram: 'https://instagram.com/aethravia',
+    facebook: 'https://facebook.com/aethravia',
   },
 };
 
@@ -68,7 +68,7 @@ export function constructMetadata({
       title,
       description,
       images: [image],
-      creator: '@aetheravia',
+      creator: '@aethravia',
     },
     icons,
     metadataBase: new URL(siteConfig.url),
@@ -128,3 +128,4 @@ export function getOrganizationSchema() {
     ],
   };
 }
+

@@ -10,3 +10,4 @@ export const brandEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'curators@aet
 
 export const storeName = process.env.STORE_NAME || 'AetherAvia Store';
 export const supportPhone = process.env.NEXT_PUBLIC_SUPPORT_PHONE || '+91-XXXX-XXXXXX';
+
