@@ -190,7 +190,7 @@ const useCartService = () => {
       // Revalidate coupon if present
       if (cartStore.getState().appliedCoupon) {
         // Fire and forget
-        revalidateAppliedCoupon(totalPrice, shippingPrice);
+        revalidateAppliedCoupon(itemsPrice, shippingPrice);
       }
     },
     decrease: (item: OrderItem) => {
@@ -217,7 +217,7 @@ const useCartService = () => {
 
       // Revalidate coupon if present
       if (cartStore.getState().appliedCoupon) {
-        revalidateAppliedCoupon(totalPrice, shippingPrice);
+        revalidateAppliedCoupon(itemsPrice, shippingPrice);
       }
     },
     saveShippingAddress: (shippingAddress: ShippingAddress) => {
@@ -252,7 +252,7 @@ const useCartService = () => {
           name: couponData.coupon.name,
           type: couponData.coupon.type,
           discountAmount: couponData.discountAmount,
-          originalOrderValue: totalPrice,
+          originalOrderValue: itemsPrice,
           finalAmount: couponData.finalAmount,
         },
       });

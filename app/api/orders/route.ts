@@ -137,12 +137,12 @@ export const POST = auth(async (req: any) => {
           isPaid: true,
         }).session(currentSession);
         
-        const validation = coupon.isValidForUser(safeUserId, totalPrice, userOrders, dbOrderItems);
+        const validation = coupon.isValidForUser(safeUserId, itemsPrice, userOrders, dbOrderItems);
         if (validation.valid) {
-          const discountAmount = coupon.calculateDiscount(totalPrice, shippingPrice, dbOrderItems);
+          const discountAmount = coupon.calculateDiscount(itemsPrice, shippingPrice, dbOrderItems);
           finalTotalPrice = Math.max(0, totalPrice - discountAmount);
           
-          await coupon.applyCoupon(safeUserId, totalPrice, discountAmount);
+          await coupon.applyCoupon(safeUserId, itemsPrice, discountAmount);
           await coupon.save({ session: currentSession || undefined });
           
           couponInfo = {
@@ -150,7 +150,7 @@ export const POST = auth(async (req: any) => {
             name: payload.coupon.name,
             type: payload.coupon.type,
             discountAmount,
-            originalOrderValue: totalPrice,
+            originalOrderValue: itemsPrice,
           };
         }
       }

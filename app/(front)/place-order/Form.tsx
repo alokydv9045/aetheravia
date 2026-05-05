@@ -17,6 +17,7 @@ import { formatPrice } from '@/lib/utils';
 
 const PAYMENT_METHOD_LABELS = {
   cod: 'Cash on Delivery (COD)',
+  Razorpay: 'Razorpay Secure Gateway',
   razorpay_upi: 'Instant UPI',
   razorpay_card: 'Credit / Debit Card',
   razorpay_netbanking: 'Net Banking',
