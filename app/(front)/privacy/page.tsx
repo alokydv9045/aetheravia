@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Aethravia Artisanal Heritage',
+  title: 'Privacy Policy | AetherAvia Artisanal Heritage',
   description: 'Sanctuary of Data & Trust. How we safeguard the sanctity of your digital footprint with absolute transparency.',
 };
 
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
                   <h2 className="text-4xl md:text-5xl font-headline tracking-tight">The Foundation of Consent</h2>
                 </div>
                 <div className="prose prose-stone max-w-none space-y-8 text-secondary font-body font-light text-lg leading-loose">
-                  <p>At Aethravia, we believe privacy is not a mere compliance requirement, but a fundamental right of the modern individual. This document serves as our covenant with you—outlining how we honor the details you entrust to us during your journey through our artisanal collections.</p>
+                  <p>At AetherAvia, we believe privacy is not a mere compliance requirement, but a fundamental right of the modern individual. This document serves as our covenant with you—outlining how we honor the details you entrust to us during your journey through our artisanal collections.</p>
                   <p>By engaging with our platform, you are entering into a partnership of trust. We commit to using your information solely to enhance your sensory experience and deliver the physical manifestations of our heritage crafts.</p>
                 </div>
               </section>
@@ -223,7 +223,7 @@ export default function PrivacyPage() {
                     </div>
                     <div>
                       <h3 className="font-headline text-2xl mb-3">Right to Access</h3>
-                      <p className="text-base text-secondary/80 leading-relaxed font-body font-light">Request a full inventory of the data we hold regarding your journey with Aethravia at any time.</p>
+                      <p className="text-base text-secondary/80 leading-relaxed font-body font-light">Request a full inventory of the data we hold regarding your journey with AetherAvia at any time.</p>
                     </div>
                   </div>
                   <div className="flex gap-10 items-start p-8 rounded-2xl hover:bg-surface-container-low transition-all duration-500 border border-transparent hover:border-outline-variant/10">
@@ -254,7 +254,7 @@ export default function PrivacyPage() {
                     <h3 className="font-headline text-3xl mb-4 tracking-tight">Inquiries on Trust</h3>
                     <p className="text-secondary/70 text-lg font-light italic">Our Privacy Steward is available for any clarifications regarding your archival state.</p>
                   </div>
-                  <Link className="px-12 py-5 bg-primary text-on-primary rounded-sm font-label text-xs font-bold uppercase tracking-[0.3em] hover:translate-y-[-2px] hover:shadow-2xl transition-all duration-300 flex items-center gap-3 group" href="mailto:privacy@aethravia.com">
+                  <Link className="px-12 py-5 bg-primary text-on-primary rounded-sm font-label text-xs font-bold uppercase tracking-[0.3em] hover:translate-y-[-2px] hover:shadow-2xl transition-all duration-300 flex items-center gap-3 group" href="mailto:privacy@aetheravia.com">
                     <span className="material-symbols-outlined text-sm transition-transform group-hover:scale-125">mail</span>
                     Connect with our Steward
                   </Link>

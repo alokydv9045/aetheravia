@@ -50,7 +50,7 @@ async function run() {
     const couponsColl = db.collection('coupons');
     const coupons = [
       {
-        code: 'AETHRAVIA50',
+        code: 'AETHERAVIA50',
         name: '50% Off Exclusive',
         type: 'percentage',
         value: 50,

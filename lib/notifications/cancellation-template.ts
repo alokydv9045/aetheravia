@@ -199,8 +199,8 @@ export function generateCancellationEmailTemplate(data: OrderNotificationData): 
             <h3>🤝 Need Help?</h3>
             <p>If you have any questions about your cancellation or need assistance with a new order, our customer support team is here to help:</p>
             <ul>
-              <li>📧 Email: support@${brandName.toLowerCase()}.com</li>
-              <li>📞 Phone: +1 (555) 123-4567</li>
+              <li>📧 Email: curators@aetheravia.com</li>
+              <li>📞 Phone: +91-XXXX-XXXXXX</li>
               <li>💬 Live Chat: Available on our website</li>
             </ul>
           </div>
@@ -252,8 +252,8 @@ export function generateCancellationEmailTemplate(data: OrderNotificationData): 
     `}
 
     Need Help?
-    Email: support@${brandName.toLowerCase()}.com
-    Phone: +1 (555) 123-4567
+    Email: curators@aetheravia.com
+    Phone: +91-XXXX-XXXXXX
 
     Thank you for choosing ${brandName}.
 

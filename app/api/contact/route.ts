@@ -45,10 +45,10 @@ export async function POST(req: Request) {
     const userMailOptions = {
       from: process.env.EMAIL_FROM || process.env.SMTP_USER,
       to: email,
-      subject: `Received: ${sanitizedSubject} | Aethravia Artisanal Archive`,
+      subject: `Received: ${sanitizedSubject} | AetherAvia Artisanal Collective`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1c1c19;">
-          <h2 style="color: #904917;">Aethravia Artisanal Archive</h2>
+          <h2 style="color: #904917;">AetherAvia Artisanal Collective</h2>
           <p>Dear ${sanitizedName},</p>
           <p>Thank you for reaching out to us. This is an automated confirmation that we have received your message regarding <strong>${sanitizedSubject}</strong>.</p>
           <p>Haan, humari team aapko jaldi contact karegiii! (Yes, our team will get in touch with you shortly!)</p>
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
           <p style="font-size: 14px; color: #725a39;"><strong>Your Message:</strong><br/>${sanitizedMessage}</p>
           <p style="font-size: 12px; color: #82746c; margin-top: 30px;">
             This is an automated response. Please do not reply directly to this email unless requested.<br/>
-            © 2024 Aethravia. All rights reserved.
+            © 2024 AetherAvia. All rights reserved.
           </p>
         </div>
       `,

@@ -31,7 +31,7 @@ async function seed() {
         name: 'Gentle Hydrating Cleanser',
         slug: 'gentle-hydrating-cleanser',
         price: 12.99,
-        brand: 'AETHRAVIA',
+        brand: 'AetherAvia',
         category: 'Cleansers',
         image: '/images/products/natural-cosmetic-products-arrangement.jpg',
         countInStock: 120,
@@ -44,7 +44,7 @@ async function seed() {
         name: 'Vitamin C Brightening Serum',
         slug: 'vitamin-c-brightening-serum',
         price: 29.5,
-        brand: 'AETHRAVIA',
+        brand: 'AetherAvia',
         category: 'Serums',
         image: '/images/products/serum-bottle-with-yellow-background.jpg',
         countInStock: 80,
@@ -57,7 +57,7 @@ async function seed() {
         name: 'Hydrating Hyaluronic Moisturizer',
         slug: 'hydrating-hyaluronic-moisturizer',
         price: 24.0,
-        brand: 'AETHRAVIA',
+        brand: 'AetherAvia',
         category: 'Moisturizers',
         image: '/images/products/spa-arrangement-with-cremes.jpg',
         countInStock: 200,
@@ -69,7 +69,7 @@ async function seed() {
         name: 'Daily Mineral Sunscreen SPF 50',
         slug: 'daily-mineral-sunscreen-spf50',
         price: 19.99,
-        brand: 'AETHRAVIA',
+        brand: 'AetherAvia',
         category: 'Sunscreen',
         image: '/images/products/organic-cosmetic-product-with-dreamy-aesthetic-fresh-background.jpg',
         countInStock: 140,
@@ -81,7 +81,7 @@ async function seed() {
         name: 'Gentle Exfoliating Gel',
         slug: 'gentle-exfoliating-gel',
         price: 15.5,
-        brand: 'AETHRAVIA',
+        brand: 'AetherAvia',
         category: 'Exfoliators',
         image: '/images/products/cosmetics-composition-with-serum-bottles.jpg',
         countInStock: 75,
@@ -93,7 +93,7 @@ async function seed() {
         name: 'Overnight Repair Night Cream',
         slug: 'overnight-repair-night-cream',
         price: 34.0,
-        brand: 'AETHRAVIA',
+        brand: 'AetherAvia',
         category: 'Night Care',
         image: '/images/products/spa-arrangement-with-cremes.jpg',
         countInStock: 60,
@@ -105,7 +105,7 @@ async function seed() {
         name: 'Revitalizing Eye Cream',
         slug: 'revitalizing-eye-cream',
         price: 22.0,
-        brand: 'AETHRAVIA',
+        brand: 'AetherAvia',
         category: 'Eye Care',
         image: '/images/products/organic-cosmetic-product-with-dreamy-aesthetic-fresh-background.jpg',
         countInStock: 90,
@@ -129,10 +129,10 @@ async function seed() {
     console.log('Created products:', products.length);
 
     // Create sample coupons
-  await CouponModel.deleteMany({ code: { $in: ['AETHRAVIA50', 'WELCOME10'] } });
+  await CouponModel.deleteMany({ code: { $in: ['AETHERAVIA50', 'WELCOME10'] } });
     const coupons = await CouponModel.create([
       {
-        code: 'AETHRAVIA50',
+        code: 'AETHERAVIA50',
         name: '50% Off Exclusive',
         type: 'percentage',
         value: 50,

@@ -11,7 +11,7 @@ import TrustBarModern from '@/components/home/TrustBarModern';
 import TrustBar from '@/components/footer/TrustBar';
 
 export const metadata: Metadata = {
-  title: 'Aethravia | Artisanal Heritage Body Care',
+  title: 'AetherAvia | Artisanal Heritage Body Care',
   description: 'Grounded elegance for the modern heritage seeker. Discover artisanal skin rituals crafted from Multani Mitti, Sandalwood, and Reetha.',
 };
 

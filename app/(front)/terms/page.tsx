@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Terms & Conditions | Aethravia Artisanal Heritage',
-  description: 'The digital sanctuary terms of service for Aethravia. Respecting the archive, the craft, and the ritual.',
+  title: 'Terms & Conditions | AetherAvia Artisanal Heritage',
+  description: 'The digital sanctuary terms of service for AetherAvia. Respecting the archive, the craft, and the ritual.',
 };
 
 export default function TermsPage() {
@@ -18,7 +18,7 @@ export default function TermsPage() {
         <span className="font-body text-[10px] font-bold tracking-[0.4em] uppercase text-primary mb-6 block opacity-60">Legal Repository</span>
         <h1 className="font-headline text-5xl md:text-7xl font-bold tracking-tight text-on-surface mb-8">Terms &amp; Conditions</h1>
         <p className="font-serif italic text-lg text-secondary max-w-2xl mx-auto leading-relaxed">
-          Respecting the archive, the craft, and the ritual. By engaging with Aethravia, you honor the lineage of artisanal heritage.
+          Respecting the archive, the craft, and the ritual. By engaging with AetherAvia, you honor the lineage of artisanal heritage.
         </p>
       </header>
 
@@ -44,7 +44,7 @@ export default function TermsPage() {
           <section className="scroll-mt-32" id="acceptance">
             <h2 className="font-headline text-3xl font-bold text-on-surface mb-8">1. Introduction &amp; Acceptance</h2>
             <div className="space-y-6 text-on-surface-variant leading-relaxed font-body font-light text-lg">
-              <p>Welcome to the Aethravia Archive. By accessing or using this digital sanctuary, you acknowledge that you have read, understood, and agreed to be bound by these Terms and Conditions. These terms constitute a legally binding agreement between you and Aethravia Artisanal Heritage.</p>
+              <p>Welcome to the AetherAvia Archive. By accessing or using this digital sanctuary, you acknowledge that you have read, understood, and agreed to be bound by these Terms and Conditions. These terms constitute a legally binding agreement between you and AetherAvia Artisanal Heritage.</p>
               <p>Our commitment is to the preservation of ancient skincare rituals. If you do not agree with any part of these terms, we kindly ask that you refrain from accessing our collections.</p>
             </div>
           </section>
@@ -138,7 +138,7 @@ export default function TermsPage() {
             <div className="bg-primary text-on-primary p-12 md:p-20 rounded shadow-2xl flex flex-col items-center text-center">
               <h2 className="font-headline text-4xl font-bold mb-8">6. Ancient Wisdom</h2>
               <p className="font-serif text-xl opacity-90 leading-relaxed mb-10 max-w-2xl font-light italic">
-                The recipes, formulations, botanical sketches, and "Aethravia" branding are protected intellectual property. They represent generations of ancient wisdom digitized for the modern seeker.
+                The recipes, formulations, botanical sketches, and "AetherAvia" branding are protected intellectual property. They represent generations of ancient wisdom digitized for the modern seeker.
               </p>
               <div className="flex flex-wrap justify-center gap-6">
                 <span className="text-[10px] font-bold tracking-[0.4em] uppercase border border-on-primary/30 px-6 py-2.5 rounded-full">Copyright {new Date().getFullYear()}</span>
@@ -152,7 +152,7 @@ export default function TermsPage() {
             <div>
               <h2 className="font-headline text-2xl font-bold text-on-surface mb-6">7. Limitation of Liability</h2>
               <p className="font-body text-base text-on-surface-variant leading-loose font-light">
-                Aethravia Artisanal Heritage shall not be held liable for any reaction resulting from the use of our products. While we use natural ingredients (Chandan, Multani Mitti), we advise a patch test for all ritual beginners. Our liability is limited to the purchase price of the product.
+                AetherAvia Artisanal Heritage shall not be held liable for any reaction resulting from the use of our products. While we use natural ingredients (Chandan, Multani Mitti), we advise a patch test for all ritual beginners. Our liability is limited to the purchase price of the product.
               </p>
             </div>
             <div>
@@ -160,7 +160,7 @@ export default function TermsPage() {
               <div className="space-y-6 font-body">
                 <p className="text-base text-on-surface-variant font-light leading-relaxed">Seek guidance from our master curators regarding any legal or ritual inquiry:</p>
                 <div className="space-y-2">
-                  <p className="text-primary font-bold text-xl font-headline tracking-wide">curator@aethravia.com</p>
+                  <p className="text-primary font-bold text-xl font-headline tracking-wide">curators@aetheravia.com</p>
                   <p className="text-secondary text-sm font-light italic opacity-80">Heritage Lane, 12th Block, Old Jaipur, RJ, India</p>
                 </div>
               </div>

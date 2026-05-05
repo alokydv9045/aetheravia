@@ -80,7 +80,7 @@ const Sidebar = () => {
             <Sparkles size={18} />
           </div>
           <span className="hidden text-xl font-black tracking-tighter uppercase text-primary">
-            AETHRAVIA
+            AETHERAVIA
           </span>
         </div>
         <button 

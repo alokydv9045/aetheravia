@@ -3,7 +3,7 @@ import OrderDetails from './OrderDetails';
 export const generateMetadata = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   return {
-    title: `Order ${id}`,
+    title: `Manifest ${id}`,
   };
 };
 

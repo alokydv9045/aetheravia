@@ -47,7 +47,7 @@ const Header = () => {
               <div className="relative w-8 h-8 sm:w-10 sm:h-10">
                 <Image
                   src="/images/logo_mark.png"
-                  alt="Aetheravia Logo"
+                  alt="AetherAvia Logo"
                   fill
                   sizes="(max-width: 640px) 32px, 40px"
                   className="object-contain"
@@ -55,7 +55,7 @@ const Header = () => {
                 />
               </div>
               <span className='hidden sm:inline-block text-lg sm:text-2xl font-black tracking-tighter uppercase text-primary hover:opacity-80 transition-opacity whitespace-nowrap'>
-                AETHRAVIA
+                AETHERAVIA
               </span>
             </Link>
           </div>

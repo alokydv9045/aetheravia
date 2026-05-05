@@ -27,7 +27,7 @@ const faqList = [
   {
     num: "05",
     question: "International shipping and handling.",
-    answer: "Aethravia ships globally via carbon-neutral logistics. Due to the delicate nature of artisanal batches, please allow 7–12 days for international curation and delivery."
+    answer: "AetherAvia ships globally via carbon-neutral logistics. Due to the delicate nature of artisanal batches, please allow 7–12 days for international curation and delivery."
   }
 ];
 

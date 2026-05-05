@@ -25,7 +25,7 @@ async function seed() {
       name: 'Gentle Exfoliating Gel',
       slug: 'gentle-exfoliating-gel',
       price: 15.5,
-      brand: 'AETHRAVIA',
+      brand: 'AetherAvia',
       category: 'Exfoliators',
       image: '/images/products/cosmetics-composition-with-serum-bottles.jpg',
       countInStock: 75,
@@ -39,7 +39,7 @@ async function seed() {
       name: 'Overnight Repair Night Cream',
       slug: 'overnight-repair-night-cream',
       price: 34.0,
-      brand: 'AETHRAVIA',
+      brand: 'AetherAvia',
       category: 'Night Care',
       image: '/images/products/spa-arrangement-with-cremes.jpg',
       countInStock: 60,
@@ -53,7 +53,7 @@ async function seed() {
       name: 'Revitalizing Eye Cream',
       slug: 'revitalizing-eye-cream',
       price: 22.0,
-      brand: 'AETHRAVIA',
+      brand: 'AetherAvia',
       category: 'Eye Care',
       image: '/images/products/organic-cosmetic-product-with-dreamy-aesthetic-fresh-background.jpg',
       countInStock: 90,
@@ -67,7 +67,7 @@ async function seed() {
 
   const coupons = [
     {
-      code: 'AETHRAVIA50',
+      code: 'AETHERAVIA50',
       name: '50% Off Exclusive',
       type: 'percentage',
       value: 50,

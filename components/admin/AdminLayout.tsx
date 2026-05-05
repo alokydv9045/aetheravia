@@ -91,7 +91,7 @@ const AdminLayout = ({
               <span className="material-symbols-outlined text-on-primary text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
             </div>
             <div>
-              <h1 className="text-[13px] font-black font-headline text-primary uppercase leading-tight tracking-tighter">AETHRAVIA</h1>
+              <h1 className="text-[13px] font-black font-headline text-primary uppercase leading-tight tracking-tighter">AetherAvia</h1>
               <p className="text-[9px] uppercase font-bold tracking-[0.3em] text-on-surface-variant/40 mt-0.5">GUARDIAN HUB</p>
             </div>
           </div>
@@ -208,11 +208,11 @@ const AdminLayout = ({
         <footer className="px-12 py-12 text-center border-t border-outline-variant/10 bg-surface-container-low/30">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-2 opacity-30 grayscale">
-              <Image src="/images/logo_mark.png" alt="Aetheravia" width={24} height={24} />
-              <span className="font-headline font-bold text-xs uppercase tracking-widest">AETHERAVIA</span>
+              <Image src="/images/logo_mark.png" alt="AetherAvia" width={24} height={24} />
+              <span className="font-headline font-bold text-xs uppercase tracking-widest">AetherAvia</span>
             </div>
             <p className="text-[10px] uppercase font-bold tracking-[0.3em] text-on-surface-variant/40">
-              © 2024 Aetheravia Heritage Archive. Operational Integrity Secured.
+              © 2024 AetherAvia Heritage Archive. Operational Integrity Secured.
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/60 hover:text-primary transition-colors">Documentation</a>
