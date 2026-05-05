@@ -15,23 +15,34 @@ export const GET = auth(async (...args: any) => {
   }
   await dbConnect();
   
-  if (params.id === 'new') {
+  const { id } = params;
+  console.log(`[Admin API] GET product ID: ${id}`);
+
+  if (id === 'new') {
     return Response.json(
-      { message: 'Template requested' },
+      { message: 'Template state - please create a new product first' },
       { status: 404 }
     );
   }
 
-  const product = await ProductModel.findById(params.id);
-  if (!product) {
+  try {
+    const product = await ProductModel.findById(id);
+    if (!product) {
+      return Response.json(
+        { message: 'product not found' },
+        {
+          status: 404,
+        },
+      );
+    }
+    return Response.json(product);
+  } catch (err: any) {
+    console.error(`[Admin API] Failed to fetch product ${id}:`, err);
     return Response.json(
-      { message: 'product not found' },
-      {
-        status: 404,
-      },
+      { message: 'Invalid Product ID format' },
+      { status: 400 }
     );
   }
-  return Response.json(product);
 }) as any;
 
 export const PUT = auth(async (...args: any) => {

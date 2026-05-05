@@ -27,14 +27,14 @@ export const POST = auth(async (req: any) => {
   }
   await dbConnect();
   const product = new ProductModel({
-    name: 'sample name',
-    slug: 'sample-name-' + Math.random(),
-    image: '',
-    price: 0,
-    category: 'sample category',
-    brand: 'sample brand',
+    name: 'New Artisanal Product',
+    slug: 'new-product-' + Date.now(),
+    image: '/images/products/placeholder.jpg',
+    price: 1,
+    category: 'Body Care',
+    brand: 'AetherAvia',
     countInStock: 0,
-    description: 'sample description',
+    description: 'A newly archived treasure awaiting its description.',
     rating: 0,
     numReviews: 0,
   });
@@ -47,8 +47,9 @@ export const POST = auth(async (req: any) => {
       },
     );
   } catch (err: any) {
+    console.error('[Admin API] Product creation failed:', err);
     return Response.json(
-      { message: err.message },
+      { message: err.message || 'Product creation failed' },
       {
         status: 500,
       },
