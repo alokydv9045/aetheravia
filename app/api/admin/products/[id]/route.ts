@@ -14,6 +14,14 @@ export const GET = auth(async (...args: any) => {
     );
   }
   await dbConnect();
+  
+  if (params.id === 'new') {
+    return Response.json(
+      { message: 'Template requested' },
+      { status: 404 }
+    );
+  }
+
   const product = await ProductModel.findById(params.id);
   if (!product) {
     return Response.json(
