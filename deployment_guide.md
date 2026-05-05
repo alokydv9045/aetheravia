@@ -1,6 +1,6 @@
-# 🚀 Render Deployment Guide (Aetheravia Store)
+# 🚀 Render Deployment Guide (AetherAvia Store)
 
-This guide describes how to deploy the **Aetheravia Store** Next.js app to **Render** using the repo’s Blueprint file.
+This guide describes how to deploy the **AetherAvia Store** Next.js app to **Render** using the repo’s Blueprint file.
 
 ## ✅ What the repo already includes
 

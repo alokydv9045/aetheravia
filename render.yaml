@@ -97,7 +97,7 @@ services:
       
       # Store Information
       - key: STORE_NAME
-        value: "Aetheravia Store"
+        value: "AetherAvia Store"
       - key: STORE_ADDRESS
         value: "Near Pal Petrol pump, Bisalpur"
       - key: STORE_CITY
@@ -123,7 +123,7 @@ services:
       - key: PICKUP_PHONE
         value: "+919876543210"
       - key: COMPANY_NAME
-        value: "Aetheravia"
+        value: "AetherAvia"
       
       # Media & Content Management
       - key: CLOUDINARY_CLOUD_NAME

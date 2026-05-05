@@ -157,7 +157,7 @@ const Form = () => {
                  <p className="text-[10px] font-bold uppercase tracking-widest text-secondary">Secured Transaction</p>
                  <p className="text-[11px] text-on-surface-variant mt-1 leading-relaxed">
                    Your acquisition is protected by military-grade encryption via the Razorpay gateway. 
-                   Aethraiva does not archive your sensitive financial credentials.
+                   AetherAvia does not archive your sensitive financial credentials.
                  </p>
                </div>
             </div>

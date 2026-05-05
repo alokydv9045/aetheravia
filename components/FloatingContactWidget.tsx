@@ -19,7 +19,7 @@ const FloatingContactWidget = () => {
   // WhatsApp usually prefers numbers without + for the wa.me link in some contexts, 
   // but wa.me/number works fine with international format.
   const whatsappNumber = phoneNumber.startsWith('+') ? phoneNumber.substring(1) : phoneNumber;
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=Hello! I have a query regarding Aetheravia products.`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=Hello! I have a query regarding AetherAvia products.`;
   const telUrl = `tel:${phoneNumber}`;
 
   return (

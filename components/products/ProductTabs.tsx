@@ -31,7 +31,7 @@ export default function ProductTabs({ description }: { description: string }) {
       id: 'ethics',
       label: 'Our Ethics',
       title: 'Conscious Craftsmanship',
-      content: 'Aetheravia is built on the principle of Ahimsa (non-violence). Every ingredient is ethically sourced, supporting local cooperatives. Our packaging is 100% plastic-free, using infinitely recyclable glass and recycled paper. We never test on animals and ensure a fair wage for every hand in our supply chain.',
+      content: 'AetherAvia is built on the principle of Ahimsa (non-violence). Every ingredient is ethically sourced, supporting local cooperatives. Our packaging is 100% plastic-free, using infinitely recyclable glass and recycled paper. We never test on animals and ensure a fair wage for every hand in our supply chain.',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuATexIdksonwhogQUZmLLaNwoiJWqTCd7laB9bTaVBksXb-6twX9SSMXO89NyPvr6eOg7eXa8_4X9ZVH_wjapZ5mQhFo6GqZutv4lNQFnRr47G4K2-1qrl3mnem5iTr1WZunwusuupDI1urhf_XbHAl_Nh84Ose103uk6NqgBfkB-UQczvkqG5GuqyVeqJvphQPQxGxo8ylSNZpgM1OsHKQu3Qlu7s93SnOm7E1DrzbT55T5bNcFc4YuYDWXBmbtRbvO5nIWy8-TBX3'
     }
   ];
