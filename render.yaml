@@ -4,7 +4,7 @@ services:
     env: node
     plan: free
     buildCommand: npm install --legacy-peer-deps && npm run build
-    startCommand: npm start
+    startCommand: node .next/standalone/server.js
     envVars:
       # Core Environment
       - key: NODE_ENV

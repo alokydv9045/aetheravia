@@ -12,7 +12,6 @@ const nextConfig = {
   // Experimental features
   experimental: {
     optimizePackageImports: ['lucide-react'],
-    cpus: 1, // Mitigate WorkerError on Windows by using a single worker
   },
   
   // Webpack configuration for better module resolution

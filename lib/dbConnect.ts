@@ -70,16 +70,20 @@ const dbConnect = async () => {
     // Set global mongoose options to avoid the 10s buffering timeout
     mongoose.set('bufferTimeoutMS', 30000);
 
-    if (process.env.NODE_ENV === 'development') {
-      if (!(global as any)._mongooseConnectionPromise) {
-        log('Creating new Mongoose connection promise...');
-        (global as any)._mongooseConnectionPromise = mongoose.connect(uri, options);
-      } else {
-        log('Reusing existing Mongoose connection promise...');
-      }
-      await (global as any)._mongooseConnectionPromise;
+    // Use a global cached promise to handle concurrent requests during cold starts
+    if (!(global as any)._mongooseConnectionPromise) {
+      log('Creating new Mongoose connection promise...');
+      (global as any)._mongooseConnectionPromise = mongoose.connect(uri, options);
     } else {
-      await mongoose.connect(uri, options);
+      log('Reusing existing Mongoose connection promise...');
+    }
+
+    try {
+      await (global as any)._mongooseConnectionPromise;
+    } catch (e) {
+      // Clear the promise so the next request can try again
+      (global as any)._mongooseConnectionPromise = null;
+      throw e;
     }
 
     connection.isConnected = mongoose.connection.readyState;
