@@ -37,7 +37,7 @@ export default function ContactPage() {
             </div>
             <h3 className="text-xl font-headline text-primary mb-2">Email Us</h3>
             <p className="text-secondary font-body text-sm mb-4">Expect a response within 24 hours.</p>
-            <a className="text-on-surface font-semibold font-body hover:text-primary transition-colors underline decoration-outline-variant underline-offset-4 block" href="mailto:curators@aetheravia.com">curators@aetheravia.com</a>
+            <a className="text-on-surface font-semibold font-body hover:text-primary transition-colors underline decoration-outline-variant underline-offset-4 block" href="mailto:curators@AetherAvia.com">curators@AetherAvia.com</a>
           </div>
           {/* Card 2 */}
           <div className="bg-surface-container-low p-8 transition-all hover:bg-surface-container-high group rounded-lg shadow-sm">

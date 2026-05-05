@@ -29,8 +29,30 @@ export async function POST(req: Request) {
     const sanitizedName = sanitizeInput(name);
     const sanitizedSubject = sanitizeInput(subject || 'No Subject');
     const sanitizedPhone = phone ? sanitizeInput(phone).substring(0, 20) : 'Not provided';
+    // Configure transporter
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 587,
+      secure: process.env.SMTP_SECURE === 'true',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
 
-          </p>
+    // 1. Send confirmation email to the user
+    const userMailOptions = {
+      from: process.env.EMAIL_FROM || process.env.SMTP_USER,
+      to: email,
+      subject: `Ritual Inquiry Received: ${sanitizedSubject}`,
+      html: `
+        <div style="font-family: serif; color: #2D4B3C; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; padding: 40px; border-radius: 12px;">
+          <h2 style="color: #2D4B3C; font-style: italic;">Greetings from AetherAvia</h2>
+          <p>Dear ${sanitizedName},</p>
+          <p>We have received your message regarding "<strong>${sanitizedSubject}</strong>".</p>
+          <p>Our artisans are reviewing your inquiry and will connect with you shortly. Thank you for your patience.</p>
+          <hr style="border: 0; border-top: 1px solid #f3f4f6; margin: 30px 0;" />
+          <p style="font-size: 12px; color: #6b7280;">This is an automated confirmation. Please do not reply directly to this message.</p>
         </div>
       `,
     };
@@ -41,13 +63,15 @@ export async function POST(req: Request) {
       to: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || process.env.SMTP_USER,
       subject: `New Contact Form Submission: ${sanitizedSubject}`,
       html: `
-        <h3>New Inquiry from ${sanitizedName}</h3>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${sanitizedPhone}</p>
-        <p><strong>Subject:</strong> ${sanitizedSubject}</p>
-        <hr />
-        <p><strong>Message:</strong></p>
-        <p>${sanitizedMessage}</p>
+        <div style="font-family: sans-serif; padding: 20px;">
+          <h3>New Inquiry from ${sanitizedName}</h3>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${sanitizedPhone}</p>
+          <p><strong>Subject:</strong> ${sanitizedSubject}</p>
+          <hr />
+          <p><strong>Message:</strong></p>
+          <p>${sanitizedMessage}</p>
+        </div>
       `,
     };
 

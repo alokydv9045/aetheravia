@@ -1,22 +1,18 @@
+import { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import CouponModel from '@/lib/models/CouponModel';
 import OrderModel from '@/lib/models/OrderModel';
 
-export const POST = auth(async (...request: any) => {
-  const [req] = request;
-  
-  if (!req.auth) {
-    return Response.json(
-      { message: 'Unauthorized' },
-      { status: 401 }
-    );
-  }
-
+export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     
-    const { couponCode, orderValue, shippingCost = 0 } = await req.json();
+    // Optional auth
+    const session = await auth();
+    const userId = session?.user?.id;
+    
+    const { couponCode, orderValue, shippingCost = 0, items = [] } = await req.json();
     
     if (!couponCode || orderValue === undefined) {
       return Response.json(
@@ -40,17 +36,21 @@ export const POST = auth(async (...request: any) => {
       );
     }
 
-    // Get user's order history to check for first-time user restrictions
-    const userOrders = await OrderModel.find({ 
-      user: req.auth.user.id,
-      isPaid: true 
-    });
+    // Get user's order history if authenticated
+    let userOrders = [];
+    if (userId) {
+      userOrders = await OrderModel.find({ 
+        user: userId,
+        isPaid: true 
+      });
+    }
 
-    // Validate coupon for user
+    // Validate coupon
     const validation = coupon.isValidForUser(
-      req.auth.user.id, 
+      userId, 
       orderValue, 
-      userOrders
+      userOrders,
+      items
     );
     
     if (!validation.valid) {
@@ -61,7 +61,7 @@ export const POST = auth(async (...request: any) => {
     }
 
     // Calculate discount
-    const discountAmount = coupon.calculateDiscount(orderValue, shippingCost);
+    const discountAmount = coupon.calculateDiscount(orderValue, shippingCost, items);
     
     return Response.json({
       valid: true,
@@ -85,4 +85,4 @@ export const POST = auth(async (...request: any) => {
       { status: 500 }
     );
   }
-});
+}

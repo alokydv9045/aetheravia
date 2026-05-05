@@ -137,9 +137,9 @@ export const POST = auth(async (req: any) => {
           isPaid: true,
         }).session(currentSession);
         
-        const validation = coupon.isValidForUser(safeUserId, totalPrice, userOrders);
+        const validation = coupon.isValidForUser(safeUserId, totalPrice, userOrders, dbOrderItems);
         if (validation.valid) {
-          const discountAmount = coupon.calculateDiscount(totalPrice, shippingPrice);
+          const discountAmount = coupon.calculateDiscount(totalPrice, shippingPrice, dbOrderItems);
           finalTotalPrice = Math.max(0, totalPrice - discountAmount);
           
           await coupon.applyCoupon(safeUserId, totalPrice, discountAmount);

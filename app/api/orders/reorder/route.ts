@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     // Find the original order and verify ownership
     const originalOrder = await OrderModel.findOne({
       _id: orderId,
-      userId: session.user._id
+      user: session.user._id
     }).lean() as any;
 
     if (!originalOrder) {
@@ -111,6 +111,8 @@ export async function POST(request: NextRequest) {
             originalQuantity: quantity,
             image: product.image,
             slug: product.slug,
+            brand: product.brand,
+            category: product.category,
             countInStock: product.countInStock,
             priceChanged: product.price !== item.price,
             quantityReduced: true
@@ -140,6 +142,8 @@ export async function POST(request: NextRequest) {
           originalQuantity: quantity,
           image: product.image,
           slug: product.slug,
+          brand: product.brand,
+          category: product.category,
           countInStock: product.countInStock,
           priceChanged: product.price !== item.price,
           quantityReduced: false
@@ -229,6 +233,8 @@ export async function PUT(request: NextRequest) {
       quantity: item.quantity,
       image: item.image,
       slug: item.slug,
+      brand: item.brand,
+      category: item.category,
       countInStock: item.countInStock
     }));
 

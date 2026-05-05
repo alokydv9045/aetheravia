@@ -50,8 +50,9 @@ const CartDetails = () => {
       const res = await fetch('/api/products/search?q=all');
       if (res.ok) {
         const data = await res.json();
+        const productsList = data.products || [];
         // Filter out items already in cart
-        const filtered = data.filter((p: any) => !items.some((i) => i.slug === p.slug));
+        const filtered = productsList.filter((p: any) => !items.some((i) => i.slug === p.slug));
         setRecommendations(filtered.slice(0, 3));
       }
     } catch (error) {
@@ -70,9 +71,15 @@ const CartDetails = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          couponCode: couponCode.trim(), 
+          couponCode: couponCode.toUpperCase(),
           orderValue: itemsPrice, 
-          shippingCost: shippingPrice 
+          shippingCost: shippingPrice,
+          items: items.map(item => ({
+            productId: item.productId || item._id,
+            category: item.category,
+            price: item.price,
+            qty: item.qty
+          }))
         }),
       });
       const data = await res.json();

@@ -206,7 +206,7 @@ async function seed() {
 
   const coupons = [
     {
-      code: 'AETHRAVIA50',
+      code: 'AetherAvia50',
       name: '50% Off Exclusive',
       type: 'percentage',
       value: 50,

@@ -84,7 +84,7 @@ const Form = () => {
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
         order_id: razorpayOrder.id,
-        name: 'AETHERAVIA',
+        name: 'AetherAvia',
         description: `Order #${orderId.slice(-6)}`,
         handler: async (response: any) => {
           try {

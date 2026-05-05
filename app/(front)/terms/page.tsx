@@ -160,7 +160,7 @@ export default function TermsPage() {
               <div className="space-y-6 font-body">
                 <p className="text-base text-on-surface-variant font-light leading-relaxed">Seek guidance from our master curators regarding any legal or ritual inquiry:</p>
                 <div className="space-y-2">
-                  <p className="text-primary font-bold text-xl font-headline tracking-wide">curators@aetheravia.com</p>
+                  <p className="text-primary font-bold text-xl font-headline tracking-wide">curators@AetherAvia.com</p>
                   <p className="text-secondary text-sm font-light italic opacity-80">Heritage Lane, 12th Block, Old Jaipur, RJ, India</p>
                 </div>
               </div>

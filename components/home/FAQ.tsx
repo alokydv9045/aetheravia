@@ -63,6 +63,7 @@ export default function FAQ() {
               <button 
                 onClick={() => toggleOpen(index)}
                 className="w-full flex items-start text-left focus:outline-none"
+                suppressHydrationWarning
               >
                 <span className="font-headline text-lg text-primary/40 mr-6 pt-1">{faq.num}</span>
                 <div className="flex-grow">
@@ -106,7 +107,7 @@ export default function FAQ() {
           <div className="md:pl-12 mt-12 md:mt-0">
             <h2 className="font-headline text-3xl text-secondary mb-6 leading-tight">Still have questions?</h2>
             <p className="font-body text-on-surface-variant mb-8">Our curators are available for personalized consultations regarding your skin ritual. Reach out to our heritage team for a deeper dive into our sourcing and ethos.</p>
-            <button className="bg-primary text-on-primary px-8 py-4 rounded-lg font-label font-semibold tracking-wider hover:opacity-90 transition-opacity">
+            <button className="bg-primary text-on-primary px-8 py-4 rounded-lg font-label font-semibold tracking-wider hover:opacity-90 transition-opacity" suppressHydrationWarning>
               CONNECT WITH A CURATOR
             </button>
           </div>

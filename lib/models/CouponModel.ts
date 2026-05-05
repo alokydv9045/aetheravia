@@ -165,7 +165,12 @@ couponSchema.virtual('remainingUsage').get(function() {
 });
 
 // Method to check if coupon is valid for a user
-couponSchema.methods.isValidForUser = function(userId: string, orderValue: number, userOrderHistory: any[]) {
+couponSchema.methods.isValidForUser = function(
+  userId: string | null | undefined, 
+  orderValue: number, 
+  userOrderHistory: any[] = [],
+  items: any[] = []
+) {
   try {
     // Check if coupon is active
     if (!this.isActive) {
@@ -176,8 +181,62 @@ couponSchema.methods.isValidForUser = function(userId: string, orderValue: numbe
     if (orderValue < this.minimumOrderAmount) {
       return { 
         valid: false, 
-        reason: `Minimum order amount is $${this.minimumOrderAmount}` 
+        reason: `Minimum order amount is ₹${this.minimumOrderAmount}` 
       };
+    }
+
+    // Check product/category restrictions
+    const hasProductRestrictions = this.applicableProducts && this.applicableProducts.length > 0;
+    const hasCategoryRestrictions = this.applicableCategories && this.applicableCategories.length > 0;
+    const hasExclusions = this.excludedProducts && this.excludedProducts.length > 0;
+
+    if (hasProductRestrictions || hasCategoryRestrictions || hasExclusions) {
+      if (!items || items.length === 0) {
+        return { valid: false, reason: 'No items to validate against coupon restrictions' };
+      }
+
+      const applicableItems = items.filter(item => {
+        // Check if explicitly excluded
+        if (hasExclusions && this.excludedProducts.some((id: any) => id.toString() === (item.productId || item._id)?.toString())) {
+          return false;
+        }
+
+        // Check if matches product restriction
+        const matchesProduct = hasProductRestrictions && this.applicableProducts.some((id: any) => id.toString() === (item.productId || item._id)?.toString());
+        
+        // Check if matches category restriction
+        const matchesCategory = hasCategoryRestrictions && this.applicableCategories.includes(item.category);
+
+        // If both restrictions exist, an item must match at least one (OR logic)
+        if (hasProductRestrictions && hasCategoryRestrictions) {
+          return matchesProduct || matchesCategory;
+        }
+        
+        // If only one exists, it must match that one
+        if (hasProductRestrictions) return matchesProduct;
+        if (hasCategoryRestrictions) return matchesCategory;
+
+        // If no positive restrictions (only exclusions), it's applicable
+        return true;
+      });
+
+      if (applicableItems.length === 0) {
+        return { 
+          valid: false, 
+          reason: 'This coupon is not applicable to the items in your bag' 
+        };
+      }
+    }
+
+    // If no userId provided, only global/item checks apply
+    if (!userId) {
+      if (this.allowedUsers && this.allowedUsers.length > 0) {
+        return { valid: false, reason: 'Please sign in to use this restricted coupon' };
+      }
+      if (this.firstTimeUsersOnly) {
+        return { valid: false, reason: 'Please sign in to verify first-time user status' };
+      }
+      return { valid: true, reason: null };
     }
 
     // Check if user is allowed (if allowedUsers is specified)
@@ -221,19 +280,52 @@ couponSchema.methods.isValidForUser = function(userId: string, orderValue: numbe
 };
 
 // Method to calculate discount
-couponSchema.methods.calculateDiscount = function(orderValue: number, shippingCost: number = 0) {
+couponSchema.methods.calculateDiscount = function(orderValue: number, shippingCost: number = 0, items: any[] = []) {
   let discount = 0;
+  
+  // Calculate the total value of items that the coupon applies to
+  let applicableValue = orderValue;
+  
+  const hasProductRestrictions = this.applicableProducts && this.applicableProducts.length > 0;
+  const hasCategoryRestrictions = this.applicableCategories && this.applicableCategories.length > 0;
+  const hasExclusions = this.excludedProducts && this.excludedProducts.length > 0;
+
+  if ((hasProductRestrictions || hasCategoryRestrictions || hasExclusions) && items.length > 0) {
+    applicableValue = items.reduce((sum, item) => {
+      // Check exclusion
+      if (hasExclusions && this.excludedProducts.some((id: any) => id.toString() === (item.productId || item._id)?.toString())) {
+        return sum;
+      }
+
+      // Check product restriction
+      const matchesProduct = hasProductRestrictions && this.applicableProducts.some((id: any) => id.toString() === (item.productId || item._id)?.toString());
+      
+      // Check category restriction
+      const matchesCategory = hasCategoryRestrictions && this.applicableCategories.includes(item.category);
+
+      let isApplicable = true;
+      if (hasProductRestrictions && hasCategoryRestrictions) {
+        isApplicable = matchesProduct || matchesCategory;
+      } else if (hasProductRestrictions) {
+        isApplicable = matchesProduct;
+      } else if (hasCategoryRestrictions) {
+        isApplicable = matchesCategory;
+      }
+
+      return isApplicable ? sum + (item.price * item.qty) : sum;
+    }, 0);
+  }
 
   switch (this.type) {
     case COUPON_TYPE.PERCENTAGE:
-      discount = (orderValue * this.value) / 100;
+      discount = (applicableValue * this.value) / 100;
       if (this.maximumDiscountAmount && discount > this.maximumDiscountAmount) {
         discount = this.maximumDiscountAmount;
       }
       break;
     
     case COUPON_TYPE.FIXED_AMOUNT:
-      discount = Math.min(this.value, orderValue);
+      discount = Math.min(this.value, applicableValue);
       break;
     
     case COUPON_TYPE.FREE_SHIPPING:

@@ -206,7 +206,7 @@ export default function ProfileTabs() {
                         <span className="material-symbols-outlined">mail</span>
                         <p className="font-label font-bold text-sm">ARCHIVE CONDUIT</p>
                       </div>
-                      <p className="font-body text-sm text-on-surface">curators@aetheravia.com</p>
+                      <p className="font-body text-sm text-on-surface">curators@AetherAvia.com</p>
                       <p className="text-[10px] text-secondary opacity-50 mt-2 italic">Expect a response within 1 ritual cycle (24h).</p>
                    </div>
                    <div className="p-8 bg-surface-container-low rounded border border-outline-variant/10">

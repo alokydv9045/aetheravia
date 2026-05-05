@@ -36,6 +36,7 @@ const Header = () => {
               onClick={toggleDrawer}
               className='lg:hidden flex items-center justify-center p-2 rounded-full hover:bg-primary/10 transition-colors text-black'
               aria-label='Toggle Menu'
+              suppressHydrationWarning
             >
               {drawerOpen ? <X size={24} /> : <MenuIcon size={24} />}
             </button>
@@ -55,7 +56,7 @@ const Header = () => {
                 />
               </div>
               <span className='hidden sm:inline-block text-lg sm:text-2xl font-black tracking-tighter uppercase text-primary hover:opacity-80 transition-opacity whitespace-nowrap'>
-                AETHERAVIA
+                AetherAvia
               </span>
             </Link>
           </div>

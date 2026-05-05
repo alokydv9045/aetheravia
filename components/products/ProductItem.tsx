@@ -97,6 +97,7 @@ const ProductItem = ({ product }: { product: Product }) => {
               : 'bg-white/90 text-primary hover:scale-110'
           }`}
           aria-label={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+          suppressHydrationWarning
         >
           <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} strokeWidth={2.5} />
         </button>
@@ -107,12 +108,14 @@ const ProductItem = ({ product }: { product: Product }) => {
             <button 
               onClick={addItemHandler}
               className="flex-1 bg-white/10 backdrop-blur-md text-white border border-white/20 py-2.5 font-body text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-white/20 transition-colors active:scale-[0.98]"
+              suppressHydrationWarning
             >
               Add to Bag
             </button>
             <button 
               onClick={buyNowHandler}
               className="flex-1 bg-primary text-white py-2.5 font-body text-[10px] font-bold uppercase tracking-widest rounded-lg shadow-lg hover:bg-opacity-90 transition-colors active:scale-[0.98]"
+              suppressHydrationWarning
             >
               Buy Now
             </button>

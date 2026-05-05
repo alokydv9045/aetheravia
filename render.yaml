@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: aetheravia-store
+    name: AetherAvia-store
     env: node
     plan: free
     buildCommand: npm install --legacy-peer-deps && npm run build
@@ -28,7 +28,7 @@ services:
         value: "false"
       # Fallback auth URL for NextAuth v5
       - key: AUTH_URL
-        value: "https://aetheravia.onrender.com"
+        value: "https://AetherAvia.onrender.com"
       
       # Database Configuration
       - key: MONGODB_URI

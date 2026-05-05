@@ -80,12 +80,13 @@ const Sidebar = () => {
             <Sparkles size={18} />
           </div>
           <span className="hidden text-xl font-black tracking-tighter uppercase text-primary">
-            AETHERAVIA
+            AetherAvia
           </span>
         </div>
         <button 
           onClick={toggleDrawer}
           className="p-2 -mr-2 rounded-full hover:bg-gray-50 transition-colors text-gray-400"
+          suppressHydrationWarning
         >
           <X size={20} />
         </button>
@@ -138,6 +139,7 @@ const Sidebar = () => {
               <button 
                 onClick={logoutHandler}
                 className="w-full flex items-center justify-between group py-3 px-4 rounded-xl transition-all duration-300 text-red-600 hover:bg-red-50 mt-4"
+                suppressHydrationWarning
               >
                 <div className="flex items-center gap-4">
                   <LogOut size={20} className="text-red-400 group-hover:text-red-600 transition-colors" />

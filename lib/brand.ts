@@ -6,7 +6,7 @@ export const brandTagline = process.env.NEXT_PUBLIC_BRAND_TAGLINE || 'Embrace th
 export const shopAddress = process.env.NEXT_PUBLIC_SHOP_ADDRESS || 'H.no. 46, Mohalla Mohammad Wasil, Near Hadri Masjid, Pilibhit, Uttar Pradesh, India, 262001';
 
 export const brandSlug = brandName.toLowerCase().replace(/[^a-z0-9]+/gi, '').trim();
-export const brandEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'curators@aetheravia.com';
+export const brandEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'curators@AetherAvia.com';
 
 export const storeName = process.env.STORE_NAME || 'AetherAvia Store';
 export const supportPhone = process.env.NEXT_PUBLIC_SUPPORT_PHONE || '+91-XXXX-XXXXXX';

@@ -328,6 +328,9 @@ export type Order = {
 };
 
 export type OrderItem = {
+  _id?: string;
+  productId?: string;
+  product?: string;
   name: string;
   slug: string;
   qty: number;
@@ -335,6 +338,9 @@ export type OrderItem = {
   price: number;
   color: string;
   size: string;
+  brand?: string;
+  category?: string;
+  countInStock?: number;
 };
 
 export type ShippingAddress = {

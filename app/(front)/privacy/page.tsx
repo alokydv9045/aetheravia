@@ -254,7 +254,7 @@ export default function PrivacyPage() {
                     <h3 className="font-headline text-3xl mb-4 tracking-tight">Inquiries on Trust</h3>
                     <p className="text-secondary/70 text-lg font-light italic">Our Privacy Steward is available for any clarifications regarding your archival state.</p>
                   </div>
-                  <Link className="px-12 py-5 bg-primary text-on-primary rounded-sm font-label text-xs font-bold uppercase tracking-[0.3em] hover:translate-y-[-2px] hover:shadow-2xl transition-all duration-300 flex items-center gap-3 group" href="mailto:privacy@aetheravia.com">
+                  <Link className="px-12 py-5 bg-primary text-on-primary rounded-sm font-label text-xs font-bold uppercase tracking-[0.3em] hover:translate-y-[-2px] hover:shadow-2xl transition-all duration-300 flex items-center gap-3 group" href="mailto:privacy@AetherAvia.com">
                     <span className="material-symbols-outlined text-sm transition-transform group-hover:scale-125">mail</span>
                     Connect with our Steward
                   </Link>

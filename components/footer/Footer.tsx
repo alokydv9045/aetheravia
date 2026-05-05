@@ -41,7 +41,7 @@ const Footer = () => {
             {/* Social Area */}
             <div className="flex items-center space-x-6 pt-4">
               <a 
-                href="https://www.instagram.com/aetheravia/?hl=en" 
+                href="https://www.instagram.com/AetherAvia/?hl=en" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-secondary hover:text-primary transition-colors flex items-center space-x-2 group"
@@ -114,7 +114,7 @@ const Footer = () => {
         <div className="mt-20 pt-10 border-t border-primary/10">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-center md:text-left">
             <p className="text-[10px] font-medium text-secondary/60 tracking-wider">
-              © {currentYear} AETHERAVIA ARTISANAL HERITAGE. ALL RIGHTS RESERVED.
+              © {currentYear} AetherAvia ARTISANAL HERITAGE. ALL RIGHTS RESERVED.
             </p>
             
             <div className="flex items-center space-x-10">

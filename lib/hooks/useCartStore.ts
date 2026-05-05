@@ -114,7 +114,17 @@ const useCartService = () => {
       const res = await fetch('/api/coupons/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ couponCode, orderValue, shippingCost }),
+        body: JSON.stringify({ 
+          couponCode, 
+          orderValue, 
+          shippingCost,
+          items: items.map(item => ({
+            productId: item.productId || item._id,
+            category: (item as any).category,
+            price: item.price,
+            qty: item.qty
+          }))
+        }),
       });
       const data = await res.json();
       if (data?.valid) {

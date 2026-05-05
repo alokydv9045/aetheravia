@@ -82,6 +82,7 @@ const FloatingContactWidget = () => {
             : 'bg-[#904917] text-white hover:shadow-[#904917]/30'
         }`}
         aria-label={isOpen ? "Close contact menu" : "Open contact menu"}
+        suppressHydrationWarning
       >
         <AnimatePresence mode="wait">
           {isOpen ? (

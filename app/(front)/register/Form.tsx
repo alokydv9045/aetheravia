@@ -200,7 +200,7 @@ const Form = () => {
                       })}
                       className="w-full px-4 py-3 bg-surface-container-low border-0 border-b-2 border-transparent focus:border-primary focus:ring-0 transition-all duration-300 placeholder:text-outline/30 rounded-t-sm text-sm" 
                       id="email" 
-                      placeholder="anya@aetheravia.com" 
+                      placeholder="anya@AetherAvia.com" 
                       type="email"
                     />
                     {errors.email && <p className="text-error text-[9px] font-bold mt-1 ml-1">{errors.email.message}</p>}
