@@ -1,7 +1,6 @@
 // WebSocket server utilities for real-time order updates
 import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { NextApiRequest, NextApiResponse } from 'next';
 
 export interface ServerToClientEvents {
   orderStatusUpdate: (data: {
@@ -108,7 +107,7 @@ class WebSocketManager {
     if (!this.io) return;
 
     this.io.on('connection', (socket: CustomSocket) => {
-      console.log(`[WebSocket] Client connected: ${socket.id}`);
+
       
       socket.data.joinedRooms = [];
 
@@ -116,7 +115,7 @@ class WebSocketManager {
       socket.on('joinOrderRoom', (orderId: string) => {
         socket.join(`order:${orderId}`);
         socket.data.joinedRooms.push(`order:${orderId}`);
-        console.log(`[WebSocket] Socket ${socket.id} joined order room: ${orderId}`);
+
       });
 
       // Handle leaving order-specific room
@@ -125,7 +124,7 @@ class WebSocketManager {
         socket.data.joinedRooms = socket.data.joinedRooms.filter(
           (room: string) => room !== `order:${orderId}`
         );
-        console.log(`[WebSocket] Socket ${socket.id} left order room: ${orderId}`);
+
       });
 
       // Handle joining admin room
@@ -133,7 +132,7 @@ class WebSocketManager {
         socket.join('admin');
         socket.data.isAdmin = true;
         socket.data.joinedRooms.push('admin');
-        console.log(`[WebSocket] Socket ${socket.id} joined admin room`);
+
       });
 
       // Handle leaving admin room
@@ -143,7 +142,7 @@ class WebSocketManager {
         socket.data.joinedRooms = socket.data.joinedRooms.filter(
           (room: string) => room !== 'admin'
         );
-        console.log(`[WebSocket] Socket ${socket.id} left admin room`);
+
       });
 
       // Handle joining user-specific room
@@ -151,7 +150,7 @@ class WebSocketManager {
         socket.join(`user:${userId}`);
         socket.data.userId = userId;
         socket.data.joinedRooms.push(`user:${userId}`);
-        console.log(`[WebSocket] Socket ${socket.id} joined user room: ${userId}`);
+
       });
 
       // Handle leaving user-specific room
@@ -161,7 +160,7 @@ class WebSocketManager {
         socket.data.joinedRooms = socket.data.joinedRooms.filter(
           (room: string) => room !== `user:${userId}`
         );
-        console.log(`[WebSocket] Socket ${socket.id} left user room: ${userId}`);
+
       });
 
       // Handle order status updates from admin
@@ -182,11 +181,21 @@ class WebSocketManager {
             updatedBy: data.updatedBy,
           });
 
-          // TODO: In a real implementation, you would also update the database here
-          // await updateOrderStatusInDatabase(data.orderId, data.status, data.message);
+          // Update the database
+          import('@/lib/models/OrderModel').then(async (OrderModelMod) => {
+            const OrderModel = OrderModelMod.default;
+            const order = await OrderModel.findById(data.orderId);
+            if (order) {
+              order.status = data.status;
+              if (data.message) {
+                order.notes = data.message;
+              }
+              await order.save();
+            }
+          }).catch(err => console.error("DB Update Error via WebSocket:", err));
 
           callback({ success: true });
-          console.log(`[WebSocket] Order status updated by admin: ${data.orderId} -> ${data.status}`);
+
         } catch (error) {
           console.error(`[WebSocket] Error updating order status:`, error);
           callback({ success: false, error: 'Failed to update order status' });
@@ -195,7 +204,7 @@ class WebSocketManager {
 
       // Handle disconnection
       socket.on('disconnect', () => {
-        console.log(`[WebSocket] Client disconnected: ${socket.id}`);
+
       });
     });
   }
@@ -214,7 +223,7 @@ class WebSocketManager {
     // Also emit to admin room for real-time monitoring
     this.io.to('admin').emit('orderStatusUpdate', data);
     
-    console.log(`[WebSocket] Emitted order status update for order: ${orderId}`);
+
   }
 
   public emitNewOrder(data: Parameters<ServerToClientEvents['orderCreated']>[0]) {
@@ -223,7 +232,7 @@ class WebSocketManager {
     // Emit to admin room for new order notifications
     this.io.to('admin').emit('orderCreated', data);
     
-    console.log(`[WebSocket] Emitted new order notification: ${data.orderId}`);
+
   }
 
   public emitInventoryUpdate(data: Parameters<ServerToClientEvents['inventoryUpdate']>[0]) {
@@ -232,7 +241,7 @@ class WebSocketManager {
     // Emit to all connected clients for inventory updates
     this.io.emit('inventoryUpdate', data);
     
-    console.log(`[WebSocket] Emitted inventory update for product: ${data.productId}`);
+
   }
 
   public emitAdminMetricsUpdate(data: Parameters<ServerToClientEvents['adminMetricsUpdate']>[0]) {
@@ -241,14 +250,14 @@ class WebSocketManager {
     // Emit to admin room only
     this.io.to('admin').emit('adminMetricsUpdate', data);
     
-    console.log(`[WebSocket] Emitted admin metrics update`);
+
   }
 
   public emitToUser(userId: string, event: keyof ServerToClientEvents, data: any) {
     if (!this.io) return;
     
     this.io.to(`user:${userId}`).emit(event, data);
-    console.log(`[WebSocket] Emitted ${event} to user: ${userId}`);
+
   }
 }
 

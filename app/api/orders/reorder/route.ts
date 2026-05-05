@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('[REORDER] Starting reorder for orderId:', orderId);
+
 
     // Find the original order and verify ownership
     const originalOrder = await OrderModel.findOne({
@@ -35,22 +35,14 @@ export async function POST(request: NextRequest) {
     }).lean() as any;
 
     if (!originalOrder) {
-      console.log('[REORDER] Order not found:', orderId);
+
       return NextResponse.json(
         { message: 'Order not found or access denied' },
         { status: 404 }
       );
     }
 
-    console.log('[REORDER] Order found:', {
-      _id: originalOrder._id,
-      hasItems: !!originalOrder.items,
-      itemsType: typeof originalOrder.items,
-      itemsLength: originalOrder.items?.length,
-      hasOrderItems: !!originalOrder.orderItems,
-      orderItemsType: typeof originalOrder.orderItems,
-      fields: Object.keys(originalOrder)
-    });
+
 
     // Determine which field contains the items
     let orderItems = originalOrder.items || originalOrder.orderItems || [];
@@ -67,20 +59,12 @@ export async function POST(request: NextRequest) {
         orderItemsLength: originalOrder.orderItems?.length
       });
       return NextResponse.json(
-        { 
-          message: 'Invalid order data structure - no items found',
-          debug: {
-            hasItems: !!originalOrder.items,
-            hasOrderItems: !!originalOrder.orderItems,
-            itemsType: typeof originalOrder.items,
-            orderItemsType: typeof originalOrder.orderItems
-          }
-        },
+        { message: 'Invalid order data structure - no items found' },
         { status: 400 }
       );
     }
 
-    console.log('[REORDER] Processing', orderItems.length, 'items');
+
 
     // Check product availability and get current prices
     const reorderItems = [];
@@ -89,21 +73,14 @@ export async function POST(request: NextRequest) {
 
     for (let i = 0; i < orderItems.length; i++) {
       const item = orderItems[i];
-      console.log(`[REORDER] Processing item ${i + 1}:`, {
-        hasProduct: !!item.product,
-        hasProductId: !!item.productId,
-        hasId: !!item._id,
-        hasQty: !!item.qty,
-        hasQuantity: !!item.quantity,
-        itemKeys: Object.keys(item)
-      });
+
 
       // Get product ID from various possible fields
       const productId = item.product || item.productId || item._id;
       const quantity = item.qty || item.quantity || 1;
 
       if (!productId) {
-        console.log('[REORDER] No product ID found for item:', item);
+
         unavailableItems.push({
           name: item.name || 'Unknown Product',
           reason: 'Product ID not found'
@@ -114,7 +91,7 @@ export async function POST(request: NextRequest) {
       const product = await ProductModel.findById(productId);
       
       if (!product) {
-        console.log('[REORDER] Product not found:', productId);
+
         unavailableItems.push({
           name: item.name || 'Unknown Product',
           reason: 'Product no longer available'
@@ -182,12 +159,7 @@ export async function POST(request: NextRequest) {
     const itemsPrice = reorderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const originalItemsPrice = originalOrder.itemsPrice;
 
-    console.log('[REORDER] Processing complete:', {
-      totalItems: orderItems.length,
-      reorderItems: reorderItems.length,
-      unavailableItems: unavailableItems.length,
-      priceChangedItems: priceChangedItems.length
-    });
+
 
     return NextResponse.json({
       success: true,

@@ -54,8 +54,8 @@ export async function POST(req: NextRequest) {
       { email: notifyEmail, sms: notifySMS }
     );
 
-    // Log notification results
-    console.log('Notification results:', results);
+
+
 
     const successfulNotifications = results.filter(r => r.success);
     const failedNotifications = results.filter(r => !r.success);

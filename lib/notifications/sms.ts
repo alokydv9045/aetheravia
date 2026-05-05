@@ -14,9 +14,6 @@ class SMSService {
   constructor() {
     // Initialize Fast2SMS API Key if available
     this.fast2smsApiKey = process.env.FAST2SMS_API_KEY || null;
-    if (!this.fast2smsApiKey) {
-      console.warn('Fast2SMS credentials not configured');
-    }
   }
 
   async sendOrderStatusUpdate(data: OrderNotificationData): Promise<SMSResult> {
@@ -41,7 +38,7 @@ class SMSService {
         }
       });
 
-      console.log('Fast2SMS response:', result.data);
+
 
       if (result.data && (result.data.return === true || result.data.status_code === 200)) {
         return {

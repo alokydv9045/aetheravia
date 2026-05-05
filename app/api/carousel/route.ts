@@ -45,9 +45,6 @@ export const GET = async () => {
       ];
     }
     
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('[API /api/carousel] Returning banners:', items);
-    }
     return NextResponse.json(items, { status: 200 });
   } catch (err: any) {
     console.error('[API /api/carousel] Error:', err?.message || err);

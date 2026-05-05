@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   const routes = [
@@ -61,14 +61,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route.priority,
   }));
 
-  // TODO: Add dynamic product pages
-  // const products = await getProducts();
-  // const productRoutes = products.map((product) => ({
-  //   url: `${baseUrl}/product/${product.slug}`,
-  //   lastModified: new Date(product.updatedAt),
-  //   changeFrequency: 'weekly' as const,
-  //   priority: 0.7,
-  // }));
+  // Fetch all product slugs for dynamic routes
+  let productRoutes: { url: string; lastModified: Date; changeFrequency: "weekly"; priority: number }[] = [];
+  try {
+    const products = await import("@/lib/models/ProductModel").then((mod) => mod.default);
+    await import("@/lib/dbConnect").then((mod) => mod.default());
+    
+    const allProducts = await products.find({}).select("slug updatedAt").lean();
+    productRoutes = allProducts.map((product: any) => ({
+      url: `${baseUrl}/product/${product.slug}`,
+      lastModified: new Date(product.updatedAt || new Date()),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error("Failed to fetch products for sitemap:", error);
+  }
 
-  return [...routes];
+  return [...routes, ...productRoutes];
 }

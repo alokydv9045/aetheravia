@@ -284,13 +284,7 @@ export class CancellationAnalytics {
       }
 
       // The cancellation is already tracked through the order status change
-      // This method can be used for additional analytics tracking if needed
-      console.log(`Cancellation tracked for order ${order.orderNumber}:`, {
-        orderId,
-        reason,
-        orderValue: order.totalAmount,
-        customerEmail: order.customerEmail
-      });
+      // Additional analytics tracking could be added here (e.g., external analytics service)
 
     } catch (error) {
       console.error('Error tracking cancellation:', error);

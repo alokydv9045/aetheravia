@@ -1,15 +1,34 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { sanitizeInput, createRateLimiter } from '@/lib/security';
+
+// Rate limiter: 3 contact requests per hour per email
+const contactRateLimiter = createRateLimiter(3, 60 * 60 * 1000);
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { name, email, phone, subject, message } = body;
+    const rawBody = await req.json();
+    const { name, email, phone, subject, message } = rawBody;
 
     // Validate required fields
     if (!name || !email || !message) {
       return NextResponse.json({ error: 'Name, email, and message are required' }, { status: 400 });
     }
+
+    // Rate limiting check
+    const rateLimit = contactRateLimiter.check(email);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' }, 
+        { status: 429 }
+      );
+    }
+
+    // Sanitize input to prevent injection in email bodies
+    const sanitizedMessage = sanitizeInput(message).substring(0, 5000); // Limit length
+    const sanitizedName = sanitizeInput(name);
+    const sanitizedSubject = sanitizeInput(subject || 'No Subject');
+    const sanitizedPhone = phone ? sanitizeInput(phone).substring(0, 20) : 'Not provided';
 
     // Nodemailer transporter setup
     const transporter = nodemailer.createTransport({
@@ -26,15 +45,15 @@ export async function POST(req: Request) {
     const userMailOptions = {
       from: process.env.EMAIL_FROM || process.env.SMTP_USER,
       to: email,
-      subject: `Received: ${subject} | Aethravia Artisanal Archive`,
+      subject: `Received: ${sanitizedSubject} | Aethravia Artisanal Archive`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1c1c19;">
           <h2 style="color: #904917;">Aethravia Artisanal Archive</h2>
-          <p>Dear ${name},</p>
-          <p>Thank you for reaching out to us. This is an automated confirmation that we have received your message regarding <strong>${subject}</strong>.</p>
+          <p>Dear ${sanitizedName},</p>
+          <p>Thank you for reaching out to us. This is an automated confirmation that we have received your message regarding <strong>${sanitizedSubject}</strong>.</p>
           <p>Haan, humari team aapko jaldi contact karegiii! (Yes, our team will get in touch with you shortly!)</p>
           <hr style="border: 0; border-bottom: 1px solid #e5e2dd; margin: 20px 0;" />
-          <p style="font-size: 14px; color: #725a39;"><strong>Your Message:</strong><br/>${message}</p>
+          <p style="font-size: 14px; color: #725a39;"><strong>Your Message:</strong><br/>${sanitizedMessage}</p>
           <p style="font-size: 12px; color: #82746c; margin-top: 30px;">
             This is an automated response. Please do not reply directly to this email unless requested.<br/>
             © 2024 Aethravia. All rights reserved.
@@ -47,15 +66,15 @@ export async function POST(req: Request) {
     const adminMailOptions = {
       from: process.env.EMAIL_FROM || process.env.SMTP_USER,
       to: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || process.env.SMTP_USER,
-      subject: `New Contact Form Submission: ${subject}`,
+      subject: `New Contact Form Submission: ${sanitizedSubject}`,
       html: `
-        <h3>New Inquiry from ${name}</h3>
+        <h3>New Inquiry from ${sanitizedName}</h3>
         <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Phone:</strong> ${sanitizedPhone}</p>
+        <p><strong>Subject:</strong> ${sanitizedSubject}</p>
         <hr />
         <p><strong>Message:</strong></p>
-        <p>${message}</p>
+        <p>${sanitizedMessage}</p>
       `,
     };
 

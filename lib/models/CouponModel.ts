@@ -181,13 +181,19 @@ couponSchema.methods.isValidForUser = function(userId: string, orderValue: numbe
     }
 
     // Check if user is allowed (if allowedUsers is specified)
-    if (this.allowedUsers && this.allowedUsers.length > 0 && !this.allowedUsers.includes(userId)) {
-      return { valid: false, reason: 'Coupon not available for this user' };
+    if (this.allowedUsers && this.allowedUsers.length > 0) {
+      const isAllowed = this.allowedUsers.some((u: any) => u.toString() === userId.toString());
+      if (!isAllowed) {
+        return { valid: false, reason: 'Coupon not available for this user' };
+      }
     }
 
     // Check if user is excluded
-    if (this.excludedUsers && this.excludedUsers.includes(userId)) {
-      return { valid: false, reason: 'Coupon not available for this user' };
+    if (this.excludedUsers && this.excludedUsers.length > 0) {
+      const isExcluded = this.excludedUsers.some((u: any) => u.toString() === userId.toString());
+      if (isExcluded) {
+        return { valid: false, reason: 'Coupon not available for this user' };
+      }
     }
 
     // Check first-time users only
@@ -200,10 +206,10 @@ couponSchema.methods.isValidForUser = function(userId: string, orderValue: numbe
       usage.user && usage.user.toString() === userId.toString()
     ).length : 0;
     
-    if (userUsageCount >= this.usagePerUser) {
+    if (userUsageCount >= (this.usagePerUser || 1)) {
       return { 
         valid: false, 
-        reason: `You have already used this coupon ${this.usagePerUser} time(s)` 
+        reason: `You have already used this coupon ${this.usagePerUser || 1} time(s)` 
       };
     }
 

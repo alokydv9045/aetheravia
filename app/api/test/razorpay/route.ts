@@ -3,12 +3,18 @@ import { NextRequest } from 'next/server';
 /**
  * Razorpay Configuration Test API
  * Tests Razorpay API connection and credentials
- * Use: GET /api/test/razorpay
+ * Use: GET /api/test/razorpay (development only)
  */
 export async function GET(request: NextRequest) {
+  // Guard: only allow in development
+  if (process.env.NODE_ENV === 'production') {
+    return Response.json(
+      { success: false, message: 'This endpoint is disabled in production' },
+      { status: 403 }
+    );
+  }
+
   try {
-    console.log('[RAZORPAY TEST] Starting configuration test...');
-    
     // Check environment variables
     const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env;
     
@@ -23,8 +29,6 @@ export async function GET(request: NextRequest) {
         length: RAZORPAY_KEY_SECRET.length
       } : { present: false }
     };
-
-    console.log('[RAZORPAY TEST] Configuration check:', configStatus);
 
     if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
       return Response.json({
@@ -41,9 +45,7 @@ export async function GET(request: NextRequest) {
 
     // Test API connection
     const auth = Buffer.from(RAZORPAY_KEY_ID + ':' + RAZORPAY_KEY_SECRET).toString('base64');
-    
-    console.log('[RAZORPAY TEST] Testing API connection...');
-    
+
     // Create a minimal test order
     const testOrderData = {
       amount: 100, // Re 1.00 in paise
@@ -63,11 +65,8 @@ export async function GET(request: NextRequest) {
       body: JSON.stringify(testOrderData),
     });
 
-    console.log('[RAZORPAY TEST] API Response status:', response.status);
-
     if (response.ok) {
       const orderData = await response.json();
-      console.log('[RAZORPAY TEST] Test order created successfully:', orderData.id);
       
       return Response.json({
         success: true,
@@ -83,12 +82,6 @@ export async function GET(request: NextRequest) {
       });
     } else {
       const errorText = await response.text();
-      console.error('[RAZORPAY TEST] API Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorText
-      });
-
       let errorData;
       try {
         errorData = JSON.parse(errorText);
@@ -115,8 +108,6 @@ export async function GET(request: NextRequest) {
     }
 
   } catch (error: any) {
-    console.error('[RAZORPAY TEST] Unexpected error:', error);
-    
     return Response.json({
       success: false,
       error: 'Configuration test failed',

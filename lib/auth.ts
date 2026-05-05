@@ -10,7 +10,7 @@ import UserModel from './models/UserModel';
 
 export const config = {
   trustHost: true, // Allow all hosts in production
-  debug: process.env.AUTH_DEBUG === 'true' || process.env.NODE_ENV === 'development',
+  debug: process.env.AUTH_DEBUG === 'true',
   secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-render-deployment-please-set-proper-secret',
   basePath: '/api/auth',
   // Add explicit URL configuration for Render

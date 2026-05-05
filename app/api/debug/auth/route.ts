@@ -1,7 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 
 export const GET = auth(async (req: any) => {
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ message: 'This endpoint is disabled in production' }, { status: 403 });
+  }
+
   const authData = req.auth;
   
   return NextResponse.json({

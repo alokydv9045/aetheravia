@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/lib/models/UserModel';
-// import { rateLimit } from '@/lib/rateLimit';
+
 // Zod schema for address validation
 const addressSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),

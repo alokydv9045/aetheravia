@@ -2,6 +2,14 @@ import { NextResponse } from 'next/server';
 import seedAdmin from '@/lib/seedAdmin';
 
 export async function GET() {
+  // Guard: only allow in development
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      { success: false, message: 'This endpoint is disabled in production' },
+      { status: 403 }
+    );
+  }
+
   try {
     const admin = await seedAdmin();
     

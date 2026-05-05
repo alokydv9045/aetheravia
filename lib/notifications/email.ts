@@ -38,7 +38,7 @@ class EmailService {
 
     try {
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('Email sent successfully:', result.messageId);
+
       return {
         messageId: result.messageId,
         accepted: result.accepted,
@@ -63,7 +63,7 @@ class EmailService {
       };
 
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('Cancellation email sent:', result.messageId);
+
       
       return {
         messageId: result.messageId,
@@ -139,7 +139,7 @@ This code will expire in 10 minutes.
 
     try {
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('OTP email sent successfully:', result.messageId);
+
       return {
         messageId: result.messageId,
         accepted: result.accepted,
@@ -220,7 +220,7 @@ This code will expire in 15 minutes.
 
     try {
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('Registration OTP email sent successfully:', result.messageId);
+
       return {
         messageId: result.messageId,
         accepted: result.accepted,

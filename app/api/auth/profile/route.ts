@@ -22,21 +22,19 @@ export const GET = auth(async (req) => {
     await dbConnect();
     const userId = toObjectIdString((user as any)?.id || (user as any)?._id);
     if (process.env.NODE_ENV !== 'production') {
-      console.log('[DEV] GET /api/auth/profile session.user:', (user as any));
-      console.log('[DEV] GET /api/auth/profile derived userId:', userId);
+      // Dev logging removed
     }
     if (!isValidObjectIdString(userId)) {
-      console.log('[API] Invalid User ID:', userId);
+
       return Response.json({ message: 'Invalid user id in session' }, { status: 400 });
     }
     const dbUser = await UserModel.findById(userId).select(
       '_id name email isAdmin avatar createdAt updatedAt loyaltyTier loyaltyPoints personalization',
     );
     if (!dbUser) {
-      console.log('[API] User not found in DB:', userId);
+
       return Response.json({ message: 'User not found' }, { status: 404 });
     }
-    console.log('[API] Successfully fetched user:', dbUser.email);
     return Response.json(dbUser);
   } catch (err: any) {
     console.error('GET /api/auth/profile error:', err);
@@ -54,8 +52,7 @@ export const PUT = auth(async (req) => {
     await dbConnect();
     const userId = toObjectIdString((user as any)?.id || (user as any)?._id);
     if (process.env.NODE_ENV !== 'production') {
-      console.log('[DEV] PUT /api/auth/profile session.user:', (user as any));
-      console.log('[DEV] PUT /api/auth/profile derived userId:', userId);
+      // Dev logging removed
     }
     if (!isValidObjectIdString(userId)) {
       return Response.json({ message: 'Invalid user id in session' }, { status: 400 });
@@ -88,7 +85,7 @@ export const PUT = auth(async (req) => {
     if (typeof password === 'string') {
       const p = password.trim();
       if (p) {
-        dbUser.password = await bcrypt.hash(p, 5);
+        dbUser.password = await bcrypt.hash(p, 12);
       }
     }
     if (typeof avatar === 'string') {

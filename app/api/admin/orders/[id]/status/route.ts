@@ -30,30 +30,57 @@ export async function PUT(
       );
     }
 
-    // Update order status
-    const updatedOrder = await OrderModel.findByIdAndUpdate(
-      id,
-      { 
-        $set: { 
-          status: status,
-          orderStatus: status,
-          updatedAt: new Date(),
-          ...(status === 'delivered' && { deliveredAt: new Date() })
-        }
-      },
-      { new: true }
-    );
+    // Find the order
+    const order = await OrderModel.findById(id);
 
-    if (!updatedOrder) {
+    if (!order) {
       return NextResponse.json(
         { message: 'Order not found' },
         { status: 404 }
       );
     }
 
+    // Update fields
+    const oldStatus = order.status;
+    order.status = status;
+    order.orderStatus = status; // Sync compatibility field
+    
+    // If status is delivered, update relevant flags
+    if (status === 'delivered') {
+      if (!order.deliveredAt) {
+        order.deliveredAt = new Date();
+      }
+      order.isDelivered = true;
+      
+      // Auto-pay if not already paid (COD flow)
+      if (!order.isPaid) {
+        order.isPaid = true;
+        order.paidAt = new Date();
+        order.paymentResult = {
+          ...order.paymentResult,
+          status: 'completed',
+          update_time: new Date().toISOString()
+        };
+      }
+    }
+
+    // Save the order (this triggers pre('save') middleware for timeline)
+    const updatedOrder = await order.save();
+
+    // Trigger loyalty points awarding if delivered
+    if (status === 'delivered' && oldStatus !== 'delivered') {
+      try {
+        const { awardPointsForOrder } = await import('@/lib/services/loyaltyService');
+        await awardPointsForOrder(order._id.toString(), order.user.toString());
+      } catch (loyaltyError) {
+        console.error('[LOYALTY_AWARD_ERROR]:', loyaltyError);
+        // We don't fail the response if loyalty awarding fails, but it's logged
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      message: 'Order status updated successfully',
+      message: `Order status updated to ${status}`,
       order: updatedOrder
     });
 
@@ -62,8 +89,7 @@ export async function PUT(
     return NextResponse.json(
       { 
         success: false, 
-        message: 'Internal server error',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        message: 'Internal server error'
       },
       { status: 500 }
     );
