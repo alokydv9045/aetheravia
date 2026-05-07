@@ -12,7 +12,7 @@ export const POST = auth(async (req: any) => {
   try {
     const { amount, orderId, paymentMethod } = await req.json();
 
-    console.log('[RAZORPAY DEBUG] Create order request:', { amount, orderId, paymentMethod });
+
 
     if (!amount || !orderId) {
       return Response.json(
@@ -29,20 +29,14 @@ export const POST = auth(async (req: any) => {
       },
     });
 
-    console.log('[RAZORPAY DEBUG] Order created successfully:', razorpayOrder?.id);
+
 
     return Response.json({
       razorpayOrder,
       razorpayKeyId: process.env.RAZORPAY_KEY_ID,
     });
   } catch (error: any) {
-    console.error('[RAZORPAY ERROR] Order creation failed:', error);
-    console.error('[RAZORPAY ERROR] Error details:', {
-      message: error.message,
-      status: error.status,
-      code: error.code,
-      description: error.description
-    });
+    console.error('[RAZORPAY] Order creation failed:', error.message);
     return Response.json(
       { message: error.message || 'Failed to create payment order' },
       { status: 500 }

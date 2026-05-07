@@ -54,8 +54,8 @@ export async function POST(req: NextRequest) {
       { email: notifyEmail, sms: notifySMS }
     );
 
-    // Log notification results
-    console.log('Notification results:', results);
+
+
 
     const successfulNotifications = results.filter(r => r.success);
     const failedNotifications = results.filter(r => !r.success);
@@ -94,11 +94,7 @@ export async function GET(req: NextRequest) {
       process.env.SMTP_PASS
     );
 
-    const smsConfigured = !!(
-      process.env.TWILIO_ACCOUNT_SID && 
-      process.env.TWILIO_AUTH_TOKEN && 
-      process.env.TWILIO_PHONE_NUMBER
-    );
+    const smsConfigured = !!process.env.FAST2SMS_API_KEY;
 
     return NextResponse.json({
       email: {
@@ -107,7 +103,7 @@ export async function GET(req: NextRequest) {
       },
       sms: {
         configured: smsConfigured,
-        provider: 'Twilio',
+        provider: 'Fast2SMS',
       },
     });
 

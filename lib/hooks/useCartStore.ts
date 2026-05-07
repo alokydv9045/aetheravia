@@ -115,7 +115,17 @@ const useCartService = () => {
       const res = await fetch('/api/coupons/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ couponCode, orderValue, shippingCost }),
+        body: JSON.stringify({ 
+          couponCode, 
+          orderValue, 
+          shippingCost,
+          items: items.map(item => ({
+            productId: item.productId || item._id,
+            category: (item as any).category,
+            price: item.price,
+            qty: item.qty
+          }))
+        }),
       });
       const data = await res.json();
       if (data?.valid) {
@@ -181,7 +191,7 @@ const useCartService = () => {
       // Revalidate coupon if present
       if (cartStore.getState().appliedCoupon) {
         // Fire and forget
-        revalidateAppliedCoupon(totalPrice, shippingPrice);
+        revalidateAppliedCoupon(itemsPrice, shippingPrice);
       }
     },
     decrease: (item: OrderItem) => {
@@ -208,7 +218,7 @@ const useCartService = () => {
 
       // Revalidate coupon if present
       if (cartStore.getState().appliedCoupon) {
-        revalidateAppliedCoupon(totalPrice, shippingPrice);
+        revalidateAppliedCoupon(itemsPrice, shippingPrice);
       }
     },
     saveShippingAddress: (shippingAddress: ShippingAddress) => {
@@ -243,7 +253,7 @@ const useCartService = () => {
           name: couponData.coupon.name,
           type: couponData.coupon.type,
           discountAmount: couponData.discountAmount,
-          originalOrderValue: totalPrice,
+          originalOrderValue: itemsPrice,
           finalAmount: couponData.finalAmount,
         },
       });

@@ -5,7 +5,7 @@ import ContactForm from './ContactForm';
 import { shopAddress } from '@/lib/brand';
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Aethravia',
+  title: 'Contact Us | AetherAvia',
   description: 'Whether you seek guidance on a personalized ritual or have a question about our artisanal ingredients, our archive is open to you.',
 };
 
@@ -38,7 +38,7 @@ export default function ContactPage() {
             </div>
             <h3 className="text-xl font-headline text-primary mb-2">Email Us</h3>
             <p className="text-secondary font-body text-sm mb-4">Expect a response within 24 hours.</p>
-            <a className="text-on-surface font-semibold font-body hover:text-primary transition-colors underline decoration-outline-variant underline-offset-4 block" href="mailto:hello@aethravia.com">hello@aethravia.com</a>
+            <a className="text-on-surface font-semibold font-body hover:text-primary transition-colors underline decoration-outline-variant underline-offset-4 block" href="mailto:curators@AetherAvia.com">curators@AetherAvia.com</a>
           </div>
           {/* Card 2 */}
           <div className="bg-surface-container-low p-8 transition-all hover:bg-surface-container-high group rounded-lg shadow-sm">

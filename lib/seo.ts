@@ -7,9 +7,9 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
   ogImage: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/images/og-image.jpg`,
   links: {
-    twitter: 'https://twitter.com/aethravia',
-    instagram: 'https://instagram.com/aethravia',
-    facebook: 'https://facebook.com/aethravia',
+    twitter: 'https://twitter.com/AetherAvia',
+    instagram: 'https://instagram.com/AetherAvia',
+    facebook: 'https://facebook.com/AetherAvia',
   },
 };
 
@@ -68,7 +68,7 @@ export function constructMetadata({
       title,
       description,
       images: [image],
-      creator: '@aethravia',
+      creator: '@AetherAvia',
     },
     icons,
     metadataBase: new URL(siteConfig.url),
@@ -105,7 +105,7 @@ export function getOrganizationSchema() {
     image: siteConfig.ogImage,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '46, Mohalla Mohammad Wasil Near Hadri Masjib',
+      streetAddress: 'H.no. 46, Mohalla Mohammad Wasil, Near Hadri Masjid',
       addressLocality: 'Pilibhit',
       addressRegion: 'Uttar Pradesh',
       postalCode: '262001',
@@ -114,7 +114,7 @@ export function getOrganizationSchema() {
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: process.env.NEXT_PUBLIC_SUPPORT_PHONE || '+91-9876543210',
-      email: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@aethravia.com',
+      email: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'curators@AetherAvia.com',
       contactType: 'Customer Service',
       availableLanguage: ['English', 'Hindi'],
       areaServed: 'IN',
@@ -128,3 +128,4 @@ export function getOrganizationSchema() {
     ],
   };
 }
+

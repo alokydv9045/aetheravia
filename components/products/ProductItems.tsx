@@ -18,22 +18,28 @@ const ProductItems = async ({
   sort?: 'latest' | 'topRated',
   q?: string
 }) => {
-  let products = [];
-  
-  if (layout === 'grid' || (category && category !== 'all') || (q && q !== 'all')) {
-    const res = await productService.getByQuery({
-      q: q,
-      category: category,
-      price: 'all',
-      rating: 'all',
-      sort: 'newest',
-      page: '1'
-    });
-    products = res.products;
-  } else if (sort === 'topRated') {
-    products = await productService.getTopRated();
-  } else {
-    products = await productService.getLatest();
+  let products: any[] = [];
+
+  try {
+    if (layout === 'grid' || (category && category !== 'all') || (q && q !== 'all')) {
+      const res = await productService.getByQuery({
+        q: q,
+        category: category,
+        price: 'all',
+        rating: 'all',
+        sort: 'newest',
+        page: '1',
+      });
+      products = res.products;
+    } else if (sort === 'topRated') {
+      products = await productService.getTopRated();
+    } else {
+      products = await productService.getLatest();
+    }
+  } catch (error) {
+    console.error('[ProductItems] Failed to load products:', error);
+    products = [];
+  }
   }
 
   if (products.length === 0) {

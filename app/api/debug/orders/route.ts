@@ -6,8 +6,11 @@ import OrderModel from '@/lib/models/OrderModel';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ message: 'This endpoint is disabled in production' }, { status: 403 });
+  }
+
   try {
-    // Get user session
     const session = await auth();
     if (!session?.user?._id) {
       return NextResponse.json(
@@ -18,7 +21,6 @@ export async function GET(request: NextRequest) {
 
     await dbConnect();
 
-    // Get the latest order for debugging
     const orders = await OrderModel.find({
       userId: session.user._id
     })
@@ -30,13 +32,7 @@ export async function GET(request: NextRequest) {
       _id: order._id,
       createdAt: order.createdAt,
       hasItems: !!order.items,
-      itemsType: typeof order.items,
       itemsLength: order.items?.length,
-      hasOrderItems: !!order.orderItems,
-      orderItemsType: typeof order.orderItems,
-      orderItemsLength: order.orderItems?.length,
-      firstItem: order.items?.[0] || null,
-      firstOrderItem: order.orderItems?.[0] || null,
       allFields: Object.keys(order)
     }));
 
@@ -47,7 +43,6 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Debug orders error:', error);
     return NextResponse.json(
       { message: 'Error fetching debug info' },
       { status: 500 }

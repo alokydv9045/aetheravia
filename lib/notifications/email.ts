@@ -38,7 +38,7 @@ class EmailService {
 
     try {
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('Email sent successfully:', result.messageId);
+
       return {
         messageId: result.messageId,
         accepted: result.accepted,
@@ -63,7 +63,7 @@ class EmailService {
       };
 
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('Cancellation email sent:', result.messageId);
+
       
       return {
         messageId: result.messageId,
@@ -139,7 +139,7 @@ This code will expire in 10 minutes.
 
     try {
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('OTP email sent successfully:', result.messageId);
+
       return {
         messageId: result.messageId,
         accepted: result.accepted,
@@ -179,7 +179,7 @@ This code will expire in 10 minutes.
 <body>
   <div class="container">
     <div class="header">
-      <h1>Aethravia</h1>
+      <h1>AetherAvia</h1>
     </div>
     <div class="content">
       <div class="welcome-text">Begin Your Ritual</div>
@@ -192,7 +192,7 @@ This code will expire in 10 minutes.
       <div class="expiry">This code will expire in 15 minutes.</div>
     </div>
     <div class="footer">
-      © ${new Date().getFullYear()} Aethravia Artisanal Collective. Handcrafted Heritage.
+      © ${new Date().getFullYear()} AetherAvia Artisanal Collective. Handcrafted Heritage.
     </div>
   </div>
 </body>
@@ -200,14 +200,14 @@ This code will expire in 10 minutes.
     `;
 
     const text = `
-Aethravia - Begin Your Ritual
+AetherAvia - Begin Your Ritual
 
 Please use the following code to complete your registration:
 ${otp}
 
 This code will expire in 15 minutes.
 
-© ${new Date().getFullYear()} Aethravia Artisanal Collective.
+© ${new Date().getFullYear()} AetherAvia Artisanal Collective.
     `;
 
     const mailOptions = {
@@ -220,7 +220,7 @@ This code will expire in 15 minutes.
 
     try {
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('Registration OTP email sent successfully:', result.messageId);
+
       return {
         messageId: result.messageId,
         accepted: result.accepted,

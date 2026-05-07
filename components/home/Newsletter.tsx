@@ -52,11 +52,13 @@ export default function Newsletter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
+            suppressHydrationWarning
           />
           <button 
             type="submit"
             disabled={isLoading}
             className="px-10 py-4 bg-secondary text-white font-label text-xs uppercase tracking-widest rounded-lg hover:bg-primary transition-all shadow-md disabled:opacity-70 disabled:cursor-not-allowed min-w-[160px]"
+            suppressHydrationWarning
           >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">

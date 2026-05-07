@@ -9,7 +9,6 @@ import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 import { Product } from '@/lib/models/ProductModel';
-import productService from '@/lib/services/productService';
 import { formatId, formatPrice } from '@/lib/utils';
 
 interface ShowColumnsState {
@@ -23,7 +22,7 @@ interface ShowColumnsState {
 export default function Products() {
   const { data: products, error } = useSWR(`/api/admin/products`);
   const searchParams = useSearchParams();
-  const initialSearch = searchParams.get('search') || '';
+  const initialSearch = searchParams?.get('search') || '';
   
   const [rawSearch, setRawSearch] = useState(initialSearch);
   const [searchTerm, setSearchTerm] = useState(initialSearch);
@@ -42,11 +41,11 @@ export default function Products() {
 
   // Sync search from URL params
   useEffect(() => {
+    if (!searchParams) return;
     const q = searchParams.get('search');
-    if (q !== null) {
-      setRawSearch(q);
-      setSearchTerm(q);
-    }
+    if (q === null) return;
+    setRawSearch(q);
+    setSearchTerm(q);
   }, [searchParams]);
 
   // Debounce search input for performance

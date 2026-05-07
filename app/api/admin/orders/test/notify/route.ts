@@ -16,11 +16,7 @@ export async function GET(req: NextRequest) {
       process.env.SMTP_PASS
     );
 
-    const smsConfigured = !!(
-      process.env.TWILIO_ACCOUNT_SID && 
-      process.env.TWILIO_AUTH_TOKEN && 
-      process.env.TWILIO_PHONE_NUMBER
-    );
+    const smsConfigured = !!process.env.FAST2SMS_API_KEY;
 
     return NextResponse.json({
       status: 'Configuration check completed',
@@ -33,9 +29,8 @@ export async function GET(req: NextRequest) {
         },
         sms: {
           configured: smsConfigured,
-          provider: 'Twilio',
-          accountSid: process.env.TWILIO_ACCOUNT_SID ? '***configured***' : 'Not configured',
-          phoneNumber: process.env.TWILIO_PHONE_NUMBER || 'Not configured',
+          provider: 'Fast2SMS',
+          apiKey: process.env.FAST2SMS_API_KEY ? '***configured***' : 'Not configured',
         },
       },
       environment: {

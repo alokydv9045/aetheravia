@@ -53,8 +53,9 @@ export const POST = auth(async (req: any) => {
       },
     );
   } catch (err: any) {
+    console.error('[Admin API] Product creation failed:', err);
     return Response.json(
-      { message: err.message },
+      { message: err.message || 'Product creation failed' },
       {
         status: 500,
       },

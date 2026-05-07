@@ -46,10 +46,7 @@ export const razorpay = {
   ) {
     const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env;
     
-    console.log('[RAZORPAY DEBUG] Environment check:', {
-      keyId: RAZORPAY_KEY_ID ? `${RAZORPAY_KEY_ID.substring(0, 8)}...` : 'NOT_SET',
-      keySecret: RAZORPAY_KEY_SECRET ? 'SET' : 'NOT_SET'
-    });
+
     
     if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
       throw new Error('Razorpay credentials not configured');
@@ -65,7 +62,7 @@ export const razorpay = {
       notes: options.notes || {},
     };
 
-    console.log('[RAZORPAY DEBUG] Creating order with data:', orderData);
+
     
     const url = `${base}/orders`;
     const response = await fetch(url, {
@@ -77,7 +74,7 @@ export const razorpay = {
       body: JSON.stringify(orderData),
     });
 
-    console.log('[RAZORPAY DEBUG] API Response status:', response.status);
+
     
     return handleResponse(response);
   },
@@ -171,7 +168,6 @@ export const razorpay = {
     
     return handleResponse(response);
   },
-  
   getPaymentDetails: async function getPaymentDetails(paymentId: string) {
     const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env;
     
@@ -190,15 +186,42 @@ export const razorpay = {
     });
     
     return handleResponse(response);
+  },
+  
+  createRefund: async function createRefund(paymentId: string, amount?: number) {
+    const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env;
+    
+    if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+      throw new Error('Razorpay credentials not configured');
+    }
+    
+    const auth = Buffer.from(RAZORPAY_KEY_ID + ':' + RAZORPAY_KEY_SECRET).toString('base64');
+    
+    const url = `${base}/payments/${paymentId}/refund`;
+    const refundData: any = {};
+    if (amount) {
+      refundData.amount = Math.round(amount * 100); // Amount in paise
+    }
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${auth}`,
+      },
+      body: JSON.stringify(refundData),
+    });
+    
+    return handleResponse(response);
   }
 };
 
 async function handleResponse(response: any) {
-  console.log('[RAZORPAY DEBUG] Response status:', response.status);
+
   
   if (response.status === 200 || response.status === 201) {
     const data = await response.json();
-    console.log('[RAZORPAY DEBUG] Success response data:', data);
+
     return data;
   }
 

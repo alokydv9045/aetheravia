@@ -58,7 +58,7 @@ export default function EditBannerPage() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-  <h1 className="text-2xl font-bold mb-4">Edit {process.env.NEXT_PUBLIC_BRAND_NAME || 'BellaModa'} Banner</h1>
+  <h1 className="text-2xl font-bold mb-4">Edit {process.env.NEXT_PUBLIC_BRAND_NAME || 'AetherAvia'} Banner</h1>
       {loading ? (
         <div>Loading...</div>
       ) : (

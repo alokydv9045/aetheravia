@@ -85,8 +85,10 @@ export async function GET() {
       .select('code name description type value expiryDate minimumOrderAmount status')
       .lean();
 
-    // 3. Top deals: no isTopDeal field exists; use featured or highly-rated products
+    // 3. Top deals: use featured or highly-rated products (excluding already recommended ones)
+    const recommendedIds = recommendations.map(p => p._id.toString());
     const topDeals = await Product.find({
+      _id: { $nin: recommendedIds },
       $or: [
         { isFeatured: true },
         { rating: { $gte: 4.5 } },

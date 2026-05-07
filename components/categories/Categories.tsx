@@ -52,7 +52,13 @@ function categoryImageSrc(name: string) {
 }
 
 export default async function Categories() {
-  const all = await productService.getCategories();
+  let all: unknown = [];
+  try {
+    all = await productService.getCategories();
+  } catch (error) {
+    console.error('[Categories] Failed to load categories:', error);
+    all = [];
+  }
   const allowedCategories = ['Body Scrub', 'Body Wash', 'Face Wash'];
   const categories = Array.isArray(all) 
     ? all.filter(cat => allowedCategories.includes(cat)) 

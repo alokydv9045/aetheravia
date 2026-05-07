@@ -13,6 +13,7 @@ import FAQSection from '@/components/footer/FAQ';
 import ProductTabs from '@/components/products/ProductTabs';
 import ProductModel from '@/lib/models/ProductModel';
 import { Zap, Ticket } from 'lucide-react';
+import dbConnect from '@/lib/dbConnect';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -23,7 +24,15 @@ export const generateMetadata = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const product = await productService.getBySlug(slug);
+  let product;
+  try {
+    product = await productService.getBySlug(slug);
+  } catch {
+    return {
+      title: 'Product',
+      description: '',
+    };
+  }
 
   if (!product) {
     return notFound();
@@ -37,7 +46,12 @@ export const generateMetadata = async ({
 
 const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  const product = await productService.getBySlug(slug);
+  let product;
+  try {
+    product = await productService.getBySlug(slug);
+  } catch {
+    return notFound();
+  }
 
   if (!product) {
     return notFound();

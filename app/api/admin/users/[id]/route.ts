@@ -45,13 +45,22 @@ export const PUT = auth(async (...p: any) => {
     await dbConnect();
     const user = await UserModel.findById(params.id);
     if (user) {
-      user.name = name;
-      user.email = email;
-      user.isAdmin = Boolean(isAdmin);
+      if (name !== undefined) user.name = name;
+      if (email !== undefined) user.email = email;
+      if (isAdmin !== undefined) user.isAdmin = Boolean(isAdmin);
 
       const updatedUser = await user.save();
-  emitAdminEvent({ ts: Date.now(), type: 'user.updated', userId: String(updatedUser._id), isAdmin: updatedUser.isAdmin, email: updatedUser.email });
-      return Response.json({ message: 'User updated successfully', user: updatedUser });
+      emitAdminEvent({
+        ts: Date.now(),
+        type: 'user.updated',
+        userId: String(updatedUser._id),
+        isAdmin: updatedUser.isAdmin,
+        email: updatedUser.email,
+      });
+      return Response.json({
+        message: 'User updated successfully',
+        user: updatedUser,
+      });
     } else {
       return Response.json(
         { message: 'User not found' },
@@ -61,6 +70,7 @@ export const PUT = auth(async (...p: any) => {
       );
     }
   } catch (err: any) {
+    console.error(`[Admin API] Error updating user ${params.id}:`, err);
     return Response.json(
       { message: err.message },
       {
@@ -105,6 +115,7 @@ export const DELETE = auth(async (...args: any) => {
       );
     }
   } catch (err: any) {
+    console.error(`[Admin API] Error deleting user ${params.id}:`, err);
     return Response.json(
       { message: err.message },
       {

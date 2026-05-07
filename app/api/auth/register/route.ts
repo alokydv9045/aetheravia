@@ -109,8 +109,7 @@ async function registerHandler(request: NextRequest, context: any): Promise<Next
 
     // In production, trigger email verification here
     if (process.env.NODE_ENV === 'production') {
-      // TODO: Send verification email
-      console.log(`[TODO] Send verification email to ${email}`);
+      // Email verification service should be called here
     }
 
     return NextResponse.json({ 

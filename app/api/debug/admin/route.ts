@@ -3,17 +3,16 @@ import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/lib/models/UserModel';
 
 export async function GET() {
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ message: 'This endpoint is disabled in production' }, { status: 403 });
+  }
+
   try {
     await dbConnect();
-    
-    // Check if admin user exists
     const admin = await UserModel.findOne({ email: 'admin@admin.com' });
     
     if (!admin) {
-      return NextResponse.json({
-        message: 'Admin user not found',
-        exists: false
-      });
+      return NextResponse.json({ message: 'Admin user not found', exists: false });
     }
     
     return NextResponse.json({

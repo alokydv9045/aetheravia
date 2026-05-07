@@ -65,12 +65,12 @@ const Menu = ({ showSearch = true, showAccount = true }: { showSearch?: boolean;
           )}
         </Link>
       </li>
-      {showAccount && (
+      {showAccount && mounted && (
         <>
           {status === 'authenticated' && session?.user ? (
             <li>
               <div className='dropdown dropdown-end dropdown-bottom'>
-                <label tabIndex={0} className='flex items-center gap-2 text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary cursor-pointer'>
+                <label tabIndex={0} className='flex items-center gap-2 text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary cursor-pointer' suppressHydrationWarning>
                   {session.user.name}
                   <ChevronDown size={16} />
                 </label>
@@ -91,7 +91,7 @@ const Menu = ({ showSearch = true, showAccount = true }: { showSearch?: boolean;
                     <Link href='/profile' className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>Profile</Link>
                   </li>
                   <li onClick={handleClick}>
-                    <button type='button' onClick={signOutHandler} className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm'>
+                    <button type='button' onClick={signOutHandler} className='text-gray-700 hover:text-primary hover:bg-primary/5 text-sm' suppressHydrationWarning>
                       Sign out
                     </button>
                   </li>
@@ -104,6 +104,7 @@ const Menu = ({ showSearch = true, showAccount = true }: { showSearch?: boolean;
                 className='text-base font-medium text-black hover:text-white transition-all duration-300 py-2 px-5 rounded-full hover:bg-primary'
                 type='button'
                 onClick={() => signIn()}
+                suppressHydrationWarning
               >
                 Sign in
               </button>

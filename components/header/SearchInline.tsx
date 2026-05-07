@@ -26,8 +26,8 @@ export default function SearchInline() {
     fetcher
   );
 
-  const hasResults = products && products.length > 0;
-  const displayProducts = hasResults ? products : (allProducts ? allProducts.slice(0, 3) : []);
+  const hasResults = products?.products && products.products.length > 0;
+  const displayProducts = hasResults ? products.products : (allProducts?.products ? allProducts.products.slice(0, 3) : []);
 
   // Device detection for responsive UI switching
   const [isMobile, setIsMobile] = useState(false);

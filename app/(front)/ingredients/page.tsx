@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Ingredients & Craftsmanship | Aethravia',
+  title: 'Ingredients & Craftsmanship | AetherAvia',
   description: 'We believe in the radical transparency of nature. Each element in our archive is selected for its ancient efficacy and sourced with deep respect for the earth.',
 };
 

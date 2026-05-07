@@ -1,11 +1,11 @@
-# BellaModa Production Readiness Checker (PowerShell)
+# AetherAvia Production Readiness Checker (PowerShell)
 # Run this script before deploying to production
 
 param(
     [switch]$Detailed = $false
 )
 
-Write-Host "🔍 BellaModa Production Readiness Check" -ForegroundColor Cyan
+Write-Host "🔍 AetherAvia Production Readiness Check" -ForegroundColor Cyan
 Write-Host "======================================" -ForegroundColor Cyan
 
 $Errors = 0

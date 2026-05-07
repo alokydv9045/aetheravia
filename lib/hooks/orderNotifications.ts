@@ -12,7 +12,7 @@ interface OrderUpdateHookData {
 class OrderNotificationHook {
   async onOrderStatusChange(data: OrderUpdateHookData): Promise<void> {
     try {
-      console.log('Order status change hook triggered:', data);
+
 
       // Fetch the complete order data
       const order = await Order.findById(data.orderId).populate('user');
@@ -26,7 +26,7 @@ class OrderNotificationHook {
       const notifiableStatuses = ['confirmed', 'processing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'];
       
       if (!notifiableStatuses.includes(data.newStatus)) {
-        console.log('Status not notifiable:', data.newStatus);
+
         return;
       }
 
@@ -68,11 +68,7 @@ class OrderNotificationHook {
       const results = await notificationService.sendOrderStatusUpdate(notificationData, config);
 
       // Log results
-      console.log('Automatic notification results:', {
-        orderId: data.orderId,
-        status: data.newStatus,
-        results,
-      });
+
 
       // Store notification log in order
       const notificationLog = {

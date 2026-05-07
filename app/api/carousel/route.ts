@@ -28,7 +28,7 @@ export const GET = async () => {
           key: 'banner0',
           href: '/shop',
           src: '/images/banner/banner0.jpg',
-          alt: 'Aetheravia - Natural Skincare Collection',
+          alt: 'AetherAvia - Natural Skincare Collection',
         },
         {
           key: 'banner1',
@@ -45,9 +45,6 @@ export const GET = async () => {
       ];
     }
     
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('[API /api/carousel] Returning banners:', items);
-    }
     return NextResponse.json(items, { status: 200 });
   } catch (err: any) {
     console.error('[API /api/carousel] Error:', err?.message || err);
@@ -57,7 +54,7 @@ export const GET = async () => {
         key: 'banner0',
         href: '/shop',
         src: '/images/banner/banner0.jpg',
-        alt: 'Aetheravia - Natural Skincare Collection',
+        alt: 'AetherAvia - Natural Skincare Collection',
       },
       {
         key: 'banner1',

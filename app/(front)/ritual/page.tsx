@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Rituals | Aethravia Artisanal Heritage',
+  title: 'Rituals | AetherAvia Artisanal Heritage',
   description: 'Explore the artisanal heritage and our ritual guides.',
 };
 
@@ -248,3 +248,4 @@ export default function RitualPage() {
     </div>
   );
 }
+

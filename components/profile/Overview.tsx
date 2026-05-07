@@ -558,7 +558,6 @@ export default function Overview({ user, onUpdateAvatar, onSaveAbout }: Props) {
                   fill 
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110" 
                 />
-                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
                 <div className="absolute bottom-6 left-6 right-6 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                   <button className="w-full bg-white/90 backdrop-blur-md py-3 rounded-xl text-[9px] font-bold uppercase tracking-widest text-primary shadow-lg">
                     Begin Ritual

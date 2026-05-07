@@ -1,20 +1,28 @@
 // API endpoint to create demo order for 3PL testing
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import OrderModel from '@/lib/models/OrderModel';
 import UserModel from '@/lib/models/UserModel';
 
 export async function POST() {
+  // Guard: only allow in development
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      { success: false, message: 'This endpoint is disabled in production' },
+      { status: 403 }
+    );
+  }
+
   try {
     await dbConnect();
     
     // Check if demo user exists, create if not
-    let demoUser = await UserModel.findOne({ email: 'demo@bellamoda.com' });
+    let demoUser = await UserModel.findOne({ email: 'demo@AetherAvia.com' });
     if (!demoUser) {
       demoUser = new UserModel({
         name: 'Demo Customer',
-        email: 'demo@bellamoda.com',
-        password: 'demo_password_hash', // In real app, this would be properly hashed
+        email: 'demo@AetherAvia.com',
+        password: 'demo_password_hash',
         isAdmin: false,
       });
       await demoUser.save();
@@ -54,11 +62,11 @@ export async function POST() {
       paymentResult: {
         id: 'demo_payment_123',
         status: 'PAID',
-        email_address: 'demo@bellamoda.com',
+        email_address: 'demo@AetherAvia.com',
       },
-      itemsPrice: 2697, // 1499 + (599 * 2)
-      shippingPrice: 0, // Free shipping over 100
-      taxPrice: 404.55, // 15% tax
+      itemsPrice: 2697,
+      shippingPrice: 0,
+      taxPrice: 404.55,
       totalPrice: 3101.55,
       isPaid: true,
       paidAt: new Date(),
@@ -82,9 +90,9 @@ export async function POST() {
     });
     
   } catch (error: any) {
-    console.error('Error creating demo order:', error);
+    console.error('Error creating demo order:', error.message);
     return NextResponse.json(
-      { error: 'Failed to create demo order', details: error.message },
+      { error: 'Failed to create demo order' },
       { status: 500 }
     );
   }

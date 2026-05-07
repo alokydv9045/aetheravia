@@ -4,10 +4,13 @@ import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/lib/models/UserModel';
 
 export async function POST() {
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ message: 'This endpoint is disabled in production' }, { status: 403 });
+  }
+
   try {
     await dbConnect();
     
-    // Check if admin already exists
     const existingAdmin = await UserModel.findOne({ email: 'admin@admin.com' });
     
     if (existingAdmin) {
@@ -21,7 +24,6 @@ export async function POST() {
       });
     }
     
-    // Create admin user
     const hashedPassword = await bcrypt.hash('admin123', 12);
     
     const admin = await UserModel.create({

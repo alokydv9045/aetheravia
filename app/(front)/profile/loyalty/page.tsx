@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import LoyaltyDetails from '@/components/profile/LoyaltyDetails';
 
 export const metadata = {
-  title: 'Loyalty Program | BellaModa',
+  title: 'Loyalty Program | AetherAvia',
 };
 
 const LoyaltyPage = () => {

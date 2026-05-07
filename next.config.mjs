@@ -4,7 +4,7 @@
 const nextConfig = {
   // Output configuration for Render
   output: 'standalone',
-  staticPageGenerationTimeout: 300,
+  staticPageGenerationTimeout: 600,
   
   // Handle large external packages like mongoose
   serverExternalPackages: ['mongoose'],
@@ -12,7 +12,6 @@ const nextConfig = {
   // Experimental features
   experimental: {
     optimizePackageImports: ['lucide-react'],
-    cpus: 1, // Mitigate WorkerError on Windows by using a single worker
   },
   
   // Webpack configuration for better module resolution
@@ -35,7 +34,7 @@ const nextConfig = {
   
   // TypeScript configuration
   typescript: {
-    ignoreBuildErrors: true, // Temporarily bypass to isolate WorkerError on Windows
+    ignoreBuildErrors: false,
   },
   
   images: {
@@ -106,9 +105,6 @@ const nextConfig = {
       },
     ];
   },
-  // experimental: {
-  //   ppr: true,
-  // },
 };
 
 export default nextConfig;

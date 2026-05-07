@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
+import useCartService from '@/lib/hooks/useCartStore';
+import { OrderItem } from '@/lib/models/OrderModel';
 
 interface ReorderItem {
   productId: string;
@@ -62,6 +64,7 @@ export default function ReorderDialog({ orderId, isOpen, onClose, onSuccess }: R
   const [loading, setLoading] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const { increase, clear, items: currentCartItems } = useCartService();
 
   const fetchReorderData = async () => {
     if (!orderId) return;
@@ -121,7 +124,38 @@ export default function ReorderDialog({ orderId, isOpen, onClose, onSuccess }: R
       }
 
       const data = await response.json();
-      alert(`Successfully added ${selectedItems.size} items to cart!`);
+      const cartItemsToAdd = data.data.cartItems;
+
+      if (clearCart) {
+        clear();
+      }
+
+      // Add each item to the Zustand store
+      cartItemsToAdd.forEach((item: any) => {
+        const orderItem: OrderItem = {
+          _id: item.productId,
+          productId: item.productId,
+          name: item.name,
+          slug: item.slug,
+          qty: item.quantity,
+          image: item.image,
+          price: item.price,
+          countInStock: item.countInStock,
+          color: '',
+          size: '',
+        };
+        // If clearCart is false, we should probably check if item already exists 
+        // and add to its quantity, but increase() handles that.
+        // However, increase() usually adds 1. 
+        // We might need a direct 'addMany' or just loop increase.
+        // Wait, increase(item) adds 1 of that item.
+        // If we want to add 'quantity' items, we should loop.
+        for (let i = 0; i < item.quantity; i++) {
+          increase(orderItem);
+        }
+      });
+
+      alert(`Successfully added ${selectedItems.size} items to your ritual bag!`);
       
       if (onSuccess) {
         onSuccess();

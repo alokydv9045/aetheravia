@@ -53,7 +53,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
 
       // Connection event handlers
       socket.on('connect', () => {
-        console.log('[WebSocket] Connected to server');
+
         setIsConnected(true);
         setIsConnecting(false);
 
@@ -69,7 +69,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
       });
 
       socket.on('disconnect', () => {
-        console.log('[WebSocket] Disconnected from server');
+
         setIsConnected(false);
       });
 

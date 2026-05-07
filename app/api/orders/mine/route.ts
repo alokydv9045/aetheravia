@@ -26,7 +26,7 @@ export const GET = auth(async (req: any) => {
     if (!userId) {
       return Response.json({ message: 'Invalid user id in session' }, { status: 400 });
     }
-    const orders = await OrderModel.find({ user: userId });
+    const orders = await OrderModel.find({ user: userId }).sort({ createdAt: -1 });
     return Response.json(orders);
   } catch (err: any) {
     console.error('GET /api/orders/mine error:', err);

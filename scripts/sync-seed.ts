@@ -4,7 +4,6 @@ import * as dotenv from 'dotenv';
 import path from 'path';
 import dns from 'dns';
 
-// Fix for Node.js SRV DNS resolution issues on some systems
 dns.setServers(['1.1.1.1', '8.8.8.8']);
 
 // Load environment variables from .env
@@ -47,7 +46,7 @@ const products = [
     category: 'Face Wash',
     image: '/images/products/natural-cosmetic-products-arrangement.jpg',
     price: 699,
-    brand: 'AETHRAVIA',
+    brand: 'AetherAvia',
     rating: 4.8,
     numReviews: 34,
     countInStock: 50,
@@ -61,7 +60,7 @@ const products = [
     category: 'Serums',
     image: '/images/products/serum-bottle-with-yellow-background.jpg',
     price: 1299,
-    brand: 'AETHRAVIA',
+    brand: 'AetherAvia',
     rating: 4.9,
     numReviews: 67,
     countInStock: 30,
@@ -74,7 +73,7 @@ const products = [
     category: 'Moisturizers',
     image: '/images/products/spa-arrangement-with-cremes.jpg',
     price: 899,
-    brand: 'AETHRAVIA',
+    brand: 'AetherAvia',
     rating: 4.7,
     numReviews: 45,
     countInStock: 40,
@@ -87,7 +86,7 @@ const products = [
     category: 'Sunscreen',
     image: '/images/products/organic-cosmetic-product-with-dreamy-aesthetic-fresh-background.jpg',
     price: 799,
-    brand: 'AETHRAVIA',
+    brand: 'AetherAvia',
     rating: 4.6,
     numReviews: 28,
     countInStock: 35,
@@ -100,7 +99,7 @@ const products = [
     category: 'Body Scrub',
     image: '/images/products/cosmetics-composition-with-serum-bottles.jpg',
     price: 649,
-    brand: 'AETHRAVIA',
+    brand: 'AetherAvia',
     rating: 4.5,
     numReviews: 23,
     countInStock: 25,
@@ -113,7 +112,7 @@ const products = [
     category: 'Body Wash',
     image: '/images/products/natural-cosmetic-products-arrangement.jpg',
     price: 549,
-    brand: 'AETHRAVIA',
+    brand: 'AetherAvia',
     rating: 4.6,
     numReviews: 52,
     countInStock: 60,
@@ -126,7 +125,7 @@ const products = [
     category: 'Night Care',
     image: '/images/products/spa-arrangement-with-cremes.jpg',
     price: 1099,
-    brand: 'AETHRAVIA',
+    brand: 'AetherAvia',
     rating: 4.8,
     numReviews: 41,
     countInStock: 20,

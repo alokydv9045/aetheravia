@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Text = () => {
-  const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || 'Aetheravia';
+  const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || 'AetherAvia';
   const TAGLINE = process.env.NEXT_PUBLIC_BRAND_TAGLINE || 'Embrace the earth, unveil your personality';
   return (
     <div>
@@ -30,7 +30,7 @@ const Text = () => {
       </p>
 
       <p className='mb-4 font-medium'>
-        Aetheravia: Where earth-inspired formulations meet personalized skincare solutions.
+        AetherAvia: Where earth-inspired formulations meet personalized skincare solutions.
       </p>
 
       <h2 className='mb-2 text-2xl font-semibold'>
@@ -47,7 +47,7 @@ const Text = () => {
 
       <p className='mb-4'>
   Join our exclusive VIP membership for rewards, early access to sales,
-  and invitations to private events. Discover Aetheravia’s curated
+  and invitations to private events. Discover AetherAvia’s curated
   collections, where sustainability, craftsmanship, and personal style
   come together.
       </p>
@@ -65,7 +65,7 @@ const Text = () => {
       <p className='mb-4'>
         Through partnerships with renowned designers, we deliver innovative
         collections that set the standard for contemporary elegance. Elevate
-  your personal style with Aetheravia and enjoy a shopping experience like no
+  your personal style with AetherAvia and enjoy a shopping experience like no
   other.
       </p>
 

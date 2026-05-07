@@ -1,6 +1,6 @@
-# cspell:ignore Moda eslintcache pids vercel encryptable ehthumbs stackdump tscache sarif
+# cspell:ignore AetherAvia eslintcache pids vercel encryptable ehthumbs stackdump tscache sarif
 # ======================================
-# BellaModa E-commerce Application
+# AetherAvia E-commerce Application
 # Production-Ready .gitignore
 # ======================================
 
@@ -107,6 +107,7 @@ deploy/
 
 # === DEVELOPMENT TOOLS & EDITORS ===
 .vscode/
+.vs/
 .idea/
 .history/
 *.swp

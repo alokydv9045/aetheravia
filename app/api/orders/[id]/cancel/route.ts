@@ -20,8 +20,8 @@ export const POST = auth(async (...request: any) => {
     
     await dbConnect();
     
-    // Find the order
-    const order = await OrderModel.findById(params.id);
+    // Find the order and populate user for email
+    const order = await OrderModel.findById(params.id).populate('user', 'email name');
     
     if (!order) {
       return Response.json(
@@ -31,7 +31,8 @@ export const POST = auth(async (...request: any) => {
     }
 
     // Check if the order belongs to the authenticated user
-    if (order.user.toString() !== req.auth.user?.id) {
+    const userId = req.auth.user?.id || req.auth.user?._id;
+    if (order.user._id.toString() !== userId) {
       return Response.json(
         { message: 'Unauthorized to cancel this order' },
         { status: 403 }
@@ -66,7 +67,7 @@ export const POST = auth(async (...request: any) => {
       ORDER_STATUS.CANCELLED, 
       reason || 'Order cancelled by customer',
       {
-        updatedBy: req.auth.user?.id,
+        updatedBy: userId,
         metadata: { 
           cancelledBy: 'customer',
           reason: reason || 'Customer request'
@@ -74,37 +75,56 @@ export const POST = auth(async (...request: any) => {
       }
     );
 
+    // Process refund if order was paid via Razorpay
+    let refundProcessed = false;
+    let refundDetails = null;
+
+    if (order.isPaid && order.paymentMethod === 'Razorpay' && order.paymentResult?.id) {
+      try {
+        const { razorpay } = await import('@/lib/razorpay');
+        const refund = await razorpay.createRefund(order.paymentResult.id, order.totalPrice);
+        refundProcessed = true;
+        refundDetails = refund;
+        
+        // Update order with refund info
+        order.notes = (order.notes || '') + `\n[REFUND] Processed ID: ${refund.id}`;
+      } catch (refundError) {
+        console.error('[REFUND_ERROR]:', refundError);
+        // We log the error but allow cancellation to proceed in DB
+        order.notes = (order.notes || '') + `\n[REFUND_FAILED] Please process manually. Error: ${refundError instanceof Error ? refundError.message : 'Unknown'}`;
+      }
+    }
+
     await order.save();
 
     // Send enhanced cancellation notification
     try {
       await notificationService.sendCancellationNotification({
         orderId: order._id.toString(),
-        orderNumber: order.orderNumber,
-        customerName: order.customerName,
-        customerEmail: order.customerEmail,
-        customerPhone: order.customerPhone,
+        orderNumber: order._id.toString().substring(order._id.toString().length - 8).toUpperCase(),
+        customerName: order.shippingAddress.fullName,
+        customerEmail: order.user?.email || req.auth.user?.email,
+        customerPhone: order.shippingAddress.phone || 'N/A',
         status: ORDER_STATUS.CANCELLED,
         previousStatus: previousStatus,
-        totalAmount: order.totalAmount,
+        totalAmount: order.totalPrice,
         items: order.items.map((item: any) => ({
           name: item.name,
-          quantity: item.quantity,
+          quantity: item.qty,
           price: item.price
         })),
         orderItems: order.items.map((item: any) => ({
           name: item.name,
-          quantity: item.quantity,
+          quantity: item.qty,
           price: item.price
         })),
-        cancellationReason: reason,
-        refundAmount: order.totalAmount, // Assuming full refund
-        refundMethod: 'Original payment method',
+        cancellationReason: reason || 'Customer request',
+        refundAmount: refundProcessed ? order.totalPrice : 0,
+        refundMethod: refundProcessed ? 'Original payment method (Razorpay)' : 'Manual / None',
         cancellationDate: new Date()
       });
     } catch (notificationError) {
       console.error('Failed to send cancellation notification:', notificationError);
-      // Don't fail the cancellation if notification fails
     }
 
     // Track cancellation for analytics
@@ -112,14 +132,31 @@ export const POST = auth(async (...request: any) => {
       await cancellationAnalytics.trackCancellation(order._id.toString(), reason);
     } catch (analyticsError) {
       console.error('Failed to track cancellation analytics:', analyticsError);
-      // Don't fail the cancellation if analytics tracking fails
     }
 
-    // TODO: Implement refund processing if payment was made
-    // TODO: Update inventory (restore stock)
+    // Update inventory (restore stock)
+    try {
+      const ProductModel = (await import('@/lib/models/ProductModel')).default;
+      const bulkUpdates = order.items.map((item: any) => ({
+        updateOne: {
+          filter: { _id: item.product },
+          update: { $inc: { countInStock: item.qty } }
+        }
+      }));
+      
+      if (bulkUpdates.length > 0) {
+        await ProductModel.bulkWrite(bulkUpdates);
+      }
+    } catch (inventoryError) {
+      console.error('Failed to update inventory:', inventoryError);
+    }
 
     return Response.json({
-      message: 'Order cancelled successfully',
+      success: true,
+      message: refundProcessed 
+        ? 'Order cancelled and refund processed successfully' 
+        : 'Order cancelled successfully',
+      refundProcessed,
       order: {
         _id: order._id,
         status: order.status,

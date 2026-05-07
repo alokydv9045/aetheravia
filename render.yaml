@@ -1,14 +1,16 @@
 services:
   - type: web
-    name: bellamoda-store
+    name: AetherAvia-store
     env: node
     plan: free
     buildCommand: npm install --legacy-peer-deps && npm run build
-    startCommand: npm start
+    startCommand: node .next/standalone/server.js
     envVars:
       # Core Environment
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: "20"
       # Ensure devDependencies install for linting in CI
       - key: NPM_CONFIG_PRODUCTION
         value: "false"
@@ -24,9 +26,11 @@ services:
         value: "true"
       - key: AUTH_DEBUG
         value: "false"
-      # Fallback auth URL for NextAuth v5
+      # Auth URL for NextAuth
       - key: AUTH_URL
-        value: "https://aetheravia.onrender.com"
+        value: "https://aetheravia-eyv3.onrender.com"
+      - key: NEXTAUTH_URL
+        value: "https://aetheravia-eyv3.onrender.com"
       
       # Database Configuration
       - key: MONGODB_URI
@@ -95,7 +99,7 @@ services:
       
       # Store Information
       - key: STORE_NAME
-        value: "Aetheravia Store"
+        value: "AetherAvia Store"
       - key: STORE_ADDRESS
         value: "Near Pal Petrol pump, Bisalpur"
       - key: STORE_CITY
@@ -121,7 +125,7 @@ services:
       - key: PICKUP_PHONE
         value: "+919876543210"
       - key: COMPANY_NAME
-        value: "Aetheravia"
+        value: "AetherAvia"
       
       # Media & Content Management
       - key: CLOUDINARY_CLOUD_NAME

@@ -119,49 +119,49 @@ function getStatusInfo(status: string) {
       label: 'Order Placed',
       description: 'Your order has been received and is being processed',
       color: 'warning',
-      icon: '📋',
+      icon: 'order_approve',
     },
     [ORDER_STATUS.CONFIRMED]: {
       label: 'Order Confirmed',
       description: 'Your order has been confirmed and payment verified',
       color: 'info',
-      icon: '✅',
+      icon: 'verified',
     },
     [ORDER_STATUS.PROCESSING]: {
       label: 'Processing',
       description: 'Your order is being prepared',
       color: 'primary',
-      icon: '📦',
+      icon: 'inventory_2',
     },
     [ORDER_STATUS.SHIPPED]: {
       label: 'Shipped',
       description: 'Your order has been shipped',
       color: 'primary',
-      icon: '🚚',
+      icon: 'local_shipping',
     },
     [ORDER_STATUS.OUT_FOR_DELIVERY]: {
       label: 'Out for Delivery',
       description: 'Your order is out for delivery',
       color: 'warning',
-      icon: '🚛',
+      icon: 'delivery_dining',
     },
     [ORDER_STATUS.DELIVERED]: {
       label: 'Delivered',
       description: 'Your order has been delivered successfully',
       color: 'success',
-      icon: '🎉',
+      icon: 'celebration',
     },
     [ORDER_STATUS.CANCELLED]: {
       label: 'Cancelled',
       description: 'Your order has been cancelled',
       color: 'error',
-      icon: '❌',
+      icon: 'cancel',
     },
     [ORDER_STATUS.RETURNED]: {
       label: 'Returned',
       description: 'Your order has been returned',
       color: 'error',
-      icon: '↩️',
+      icon: 'assignment_return',
     },
   };
 
@@ -169,6 +169,6 @@ function getStatusInfo(status: string) {
     label: status,
     description: 'Order status',
     color: 'neutral',
-    icon: '📋',
+    icon: 'history_edu',
   };
 }

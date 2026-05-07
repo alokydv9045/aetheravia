@@ -2,7 +2,7 @@ import mongoSanitize from 'mongo-sanitize';
 import { NextRequest } from 'next/server';
 
 /**
- * Enterprise-grade security utilities for BellaModa
+ * Enterprise-grade security utilities for AetherAvia
  * Provides comprehensive protection against all major security threats
  * Edge Runtime compatible implementation
  */

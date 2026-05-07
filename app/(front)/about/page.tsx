@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Our Story | Aethravia',
-  description: 'A dialogue between ancestral memory and modern science. Learn about the genesis of Aethravia.',
+  title: 'Our Story | AetherAvia',
+  description: 'A dialogue between ancestral memory and modern science. Learn about the genesis of AetherAvia.',
 };
 
 export default function AboutPage() {
@@ -65,7 +65,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 2. How Aethravia Began */}
+      {/* 2. How AetherAvia Began */}
       <section className="bg-surface-container-low px-8 md:px-24 py-32">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-20 items-center">
           <div className="w-full md:w-1/2 relative group">
@@ -78,13 +78,13 @@ export default function AboutPage() {
           </div>
           <div className="w-full md:w-1/2">
             <span className="text-xs uppercase tracking-[0.4em] text-primary font-bold mb-4 block">The Genesis</span>
-            <h2 className="font-headline text-3xl md:text-4xl text-on-surface mb-6 leading-tight">How Aethravia Began</h2>
+            <h2 className="font-headline text-3xl md:text-4xl text-on-surface mb-6 leading-tight">How AetherAvia Began</h2>
             <div className="space-y-5 text-on-surface-variant leading-loose text-base md:text-lg font-light font-body">
               <p>
                 It started not in a lab, but in the memory of a grandmother’s courtyard. Arpita Kashyap watched as the raw materials of the earth—clays, oils, and barks—were transformed into potent elixirs that outperformed anything on a modern shelf.
               </p>
               <p>
-                Aethravia was born from a singular question: why must we choose between the soul of tradition and the precision of modern clinical science? We set out to bridge this gap, ensuring that every drop of our formulations honors the heritage it claims while meeting the rigorous standards of modern dermatology.
+                AetherAvia was born from a singular question: why must we choose between the soul of tradition and the precision of modern clinical science? We set out to bridge this gap, ensuring that every drop of our formulations honors the heritage it claims while meeting the rigorous standards of modern dermatology.
               </p>
             </div>
           </div>
@@ -118,7 +118,7 @@ export default function AboutPage() {
       <section className="px-8 md:px-24 py-24 md:py-32 bg-surface-container-highest">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 text-center">
-            <h2 className="font-headline text-3xl md:text-4xl text-on-surface mb-4">The Aethravia Standard</h2>
+            <h2 className="font-headline text-3xl md:text-4xl text-on-surface mb-4">The AetherAvia Standard</h2>
             <p className="font-body text-secondary tracking-widest uppercase text-xs">Six pillars of artisanal excellence</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-variant/10">
@@ -177,7 +177,7 @@ export default function AboutPage() {
                 <div className="aspect-[3/4] overflow-hidden rounded-lg">
                   <img 
                     className="w-full h-full object-cover grayscale brightness-90 contrast-110" 
-                    alt="Professional and serene portrait of Arpita Kashyap, founder of Aethravia, in a modern artisanal studio" 
+                    alt="Professional and serene portrait of Arpita Kashyap, founder of AetherAvia, in a modern artisanal studio" 
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA256z3YpgCPE4vHYl-mI5eA55gL5MuODVlIFm43YcYcmtxEMToMFouCu0w0cyoGSYCgcFpAqK73T8u1q0yTl3ANhEL-H6ZadWVIcZtQlJMrZF6dgS7uhahLsMMdmwfXyO4QVo-0hsbIdvPB9E0aC5nsWWzkr4lI6H8Q_0X0XHaCYs2AOrlsyHBJlIOTw96KOGHjmbxDXFiVZ3sgV0QSg-CWiqcVZ-4pS7DhC66C4CdzWxfD2aShZbnHPPbRChEPLl3tFQQ6ZqAiwI"
                   />
                 </div>
@@ -188,7 +188,7 @@ export default function AboutPage() {
               <div className="lg:w-2/3 max-w-2xl">
                 <h4 className="font-headline text-2xl md:text-3xl text-on-surface mb-6">A Message from Our Founder</h4>
                 <blockquote className="text-xl md:text-2xl font-headline text-secondary leading-relaxed mb-8 italic">
-                  "Aethravia isn't just about skincare; it's about reclaiming the moments of quietude we've lost to a fast-paced world. We invite you to slow down, feel the texture of the earth on your skin, and remember who you are."
+                  "AetherAvia isn't just about skincare; it's about reclaiming the moments of quietude we've lost to a fast-paced world. We invite you to slow down, feel the texture of the earth on your skin, and remember who you are."
                 </blockquote>
                 <div>
                   <p className="font-bold font-body text-on-surface tracking-widest uppercase">Arpita Kashyap</p>
@@ -203,7 +203,7 @@ export default function AboutPage() {
                 <div className="aspect-[3/4] overflow-hidden rounded-lg">
                   <img 
                     className="w-full h-full object-cover grayscale brightness-90 contrast-110" 
-                    alt="Professional studio portrait of Vikram Rathore, co-founder of Aethravia, in a neutral earthy linen shirt with a warm, confident expression." 
+                    alt="Professional studio portrait of Vikram Rathore, co-founder of AetherAvia, in a neutral earthy linen shirt with a warm, confident expression." 
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9tw_ZtPUCzn7MonlKY_B4WdwHml_HBvdfW9RDq7BXMxNOFL0hhvSjNZVBSGioh-4ONANd5IIxJVJ7gwDK0goZ8YMBga292pupawMFbVWnj7MT08q95x0A73bWboc4jk8XlG7kPSnCm7golwmU9TCt8jwINuLL-e43M6PJu60uJnLBltoWM2IPCPwfi2J8vF0mXEQnU5MoaTh1IRsVG3cIMmrF4MWJmwDizPykKGAkMKfrDN5jSVY68prq_6S_oUMqX8f-_H_FFwuI"
                   />
                 </div>

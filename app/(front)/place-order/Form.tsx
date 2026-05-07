@@ -17,6 +17,7 @@ import { formatPrice } from '@/lib/utils';
 
 const PAYMENT_METHOD_LABELS = {
   cod: 'Cash on Delivery (COD)',
+  Razorpay: 'Razorpay Secure Gateway',
   razorpay_upi: 'Instant UPI',
   razorpay_card: 'Credit / Debit Card',
   razorpay_netbanking: 'Net Banking',
@@ -87,7 +88,7 @@ const Form = () => {
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
         order_id: razorpayOrder.id,
-        name: 'AETHERAVIA',
+        name: 'AetherAvia',
         description: `Order #${orderId.slice(-6)}`,
         handler: async (response: any) => {
           try {

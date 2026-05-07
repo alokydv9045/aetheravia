@@ -1,4 +1,4 @@
-// Unified Analytics API for BellaModa Admin Dashboard
+// Unified Analytics API for AetherAvia Admin Dashboard
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';

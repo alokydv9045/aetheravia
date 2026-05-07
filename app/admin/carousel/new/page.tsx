@@ -117,7 +117,7 @@ export default function NewBannerPage() {
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-8">
       <div className="space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-bold">Add New {process.env.NEXT_PUBLIC_BRAND_NAME || 'BellaModa'} Banner</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">Add New {process.env.NEXT_PUBLIC_BRAND_NAME || 'AetherAvia'} Banner</h1>
         <p className="text-sm opacity-70">Upload and configure a carousel banner. Optimized aspect ratio ~ 3:1 (e.g. 1500x500).</p>
       </div>
 

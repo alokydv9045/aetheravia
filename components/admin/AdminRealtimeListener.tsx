@@ -46,7 +46,14 @@ export default function AdminRealtimeListener() {
             if (next.length > MAX_EVENTS) next.pop();
             return next;
           });
-          // TODO: integrate with toast/notification system if desired
+          // Integrate with toast notification system
+          import('react-hot-toast').then(({ toast }) => {
+            if (evt.type === 'NEW_ORDER') {
+              toast.success(`New order received!`, { icon: '📦' });
+            } else if (evt.type === 'USER_REGISTERED') {
+              toast.success(`New user registered!`, { icon: '👤' });
+            }
+          });
         } catch (_) {
           // ignore parse errors
         }
