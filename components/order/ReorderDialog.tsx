@@ -142,7 +142,7 @@ export default function ReorderDialog({ orderId, isOpen, onClose, onSuccess }: R
           price: item.price,
           countInStock: item.countInStock,
           color: '',
-          size: '',
+          mlQuantity: '',
         };
         // If clearCart is false, we should probably check if item already exists 
         // and add to its quantity, but increase() handles that.

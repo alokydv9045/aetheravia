@@ -59,7 +59,7 @@ const AdminLayout = ({
       items: [
         { key: 'orders', label: 'Orders', href: '/admin/orders/unified', icon: 'shopping_cart' },
         { key: 'products', label: 'Products', href: '/admin/products', icon: 'spa' },
-        { key: 'settings', label: 'Shipping Rates', href: '/admin/settings', icon: 'local_shipping' },
+        { key: 'settings', label: 'Store Settings', href: '/admin/settings', icon: 'settings' },
       ]
     },
     {

@@ -40,7 +40,6 @@ const ProductItems = async ({
     console.error('[ProductItems] Failed to load products:', error);
     products = [];
   }
-  }
 
   if (products.length === 0) {
     return (

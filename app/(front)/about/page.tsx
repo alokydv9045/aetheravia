@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import React from 'react';
+import FoundersSection from '@/components/contact/FoundersSection';
 
 export const metadata: Metadata = {
   title: 'Our Story | AetherAvia',
@@ -162,81 +163,25 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 5. Founders' Messages Section */}
-      <section className="px-8 md:px-24 py-24 md:py-32 space-y-24">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-xs uppercase tracking-[0.4em] text-primary font-bold mb-4 block">Our Leadership</span>
-            <h2 className="font-headline text-3xl md:text-4xl text-on-surface">The Minds Behind the Ritual</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-24">
-            {/* Founder: Arpita Kashyap */}
-            <div className="flex flex-col lg:flex-row gap-20 items-center">
-              <div className="lg:w-1/3 relative">
-                <div className="aspect-[3/4] overflow-hidden rounded-lg">
-                  <img 
-                    className="w-full h-full object-cover grayscale brightness-90 contrast-110" 
-                    alt="Professional and serene portrait of Arpita Kashyap, founder of AetherAvia, in a modern artisanal studio" 
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA256z3YpgCPE4vHYl-mI5eA55gL5MuODVlIFm43YcYcmtxEMToMFouCu0w0cyoGSYCgcFpAqK73T8u1q0yTl3ANhEL-H6ZadWVIcZtQlJMrZF6dgS7uhahLsMMdmwfXyO4QVo-0hsbIdvPB9E0aC5nsWWzkr4lI6H8Q_0X0XHaCYs2AOrlsyHBJlIOTw96KOGHjmbxDXFiVZ3sgV0QSg-CWiqcVZ-4pS7DhC66C4CdzWxfD2aShZbnHPPbRChEPLl3tFQQ6ZqAiwI"
-                  />
-                </div>
-                <div className="absolute -bottom-8 -right-8 bg-primary text-on-primary p-8 rounded-lg shadow-xl hidden sm:block">
-                  <p className="font-headline text-lg italic">"Nature does not hurry, yet everything is accomplished."</p>
-                </div>
-              </div>
-              <div className="lg:w-2/3 max-w-2xl">
-                <h4 className="font-headline text-2xl md:text-3xl text-on-surface mb-6">A Message from Our Founder</h4>
-                <blockquote className="text-xl md:text-2xl font-headline text-secondary leading-relaxed mb-8 italic">
-                  "AetherAvia isn't just about skincare; it's about reclaiming the moments of quietude we've lost to a fast-paced world. We invite you to slow down, feel the texture of the earth on your skin, and remember who you are."
-                </blockquote>
-                <div>
-                  <p className="font-bold font-body text-on-surface tracking-widest uppercase">Arpita Kashyap</p>
-                  <p className="font-body text-on-surface-variant text-sm mt-1">Founder & Chief Formulation Officer</p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Co-Founder: Vikram Rathore */}
-            <div className="flex flex-col lg:flex-row-reverse gap-20 items-center">
-              <div className="lg:w-1/3 relative">
-                <div className="aspect-[3/4] overflow-hidden rounded-lg">
-                  <img 
-                    className="w-full h-full object-cover grayscale brightness-90 contrast-110" 
-                    alt="Professional studio portrait of Vikram Rathore, co-founder of AetherAvia, in a neutral earthy linen shirt with a warm, confident expression." 
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9tw_ZtPUCzn7MonlKY_B4WdwHml_HBvdfW9RDq7BXMxNOFL0hhvSjNZVBSGioh-4ONANd5IIxJVJ7gwDK0goZ8YMBga292pupawMFbVWnj7MT08q95x0A73bWboc4jk8XlG7kPSnCm7golwmU9TCt8jwINuLL-e43M6PJu60uJnLBltoWM2IPCPwfi2J8vF0mXEQnU5MoaTh1IRsVG3cIMmrF4MWJmwDizPykKGAkMKfrDN5jSVY68prq_6S_oUMqX8f-_H_FFwuI"
-                  />
-                </div>
-                <div className="absolute -bottom-8 -left-8 bg-secondary text-on-primary p-8 rounded-lg shadow-xl hidden sm:block">
-                  <p className="font-headline text-lg italic">"Precision is the highest form of respect for tradition."</p>
-                </div>
-              </div>
-              <div className="lg:w-2/3 max-w-2xl lg:text-right">
-                <h4 className="font-headline text-2xl md:text-3xl text-on-surface mb-6">A Note from Our Co-Founder</h4>
-                <blockquote className="text-xl md:text-2xl font-headline text-secondary leading-relaxed mb-8 italic">
-                  "Our goal was never to replicate the past, but to refine it. By applying the rigor of modern science to heritage ingredients, we ensure that the wisdom of the ancients meets the expectations of the future."
-                </blockquote>
-                <div className="lg:flex lg:flex-col lg:items-end">
-                  <p className="font-bold font-body text-on-surface tracking-widest uppercase">Vikram Rathore</p>
-                  <p className="font-body text-on-surface-variant text-sm mt-1">Co-Founder & Head of Innovation</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 5. Founders' Messages Section (Dynamic) */}
+      <FoundersSection />
 
-      {/* 6. Our Commitments */}
-      <section className="bg-surface-container-high py-24 md:py-32 px-8 text-center">
-        <div className="max-w-3xl mx-auto border-y border-outline-variant/30 py-16">
-          <h2 className="font-headline text-3xl md:text-4xl text-primary mb-6">Our Everlasting Commitment</h2>
-          <p className="font-body text-on-surface-variant text-base md:text-lg leading-loose mb-10">
-            We pledge to remain transparent about our supply chain, to never compromise on ingredient purity, and to continuously innovate toward a more regenerative future for our planet and your skin.
+      {/* 6. Discover the Collection */}
+      <section className="bg-primary/5 py-24 md:py-32 px-8 text-center relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }}></div>
+        <div className="max-w-4xl mx-auto relative z-10">
+          <h2 className="font-headline text-4xl md:text-5xl text-primary mb-8 italic">Ready to begin your journey?</h2>
+          <p className="font-body text-secondary text-lg md:text-xl leading-relaxed mb-12 max-w-2xl mx-auto">
+            From ancestral wisdom to your modern vanity. Discover the artisanal elixirs that bridge the gap between soul and science.
           </p>
-          <a className="inline-flex items-center gap-3 bg-primary text-on-primary px-10 py-5 rounded-lg font-bold font-label tracking-widest uppercase text-xs transition-all hover:bg-primary/90" href="/ritual">
-            Explore the Rituals
-            <span className="material-symbols-outlined text-sm">arrow_forward</span>
-          </a>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <a className="w-full sm:w-auto px-12 py-5 bg-primary text-on-primary rounded-full font-bold font-label tracking-widest uppercase text-[11px] transition-all hover:bg-primary/90 shadow-xl shadow-primary/20" href="/shop">
+              Shop the Collection
+            </a>
+            <a className="w-full sm:w-auto px-12 py-5 border border-primary/20 text-primary rounded-full font-bold font-label tracking-widest uppercase text-[11px] transition-all hover:bg-primary/5" href="/ingredients">
+              Discover Ingredients
+            </a>
+          </div>
         </div>
       </section>
     </main>
